@@ -77,7 +77,15 @@ UltraISO可以直接[百度下载](https://www.baidu.com/s?wd=ultraiso)
 * 下方会出现一个输入框，并且已经自动键入了`runweasel`指令  
 * 在`runweasel`后添加`formatwithmbr`，即最后输入框中的指令变成`runweasel formatwithmbr`，回车继续安装  
 
-这次安装完成后就可以进入ESXi系统啦！\(^o^)/  
+这次安装完成后就可以进入ESXi系统啦！ \(^o^)/  
 　  
 　*PS:顺手查了一下[GPT和MBR的区别](http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html)*
+
+## 安装OpenSUSE 13.2  
+
+装完Hypervisor开始部署VM~
+首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。  
+随后把VM开机，载入client端上的ISO，再用`CTRL+ALT+INSERT`重启虚机即可进入安装界面，一路NEXT...  
+如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项  
+![]({{site.baseurl}}{{page.imagedir}}00.JPG)
 
