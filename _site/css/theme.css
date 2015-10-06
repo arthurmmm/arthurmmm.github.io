@@ -1,6 +1,7 @@
 body {
     padding-top: 60px;
     padding-bottom: 60px;
+	font-family: "Microsoft YaHei";
 }
 
 .copyright {
@@ -42,6 +43,10 @@ body {
     margin: 0;
 }
 
+.language-text{
+	font-family: "Courier New";
+}
+
 .well h1 {
     color: #ee4444;
     font-size: 1.3em;
@@ -50,6 +55,7 @@ body {
 .well h2 {
     color: #000066;
     font-size: 1em;
+
 }
 
 .author {

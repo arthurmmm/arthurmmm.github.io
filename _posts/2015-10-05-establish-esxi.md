@@ -3,7 +3,7 @@ layout: post
 title:  '使用笔记本搭建ESXi环境'
 date:   2015-10-05 12:31 +0800
 comments: true
-imagedir: \images\2015-10-05-00\
+imagedir: /images/2015-10-05-00/
 category: ESXi
 ---
 
@@ -89,4 +89,5 @@ UltraISO可以直接[百度下载](https://www.baidu.com/s?wd=ultraiso)
 随后把VM开机，载入client端上的ISO，再用`CTRL+ALT+INSERT`重启虚机即可进入安装界面，一路NEXT...  
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项  
 ![]({{site.baseurl}}{{page.imagedir}}00.JPG)
+
 
