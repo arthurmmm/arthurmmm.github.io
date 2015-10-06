@@ -1,6 +1,7 @@
 body {
     padding-top: 60px;
     padding-bottom: 60px;
+	font-family: "Microsoft YaHei";
 }
 
 .copyright {
@@ -18,13 +19,11 @@ body {
 .sidebar h1 {
     color: #ee4444;
     font-size: 1.3em;
-	font-family: "Microsoft YaHei";
 }
 
 .sidebar h2 {
     color: #000066;
     font-size: 1em;
-	font-family: "Microsoft YaHei";
 }
 
 .sidebar a {
@@ -44,14 +43,13 @@ body {
     margin: 0;
 }
 
-.well {
-	font-family: "Microsoft YaHei";
+.language-text{
+	font-family: "Courier New";
 }
 
 .well h1 {
     color: #ee4444;
     font-size: 1.3em;
-
 }
 
 .well h2 {
