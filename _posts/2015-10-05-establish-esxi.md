@@ -3,6 +3,7 @@ layout: post
 title:  '使用笔记本搭建ESXi环境'
 date:   2015-10-05 12:31 +0800
 comments: true
+imagedir: \images\2015-10-05-00\
 category: ESXi
 ---
 
