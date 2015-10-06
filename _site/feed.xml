@@ -1,18 +1,357 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Arthur's Blog</title>
-		<description>喵 ・ω・~☆</description>
+		<title>ArthurMMM's Blog</title>
+		<description>你好喵 ・ω・~☆</description>
 		<link>http://arthurmmm.github.io</link>
 		<atom:link href="http://arthurmmm.github.io/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>在OpenSUSE上搭建jekyll服务器</title>
+				<description>&lt;p&gt;这个博客站点是使用gitpage+jekyll搭建而成的，为了在部署到github前在本地做测试，需要搭建jekyll+gitpage的测试服务器。&lt;br&gt;
+本文记录了在OpenSUSE环境下搭建jekyll+gitpage服务器的过程  &lt;/p&gt;
+
+&lt;h2 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h2&gt;
+
+&lt;p&gt;OpenSUSE 13.2自带了ruby2.1，无需额外安装  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# ruby --version
+ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;安装bundler&quot;&gt;安装bundler&lt;/h2&gt;
+
+&lt;p&gt;1] 将gem源替换成国内的taobao镜像以提升速度&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# gem source -r https://ruby.taobao.org
+https://ruby.taobao.org removed from sources
+# gem sources -a https://ruby.taobao.org
+https://ruby.taobao.org added to sources
+# gem sources
+*** CURRENT SOURCES ***
+
+https://ruby.taobao.org
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 安装bundle  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# gem install bundler
+Fetching: bundler-1.10.6.gem (100%)
+Successfully installed bundler-1.10.6
+Parsing documentation for bundler-1.10.6
+Installing ri documentation for bundler-1.10.6
+Done installing documentation for bundler after 6 seconds
+1 gem installed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;使用bundler安装github-pages&quot;&gt;使用bundler安装github-pages&lt;/h2&gt;
+
+&lt;p&gt;1] 在根目录下创建&lt;code&gt;Gemfile&lt;/code&gt;文件，并写入以下内容  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;source &amp;#39;https://ruby.taobao.org&amp;#39;
+gem &amp;#39;github-pages&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 对于全新的OpenSUSE 13.2需要额外安装以下依赖包  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# zypper install ruby-devel make zlib-devel patch gcc nodejs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 启动bundler安装github-pages，如果报错请检查一下必要的依赖包是否都装了  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# bundle.ruby2.1 install
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 切换到gitpage根目录即可  &lt;/p&gt;
+
+&lt;p&gt;后续如何在jekyll+gitpage上创建站点这里暂不做详细介绍，想要了解的话推荐这篇博文：&lt;a href=&quot;http://www.pchou.info/web-build/2014/07/04/build-github-blog-page-08.html&quot;&gt;一步步在GitHub上创建博客主页&lt;/a&gt; &lt;/p&gt;
+</description>
+				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
+				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
+				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</guid>
+			</item>
+		
+			<item>
+				<title>配置和安装OpenSUSE 13.2虚拟机</title>
+				<description>&lt;p&gt;这里记录一下在ESXi上部署OpenSUSE 13.2虚拟机的过程。&lt;br&gt;
+关于搭建ESXi的细节可以参考&lt;a href=&quot;/2015/10/establish-esxi/&quot;&gt;这里&lt;/a&gt;  &lt;/p&gt;
+
+&lt;h2 id=&quot;安装opensuse&quot;&gt;安装OpenSUSE&lt;/h2&gt;
+
+&lt;p&gt;首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。&lt;br&gt;
+随后把VM开机，载入client端上的ISO，再用&lt;code&gt;CTRL+ALT+INSERT&lt;/code&gt;重启虚机即可进入安装界面，一路NEXT...&lt;br&gt;
+如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项&lt;br&gt;
+&lt;img src=&quot;/images/2015-10-06-00/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;配置zypper国内源：&quot;&gt;配置zypper国内源：&lt;/h2&gt;
+
+&lt;p&gt;参考我的另外一篇文章&lt;a href=&quot;/2015/10/replace-zypper-repo/&quot;&gt;快速为OpenSUSE配置国内源&lt;/a&gt;  &lt;/p&gt;
+
+&lt;h2 id=&quot;安装git：&quot;&gt;安装GIT：&lt;/h2&gt;
+
+&lt;p&gt;由于我的各类配置都同步在GIT上，所以这里先安装GIT以便导入配置，也记录一下安装和配置GIT的过程：  &lt;/p&gt;
+
+&lt;p&gt;1] 使用zypper安装GIT程序包：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper install git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 配置GIT用户名和邮箱：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git config --global user.name &amp;quot;arthurmmm&amp;quot;
+$ git config --global user.email &amp;quot;arthur_mao@live.com&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 生成ssh密钥：   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh-keygen -t rsa -C &amp;quot;arthur_mao@live.com&amp;quot;
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+//不用更改目录和密码，敲3次回车即可
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 登陆&lt;code&gt;github&lt;/code&gt;，展开右上角箭头找到并进入&lt;code&gt;setting&lt;/code&gt;页面&lt;br&gt;
+&lt;img src=&quot;/images/2015-10-06-00/01.JPG&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+
+&lt;p&gt;5] 进入右侧&lt;code&gt;SSH Keys&lt;/code&gt;页面，点击&lt;code&gt;Add SSH key&lt;/code&gt;，把&lt;code&gt;/root/.ssh/id_rsa.pub&lt;/code&gt;中的内容复制到&lt;code&gt;Key&lt;/code&gt;中再点击&lt;code&gt;Add key&lt;/code&gt;   &lt;/p&gt;
+
+&lt;p&gt;6] 测试  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh git@github.com
+Warning: Permanently added the RSA host key for IP address &amp;#39;192.30.252.128&amp;#39; to the list of known hosts.
+PTY allocation request failed on channel 0
+Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;7] 导入github上的配置文件  &lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;PS：这些配置文件仅适用于我自家的环境哟&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ./setup.sh
+&amp;gt;&amp;gt; Creating NETSTORAGE mount point...
+&amp;gt;&amp;gt; Installing user profile...
+&amp;gt;&amp;gt; Installing system profile...
+&amp;gt;&amp;gt; Finish!
+
+** Please reboot to activate all settings ...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+				<pubDate>Tue, 06 Oct 2015 19:53:00 +0800</pubDate>
+				<link>http://arthurmmm.github.io/2015/10/deploy-opensuse</link>
+				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/deploy-opensuse</guid>
+			</item>
+		
+			<item>
+				<title>快速为OpenSUSE配置国内源</title>
+				<description>&lt;p&gt;OpenSUSE的YaST图形化工具用来做配置是很方便的，然而在配置下载源的时候，由于要配置的条目众多，还是略显麻烦。&lt;br&gt;
+这里介绍如何在命令行下，利用xargs/awk/sed工具快速的将zypper替换成国内源（以浙大的镜像为例）。   &lt;/p&gt;
+
+&lt;h2 id=&quot;首先查看zypper帮助文档熟悉下操作：&quot;&gt;首先查看zypper帮助文档熟悉下操作：&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -h | less
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;列出所有安装源：&quot;&gt;列出所有安装源：&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -lr
+ | Alias                     | Name                               | Enabled | Refresh | Type
+--+---------------------------+------------------------------------+---------+---------+------
+1 | openSUSE-13.2-0           | openSUSE-13.2-0                    | Yes     | No      | yast2
+2 | repo-debug                | openSUSE-13.2-Debug                | No      | Yes     | NONE
+3 | repo-debug-update         | openSUSE-13.2-Update-Debug         | No      | Yes     | NONE
+4 | repo-debug-update-non-oss | openSUSE-13.2-Update-Debug-Non-Oss | No      | Yes     | NONE
+5 | repo-non-oss              | openSUSE-13.2-Non-Oss              | Yes     | Yes     | yast2
+6 | repo-oss                  | openSUSE-13.2-Oss                  | Yes     | Yes     | yast2
+7 | repo-source               | openSUSE-13.2-Source               | No      | Yes     | NONE
+8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
+9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;禁用并停止更新自带源：&quot;&gt;禁用并停止更新自带源：&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper mr -d -R --all
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;配置浙大源：&quot;&gt;配置浙大源：&lt;/h2&gt;
+
+&lt;p&gt;1] 进入&lt;code&gt;/etc/zypp/repos.d&lt;/code&gt;文件夹  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ll
+total 36
+-rw-r--r-- 1 root root 191 Oct  5 23:22 openSUSE-13.2-0.repo
+-rw-r--r-- 1 root root 188 Oct  5 23:25 repo-debug-update-non-oss.repo
+-rw-r--r-- 1 root root 164 Oct  5 23:25 repo-debug-update.repo
+-rw-r--r-- 1 root root 165 Oct  5 23:25 repo-debug.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-non-oss.repo
+-rw-r--r-- 1 root root 156 Oct  5 23:25 repo-oss.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-source.repo
+-rw-r--r-- 1 root root 170 Oct  5 23:25 repo-update-non-oss.repo
+-rw-r--r-- 1 root root 146 Oct  5 23:25 repo-update.repo
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 执行以下指令批量创建ZJU源(&lt;a href=&quot;http://mirrors.zju.edu.cn/opensuse&quot;&gt;http://mirrors.zju.edu.cn/opensuse&lt;/a&gt;)  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ find . -name &amp;quot;repo*&amp;quot; | sed &amp;#39;s/.\///g&amp;#39; | xargs -i sh -c &amp;quot;cat {} | sed &amp;#39;s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g&amp;#39; | sed &amp;#39;s/repo-/zju\/repo-/g&amp;#39; | sed &amp;#39;s/openSUSE-13.2/zju\/openSUSE-13.2/g&amp;#39; &amp;gt; zju-{}&amp;quot;
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | No      | No
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | No      | No
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | No      | No
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | No      | No
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | No      | No
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | No      | No
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | No      | No
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | No      | No
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 执行以下指令启用zju源并打开自动更新   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper lr | grep zju | awk &amp;#39;{print $3}&amp;#39; | xargs -i zypper mr -e -r {}
+Repository &amp;#39;zju/repo-debug&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-debug&amp;#39;.
+Repository &amp;#39;zju/repo-debug-update&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-debug-update&amp;#39;.
+Repository &amp;#39;zju/repo-debug-update-non-oss&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-debug-update-non-oss&amp;#39;.
+Repository &amp;#39;zju/repo-non-oss&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-non-oss&amp;#39;.
+Repository &amp;#39;zju/repo-oss&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-oss&amp;#39;.
+Repository &amp;#39;zju/repo-source&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-source&amp;#39;.
+Repository &amp;#39;zju/repo-update&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-update&amp;#39;.
+Repository &amp;#39;zju/repo-update-non-oss&amp;#39; has been successfully enabled.
+Autorefresh has been enabled for repository &amp;#39;zju/repo-update-non-oss&amp;#39;.
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | Yes     | Yes
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | Yes     | Yes
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | Yes     | Yes
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | Yes     | Yes
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | Yes     | Yes
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | Yes     | Yes
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | Yes     | Yes
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | Yes     | Yes
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 更新源  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper refresh
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Debug&amp;#39; metadata ............................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Debug&amp;#39; cache .................................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Debug&amp;#39; metadata .....................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Update-Debug&amp;#39; cache ..........................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&amp;#39; metadata .............................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&amp;#39; cache ..................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Non-Oss&amp;#39; metadata ..........................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Non-Oss&amp;#39; cache ...............................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Oss&amp;#39; metadata ..............................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Oss&amp;#39; cache ...................................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Source&amp;#39; metadata ...........................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Source&amp;#39; cache ................................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Update&amp;#39; metadata ...........................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Update&amp;#39; cache ................................................................................................[done]
+Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; metadata ...................................................................................[done]
+Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ........................................................................................[done]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;EOF&gt;&lt;/p&gt;
+</description>
+				<pubDate>Mon, 05 Oct 2015 23:31:00 +0800</pubDate>
+				<link>http://arthurmmm.github.io/2015/10/replace-zypper-repo</link>
+				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/replace-zypper-repo</guid>
+			</item>
+		
+			<item>
+				<title>使用笔记本搭建ESXi环境</title>
+				<description>&lt;p&gt;本文记录了将一台笔记本配置成ESXi的过程。  &lt;/p&gt;
+
+&lt;h1 id=&quot;准备工作&quot;&gt;准备工作&lt;/h1&gt;
+
+&lt;p&gt;&lt;strong&gt;硬件：&lt;/strong&gt;  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;CPU: Intel i5 520 M&lt;/li&gt;
+&lt;li&gt;内存：4GB&lt;/li&gt;
+&lt;li&gt;网卡: Realtek 8118/8168&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;安装介质：&lt;/strong&gt;  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;4GB U盘一枚&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ESXi版本：&lt;/strong&gt;  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ESXi 5.1 ISO 镜像（VMware Hypervisor）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;为什么不安装更新的esxi-5-5或者6-0&quot;&gt;为什么不安装更新的ESXi 5.5或者6.0?&lt;/h1&gt;
+
+&lt;p&gt;其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  &lt;/p&gt;
+
+&lt;h2 id=&quot;【安装时报错no-compatible-network-adapter-found】&quot;&gt;【安装时报错&lt;code&gt;No compatible network adapter found&lt;/code&gt;】&lt;/h2&gt;
+
+&lt;p&gt;解决方案参考&lt;a href=&quot;http://bbs.51cto.com/thread-1165256-1-1.html&quot;&gt;这篇文章&lt;/a&gt; ，简单来讲：  &lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;从&lt;a href=&quot;https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers&quot;&gt;这个网站&lt;/a&gt; 下载对应的网卡驱动&lt;/li&gt;
+&lt;li&gt;下载并使用&lt;a href=&quot;http://pan.baidu.com/s/1eQ2f822&quot;&gt;ESXi-Customizer-v2.7.2&lt;/a&gt; 将网卡驱动写入ISO镜像&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;【安装时提示内存不足4gb】&quot;&gt;【安装时提示内存不足4GB】&lt;/h2&gt;
+
+&lt;p&gt;坑爹啊（╯‵□′）╯︵┴─┴~~&lt;br&gt;
+虽然说这台笔记本号称是有&amp;#39;4G内存&amp;#39;，然而却被集显吃掉了部分内存，实际只有3.8G。  &lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！&lt;/strong&gt;  &lt;/p&gt;
+
+&lt;p&gt;这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃(’╥ω╥‘)  &lt;/p&gt;
+
+&lt;h1 id=&quot;下载esx-5-1&quot;&gt;下载ESX 5.1&lt;/h1&gt;
+
+&lt;p&gt;首先登录到&lt;a href=&quot;http://www.vmware.com/cn&quot;&gt;VMware官网&lt;/a&gt; ，点击&lt;code&gt;下载&lt;/code&gt;-&amp;gt;&lt;code&gt;所有下载、驱动程序和工具&lt;/code&gt; 进入到搜索页面&lt;br&gt;
+或者直接点击&lt;a href=&quot;https://my.vmware.com/cn/web/vmware/downloads&quot;&gt;这个链接&lt;/a&gt;&lt;br&gt;
+在该页面搜索&amp;#39;hypervisor 5.1&amp;#39;就可以找到对应的ISO镜像啦！&lt;br&gt;
+　&lt;br&gt;
+　&lt;em&gt;PS:&lt;br&gt;
+　你需要注册一个VMWARE帐号来获得免费使用的licence&lt;br&gt;
+　由于现在的最新版本是ESXi 6.x，直接点&lt;code&gt;下载&lt;/code&gt;-&amp;gt;&lt;code&gt;vSphere Hypervisor&lt;/code&gt;是找不到5.x的版本的！&lt;/em&gt;  &lt;/p&gt;
+
+&lt;h1 id=&quot;使用ultraiso制作安装u盘&quot;&gt;使用UltraISO制作安装U盘&lt;/h1&gt;
+
+&lt;p&gt;UltraISO可以直接&lt;a href=&quot;https://www.baidu.com/s?wd=ultraiso&quot;&gt;百度下载&lt;/a&gt;&lt;br&gt;
+&lt;strong&gt;注意：ESX 5.1自带了很多网卡驱动（比如常见的Realtek 8118/8168），你不需要再自制ISO了，如果按照6.0的方式自制ISO反而会报&lt;code&gt;No compatible network adapter found&lt;/code&gt;的错误！&lt;/strong&gt;  &lt;/p&gt;
+
+&lt;p&gt;在UltraISO中选择&lt;code&gt;文件&lt;/code&gt;-&amp;gt;&lt;code&gt;打开&lt;/code&gt;来载入ISO镜像，随后选择&lt;code&gt;启动&lt;/code&gt;-&amp;gt;&lt;code&gt;写入硬盘镜像&lt;/code&gt;来制作安装U盘。&lt;em&gt;记得要把&lt;code&gt;硬盘驱动器&lt;/code&gt;改为你的U盘哦！&lt;/em&gt;  &lt;/p&gt;
+
+&lt;h1 id=&quot;安装esxi系统&quot;&gt;安装ESXi系统&lt;/h1&gt;
+
+&lt;p&gt;将做好的U盘插入笔记本，开机时长按&lt;F12&gt;进入boot menu，选择U盘引导进入安装向导&lt;br&gt;
+向导部分还是很简单的，一路根据提示选择，可以参考&lt;a href=&quot;http://www.osyunwei.com/archives/6586.html&quot;&gt;这篇文章&lt;/a&gt;&lt;br&gt;
+安装完成后又遇到了一个问题：  &lt;/p&gt;
+
+&lt;h2 id=&quot;【系统无法正常引导，仅提示boot-up-failed！】&quot;&gt;【系统无法正常引导，仅提示boot up failed！】&lt;/h2&gt;
+
+&lt;p&gt;一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。&lt;br&gt;
+在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置...&lt;br&gt;
+最后的解决方案如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;在一开始那个&lt;code&gt;Loading ESXi installer&lt;/code&gt;的界面键入Shift+O&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;下方会出现一个输入框，并且已经自动键入了&lt;code&gt;runweasel&lt;/code&gt;指令&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;在&lt;code&gt;runweasel&lt;/code&gt;后添加&lt;code&gt;formatwithmbr&lt;/code&gt;，即最后输入框中的指令变成&lt;code&gt;runweasel formatwithmbr&lt;/code&gt;，回车继续安装&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这次安装完成后就可以进入ESXi系统啦！(^o^)/&lt;br&gt;
+　&lt;br&gt;
+　&lt;em&gt;PS:顺手查了一下&lt;a href=&quot;http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html&quot;&gt;GPT和MBR的区别&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
+</description>
+				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
+				<link>http://arthurmmm.github.io/2015/10/establish-esxi</link>
+				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-esxi</guid>
+			</item>
 		
 			<item>
 				<title>博客搭建完成啦！</title>
 				<description>&lt;h2 id=&quot;嘿，你好！&quot;&gt;嘿，你好！&lt;/h2&gt;
 
-&lt;p&gt;我的博客终于搭完啦（擦汗）  &lt;/p&gt;
-
-&lt;p&gt;请随意参观~~&lt;/p&gt;
+&lt;p&gt;我的博客终于搭完啦！！（擦汗）&lt;br&gt;
+目前还没有什么干货，会尽量慢慢更新哒，敬请期待╰(&lt;em&gt;´︶`&lt;/em&gt;)╯♡&lt;/p&gt;
 </description>
 				<pubDate>Sun, 04 Oct 2015 23:34:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/first-blog</link>

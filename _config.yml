@@ -1,7 +1,7 @@
 # Jekyll configuration
 
-name: Arthur's Blog
-description: 喵 ・ω・~☆
+name: ArthurMMM's Blog
+description: 你好喵 ・ω・~☆
 
 # url is currently only used only for the RSS feed in feed.xml
 url: http://arthurmmm.github.io
@@ -11,9 +11,6 @@ url: http://arthurmmm.github.io
 # *** IMPORTANT: If your local "jekyll serve" throws errors change this to '' or
 #     run it like so: jekyll serve --baseurl=''
 baseurl: ''
-
-# This can be '' to hide the Github nav button
-github: 'https://github.com/arthurmmm/arthurmmm.github.io'
 
 # Set this to your UA-# value, or '' to disable the block completely
 gaaccount: ''
@@ -25,7 +22,7 @@ ds: 'arthurmmm'
 comments: true
 
 permalink: /:year/:month/:title
-paginate: 3
+paginate: 5
 
 highlighter: pygments
 markdown: redcarpet

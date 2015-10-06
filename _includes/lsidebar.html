@@ -1,0 +1,24 @@
+
+<div class="sidebar well">
+    <h1>Recent Posts</h1>
+    <ul>
+        {% for post in site.posts limit:5 %}
+          <li><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="sidebar well">
+    <h1>Categories</h1>
+    <ul>
+        {% for category  in site.categories %}
+			<li><a href="{{ site.baseurl}}/categories.html#{{ category | first }}">{{ category | first }}  [{{ category | last | size }}]</a></li>
+        {% endfor %}
+    </ul>
+</div>
+<div class="sidebar" align="center">
+	<h4>手机阅读( •̀ ω •́ )✧</h4>
+</div>
+<div class="sidebar" align="center">
+	<img width="150" height="150" src="http://qr.liantu.com/api.php?text={{ site.url }}{{ page.url }}"/>
+</div>

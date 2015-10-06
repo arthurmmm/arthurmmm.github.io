@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Arthur's Blog</title>
+    <title>ArthurMMM's Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -23,18 +23,15 @@
                   <span class="icon-bar"></span>
                   <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Arthur's Blog</a>
+                <a class="navbar-brand" href="/">ArthurMMM's Blog</a>
               </div>
               <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/">Home</a></li>
-                    <li class="active visible-xs-block"><a href="/links.html">Links</a></li>
+                    <li class="active visible-xs-block"><a href="/categories.html">Categories</a></li>
                     <li class="active"><a href="/archive.html">Archive</a></li>
-                    <li class="active"><a href="https://www.linkedin.com/pub/yunjie-mao/b0/b49/75">LinkedIn</a></li>
-                    <li class="active"><a href="/feed.xml">RSS</a></li>
-                    
-                      <li class="active"><a href="https://github.com/https://github.com/arthurmmm/arthurmmm.github.io">Github</a></li>
-                    
+					<li class="active"><a href="/feed.xml">RSS</a></li>
+					<li class="active"><a href="/about.html">About Me</a></li>
                 </ul>
               </div>
         </div>
@@ -44,44 +41,56 @@
 
 <div class="container container-left">
     <div class="row">
-        <div class="col-md-3 hidden-xs">
-            <div class="sidebar well">
-喵 ・ω・~☆
-</div>
-
+        <div class="col-sm-3 hidden-xs">
+            
 <div class="sidebar well">
     <h1>Recent Posts</h1>
     <ul>
         
-          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
+          <li><a href="/2015/10/establish-jekyll-on-suse">在OpenSUSE上搭建jekyll服务器</a></li>
         
-          <li><a href="/2014/08/jekyll-clean-theme">Jekyll Clean Theme</a></li>
+          <li><a href="/2015/10/deploy-opensuse">配置和安装OpenSUSE 13.2虚拟机</a></li>
+        
+          <li><a href="/2015/10/replace-zypper-repo">快速为OpenSUSE配置国内源</a></li>
+        
+          <li><a href="/2015/10/establish-esxi">使用笔记本搭建ESXi环境</a></li>
+        
+          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
         
     </ul>
 </div>
 
 <div class="sidebar well">
-<h1>Links</h1>
-<ul>
-  <li>Weibo: <a href="http://weibo.com/u/2522714682">@ArthurMao一_一</a></li>
-  <li>Email: <a href="mailto:arthur_mao@live.com">arthur_mao</a></li>
-</ul>
-
+    <h1>Categories</h1>
+    <ul>
+        
+			<li><a href="/categories.html#esxi">esxi  [1]</a></li>
+        
+			<li><a href="/categories.html#linux">linux  [3]</a></li>
+        
+    </ul>
 </div>
-
+<div class="sidebar" align="center">
+	<h4>手机阅读( •̀ ω •́ )✧</h4>
+</div>
+<div class="sidebar" align="center">
+	<img width="150" height="150" src="http://qr.liantu.com/api.php?text=http://arthurmmm.github.io/index.html"/>
+</div>
         </div>
-        <div class="col-md-9">
+        <div class="col-sm-9">
             
 <div class="article">
     <div class="well">
-        <h1><a href="/2015/10/first-blog">Oct 4, 2015 - 博客搭建完成啦！</a></h1>
+        <h1><a href="/2015/10/establish-jekyll-on-suse">在OpenSUSE上搭建jekyll服务器</a></h1>
+		<p class="author">Oct 6, 2015</p>
+		<!--
         
+          <p class="author"><a href="/2015/10/establish-jekyll-on-suse/#ds-thread">Comments</a></p>
+        
+		-->
         <div class="content">
-            <h2 id="嘿，你好！">嘿，你好！</h2>
-
-<p>我的博客终于搭完啦（擦汗）  </p>
-
-<p>请随意参观~~</p>
+            <p>这个博客站点是使用gitpage+jekyll搭建而成的，为了在部署到github前在本地做测试，需要搭建jekyll+gitpage的测试服务器。<br>
+本文记录了在OpenSUSE环境下搭建jekyll+gitpage服务器的过程  </p>
 
         </div>
     </div>
@@ -89,90 +98,66 @@
 
 <div class="article">
     <div class="well">
-        <h1><a href="/2014/08/jekyll-clean-theme">Aug 23, 2014 - Jekyll Clean Theme</a></h1>
+        <h1><a href="/2015/10/deploy-opensuse">配置和安装OpenSUSE 13.2虚拟机</a></h1>
+		<p class="author">Oct 6, 2015</p>
+		<!--
         
-          <p class="author"><a href="/2014/08/jekyll-clean-theme/#ds-thread">Comments</a></p>
+          <p class="author"><a href="/2015/10/deploy-opensuse/#ds-thread">Comments</a></p>
         
+		-->
         <div class="content">
-            <ul>
-<li>Get it from <a href="https://github.com/scotte/jekyll-clean">github</a>.</li>
-<li>See the <a href="https://scotte.github.io/jekyll-clean">live demo</a>.</li>
-<li>See it <a href="https://scotte.github.io">in action on my own blog</a>.</li>
-</ul>
+            <p>这里记录一下在ESXi上部署OpenSUSE 13.2虚拟机的过程。<br>
+关于搭建ESXi的细节可以参考<a href="/2015/10/establish-esxi/">这里</a>  </p>
 
-<p>Welcome to the sample post for the Jekyll Clean theme.</p>
+        </div>
+    </div>
+</div>
 
-<p>A simple and clean Jekyll theme using <a href="http://getbootstrap.com">bootstrap</a>
-(not to be confused with jekyll-bootstrap) that&#39;s easy to modify and very
-modular in component and element reuse.</p>
+<div class="article">
+    <div class="well">
+        <h1><a href="/2015/10/replace-zypper-repo">快速为OpenSUSE配置国内源</a></h1>
+		<p class="author">Oct 5, 2015</p>
+		<!--
+        
+          <p class="author"><a href="/2015/10/replace-zypper-repo/#ds-thread">Comments</a></p>
+        
+		-->
+        <div class="content">
+            <p>OpenSUSE的YaST图形化工具用来做配置是很方便的，然而在配置下载源的时候，由于要配置的条目众多，还是略显麻烦。<br>
+这里介绍如何在命令行下，利用xargs/awk/sed工具快速的将zypper替换成国内源（以浙大的镜像为例）。   </p>
 
-<p>It uses Disqus for comments and includes Google Analytics support. Both of
-these features are disabled by default and can be enabled via _config.yml. You
-can also rip this code out of the templates if you like (footer.html and post.html).
-The beauty of Jekyll - keep things clean... Jekyll Clean!</p>
+        </div>
+    </div>
+</div>
 
-<p>The theme works well on mobile phones, using a collapsable nav bar and hiding the
-sidebar. The links pane in the sidebar is available on mobile through the nav menu,
-and you can do the same thing for any other sections added to the sidebar.</p>
+<div class="article">
+    <div class="well">
+        <h1><a href="/2015/10/establish-esxi">使用笔记本搭建ESXi环境</a></h1>
+		<p class="author">Oct 5, 2015</p>
+		<!--
+        
+          <p class="author"><a href="/2015/10/establish-esxi/#ds-thread">Comments</a></p>
+        
+		-->
+        <div class="content">
+            <p>本文记录了将一台笔记本配置成ESXi的过程。  </p>
 
-<p>Don&#39;t forget to occassionally merge against my upstream repository so you can get
-the latest changes. Pull requests are encouraged and accepted!</p>
+        </div>
+    </div>
+</div>
 
-<h1 id="installation">Installation</h1>
+<div class="article">
+    <div class="well">
+        <h1><a href="/2015/10/first-blog">博客搭建完成啦！</a></h1>
+		<p class="author">Oct 4, 2015</p>
+		<!--
+        
+		-->
+        <div class="content">
+            <h2 id="嘿，你好！">嘿，你好！</h2>
 
-<p>If you don&#39;t have a blog already on github, start by cloning this repository.
-Best to do that directly on github and then clone that down to your computer.</p>
-
-<p>If you already do have a blog, You can certainly apply this theme to your existing
-blog in place, but then you won&#39;t be able to merge as the theme changes. If you
-re-apply your blog history on top of this theme&#39;s <strong>gh-pages</strong> branch, it&#39;s then
-easy to update to the latest version of the theme. You also don&#39;t want to have to
-deal with resolving old conflicts from your existing history, so you may wish to to
-push your existing master off to a new branch so you have the old history and start
-a new branch with this as the start, merging in your _posts and other assets (after
-git rm&#39;ing the current _posts.</p>
-
-<p>Not ideal, but you have to make a choice - either apply it manually or base your
-blog off this theme&#39;s branch. Either way it will work, and both have their own
-pros and cons.</p>
-
-<p>You can setup an upstream tracking repository like so:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ git remote add upstream git@github.com:scotte/jekyll-clean.git
-</code></pre></div>
-<p>And now when you wish to merge your own branch onto the latest version of the
-theme, simply do:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ git fetch upstream
-$ git merge upstream/gh-pages
-</code></pre></div>
-<p>Of course you will have to resolve conflicts for _config.yml, _includes/links-list.html,
-and _posts, and so on, but in practice this is pretty simple.</p>
-
-<p>This is how I maintain my own blog which is based on this theme. The old history is
-sitting in an <strong>old-master</strong> branch that I can refer to when I need to.</p>
-
-<h1 id="license">License</h1>
-
-<p>The content of this theme is distributed and licensed under a
-<img src="/images/cc_by_88x31.png" alt="License Badge">
-<a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 License</a></p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">This license lets others distribute, remix, tweak, and build upon your work,
-even commercially, as long as they credit you for the original creation. This
-is the most accommodating of licenses offered. Recommended for maximum
-dissemination and use of licensed materials.
-</code></pre></div>
-<p>In other words: you can do anything you want with this theme on any site, just please
-provide a link to <a href="https://github.com/scotte/jekyll-clean">the original theme on github</a>
-so I get credit for the original design. Beyond that, have at it!</p>
-
-<p>This theme includes the following files which are the properties of their
-respective owners:</p>
-
-<ul>
-<li>js/bootstrap.min.js - <a href="http://getbootstrap.com">bootstrap</a></li>
-<li>css/bootstrap.min.css - <a href="http://getbootstrap.com">bootstrap</a></li>
-<li>js/jquery.min.js - <a href="https://jquery.com">jquery</a></li>
-<li>images/cc_by_88x31.png - <a href="https://creativecommons.org">creative commons</a></li>
-</ul>
+<p>我的博客终于搭完啦！！（擦汗）<br>
+目前还没有什么干货，会尽量慢慢更新哒，敬请期待╰(<em>´︶`</em>)╯♡</p>
 
         </div>
     </div>
@@ -181,7 +166,9 @@ respective owners:</p>
 
 <div class="pagination">
   
-  <span class="page_number ">Page: 1 of 1</span>
+  <span class="page_number ">Page: 1 of 2</span>
+  
+    <a class="btn btn-default" href="/page2" class="next">Older</a>
   
 </div>
 
@@ -192,9 +179,7 @@ respective owners:</p>
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 footer navbar-inverse navbar-fixed-bottom">
-            <p class="copyright">&copy;2015 Arthur's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, theme by <a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
-            under
-            <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a></p>
+            <p class="copyright">&copy;2015 ArthurMMM's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, <a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
         </div>
     </div>
 </div>
