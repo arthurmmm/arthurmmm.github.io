@@ -8,10 +8,7 @@
 		
 			<item>
 				<title>在OpenSUSE上搭建jekyll服务器</title>
-				<description>&lt;p&gt;这个博客站点是使用gitpage+jekyll搭建而成的，为了在部署到github前在本地做测试，需要搭建jekyll+gitpage的测试服务器。&lt;br&gt;
-本文记录了在OpenSUSE环境下搭建jekyll+gitpage服务器的过程  &lt;/p&gt;
-
-&lt;h2 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h2&gt;
+				<description>&lt;h2 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h2&gt;
 
 &lt;p&gt;OpenSUSE 13.2自带了ruby2.1，无需额外安装  &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# ruby --version
@@ -20,7 +17,7 @@ ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
 &lt;h2 id=&quot;安装bundler&quot;&gt;安装bundler&lt;/h2&gt;
 
 &lt;p&gt;1] 将gem源替换成国内的taobao镜像以提升速度&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# gem source -r https://ruby.taobao.org
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# gem source -r https://rubygems.org
 https://ruby.taobao.org removed from sources
 # gem sources -a https://ruby.taobao.org
 https://ruby.taobao.org added to sources
@@ -51,8 +48,6 @@ gem &amp;#39;github-pages&amp;#39;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# bundle.ruby2.1 install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;4] 切换到gitpage根目录即可  &lt;/p&gt;
-
-&lt;p&gt;后续如何在jekyll+gitpage上创建站点这里暂不做详细介绍，想要了解的话推荐这篇博文：&lt;a href=&quot;http://www.pchou.info/web-build/2014/07/04/build-github-blog-page-08.html&quot;&gt;一步步在GitHub上创建博客主页&lt;/a&gt; &lt;/p&gt;
 </description>
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
@@ -191,9 +186,7 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 		
 			<item>
 				<title>使用笔记本搭建ESXi环境</title>
-				<description>&lt;p&gt;本文记录了将一台笔记本配置成ESXi的过程。  &lt;/p&gt;
-
-&lt;h1 id=&quot;准备工作&quot;&gt;准备工作&lt;/h1&gt;
+				<description>&lt;h1 id=&quot;准备工作&quot;&gt;准备工作&lt;/h1&gt;
 
 &lt;p&gt;&lt;strong&gt;硬件：&lt;/strong&gt;  &lt;/p&gt;
 

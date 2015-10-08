@@ -83,14 +83,47 @@
     <div class="well">
         <h1><a href="/2015/10/establish-jekyll-on-suse">在OpenSUSE上搭建jekyll服务器</a></h1>
 		<p class="author">Oct 6, 2015</p>
-		<!--
-        
-          <p class="author"><a href="/2015/10/establish-jekyll-on-suse/#ds-thread">Comments</a></p>
-        
-		-->
         <div class="content">
-            <p>这个博客站点是使用gitpage+jekyll搭建而成的，为了在部署到github前在本地做测试，需要搭建jekyll+gitpage的测试服务器。<br>
-本文记录了在OpenSUSE环境下搭建jekyll+gitpage服务器的过程  </p>
+            <h2 id="安装ruby">安装Ruby</h2>
+
+<p>OpenSUSE 13.2自带了ruby2.1，无需额外安装  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># ruby --version
+ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
+</code></pre></div>
+<h2 id="安装bundler">安装bundler</h2>
+
+<p>1] 将gem源替换成国内的taobao镜像以提升速度</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># gem source -r https://rubygems.org
+https://ruby.taobao.org removed from sources
+# gem sources -a https://ruby.taobao.org
+https://ruby.taobao.org added to sources
+# gem sources
+*** CURRENT SOURCES ***
+
+https://ruby.taobao.org
+</code></pre></div>
+<p>2] 安装bundle  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># gem install bundler
+Fetching: bundler-1.10.6.gem (100%)
+Successfully installed bundler-1.10.6
+Parsing documentation for bundler-1.10.6
+Installing ri documentation for bundler-1.10.6
+Done installing documentation for bundler after 6 seconds
+1 gem installed
+</code></pre></div>
+<h2 id="使用bundler安装github-pages">使用bundler安装github-pages</h2>
+
+<p>1] 在根目录下创建<code>Gemfile</code>文件，并写入以下内容  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">source &#39;https://ruby.taobao.org&#39;
+gem &#39;github-pages&#39;
+</code></pre></div>
+<p>2] 对于全新的OpenSUSE 13.2需要额外安装以下依赖包  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># zypper install ruby-devel make zlib-devel patch gcc nodejs
+</code></pre></div>
+<p>3] 启动bundler安装github-pages，如果报错请检查一下必要的依赖包是否都装了  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># bundle.ruby2.1 install
+</code></pre></div>
+<p>4] 切换到gitpage根目录即可  </p>
 
         </div>
     </div>
@@ -100,14 +133,129 @@
     <div class="well">
         <h1><a href="/2015/10/replace-zypper-repo">快速为OpenSUSE配置国内源</a></h1>
 		<p class="author">Oct 5, 2015</p>
-		<!--
-        
-          <p class="author"><a href="/2015/10/replace-zypper-repo/#ds-thread">Comments</a></p>
-        
-		-->
         <div class="content">
             <p>OpenSUSE的YaST图形化工具用来做配置是很方便的，然而在配置下载源的时候，由于要配置的条目众多，还是略显麻烦。<br>
 这里介绍如何在命令行下，利用xargs/awk/sed工具快速的将zypper替换成国内源（以浙大的镜像为例）。   </p>
+
+<h2 id="首先查看zypper帮助文档熟悉下操作：">首先查看zypper帮助文档熟悉下操作：</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -h | less
+</code></pre></div>
+<h2 id="列出所有安装源：">列出所有安装源：</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -lr
+ | Alias                     | Name                               | Enabled | Refresh | Type
+--+---------------------------+------------------------------------+---------+---------+------
+1 | openSUSE-13.2-0           | openSUSE-13.2-0                    | Yes     | No      | yast2
+2 | repo-debug                | openSUSE-13.2-Debug                | No      | Yes     | NONE
+3 | repo-debug-update         | openSUSE-13.2-Update-Debug         | No      | Yes     | NONE
+4 | repo-debug-update-non-oss | openSUSE-13.2-Update-Debug-Non-Oss | No      | Yes     | NONE
+5 | repo-non-oss              | openSUSE-13.2-Non-Oss              | Yes     | Yes     | yast2
+6 | repo-oss                  | openSUSE-13.2-Oss                  | Yes     | Yes     | yast2
+7 | repo-source               | openSUSE-13.2-Source               | No      | Yes     | NONE
+8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
+9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
+</code></pre></div>
+<h2 id="禁用并停止更新自带源：">禁用并停止更新自带源：</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper mr -d -R --all
+</code></pre></div>
+<h2 id="配置浙大源：">配置浙大源：</h2>
+
+<p>1] 进入<code>/etc/zypp/repos.d</code>文件夹  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ ll
+total 36
+-rw-r--r-- 1 root root 191 Oct  5 23:22 openSUSE-13.2-0.repo
+-rw-r--r-- 1 root root 188 Oct  5 23:25 repo-debug-update-non-oss.repo
+-rw-r--r-- 1 root root 164 Oct  5 23:25 repo-debug-update.repo
+-rw-r--r-- 1 root root 165 Oct  5 23:25 repo-debug.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-non-oss.repo
+-rw-r--r-- 1 root root 156 Oct  5 23:25 repo-oss.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-source.repo
+-rw-r--r-- 1 root root 170 Oct  5 23:25 repo-update-non-oss.repo
+-rw-r--r-- 1 root root 146 Oct  5 23:25 repo-update.repo
+</code></pre></div>
+<p>2] 执行以下指令批量创建ZJU源(<a href="http://mirrors.zju.edu.cn/opensuse">http://mirrors.zju.edu.cn/opensuse</a>)  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ find . -name &quot;repo*&quot; | sed &#39;s/.\///g&#39; | xargs -i sh -c &quot;cat {} | sed &#39;s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g&#39; | sed &#39;s/repo-/zju\/repo-/g&#39; | sed &#39;s/openSUSE-13.2/zju\/openSUSE-13.2/g&#39; &gt; zju-{}&quot;
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | No      | No
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | No      | No
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | No      | No
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | No      | No
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | No      | No
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | No      | No
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | No      | No
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | No      | No
+</code></pre></div>
+<p>3] 执行以下指令启用zju源并打开自动更新   </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper lr | grep zju | awk &#39;{print $3}&#39; | xargs -i zypper mr -e -r {}
+Repository &#39;zju/repo-debug&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug&#39;.
+Repository &#39;zju/repo-debug-update&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug-update&#39;.
+Repository &#39;zju/repo-debug-update-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug-update-non-oss&#39;.
+Repository &#39;zju/repo-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-non-oss&#39;.
+Repository &#39;zju/repo-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-oss&#39;.
+Repository &#39;zju/repo-source&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-source&#39;.
+Repository &#39;zju/repo-update&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-update&#39;.
+Repository &#39;zju/repo-update-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-update-non-oss&#39;.
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | Yes     | Yes
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | Yes     | Yes
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | Yes     | Yes
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | Yes     | Yes
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | Yes     | Yes
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | Yes     | Yes
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | Yes     | Yes
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | Yes     | Yes
+</code></pre></div>
+<p>4] 更新源  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper refresh
+Retrieving repository &#39;zju/openSUSE-13.2-Debug&#39; metadata ............................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Debug&#39; cache .................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug&#39; metadata .....................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Debug&#39; cache ..........................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; metadata .............................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; cache ..................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Non-Oss&#39; metadata ..........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Non-Oss&#39; cache ...............................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Oss&#39; metadata ..............................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Oss&#39; cache ...................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Source&#39; metadata ...........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Source&#39; cache ................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update&#39; metadata ...........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update&#39; cache ................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; metadata ...................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; cache ........................................................................................[done]
+</code></pre></div>
+<p><EOF></p>
 
         </div>
     </div>
@@ -117,13 +265,97 @@
     <div class="well">
         <h1><a href="/2015/10/establish-esxi">使用笔记本搭建ESXi环境</a></h1>
 		<p class="author">Oct 5, 2015</p>
-		<!--
-        
-          <p class="author"><a href="/2015/10/establish-esxi/#ds-thread">Comments</a></p>
-        
-		-->
         <div class="content">
-            <p>本文记录了将一台笔记本配置成ESXi的过程。  </p>
+            <h1 id="准备工作">准备工作</h1>
+
+<p><strong>硬件：</strong>  </p>
+
+<ul>
+<li>CPU: Intel i5 520 M</li>
+<li>内存：4GB</li>
+<li>网卡: Realtek 8118/8168</li>
+</ul>
+
+<p><strong>安装介质：</strong>  </p>
+
+<ul>
+<li>4GB U盘一枚<br></li>
+</ul>
+
+<p><strong>ESXi版本：</strong>  </p>
+
+<ul>
+<li>ESXi 5.1 ISO 镜像（VMware Hypervisor）</li>
+</ul>
+
+<h1 id="为什么不安装更新的esxi-5-5或者6-0">为什么不安装更新的ESXi 5.5或者6.0?</h1>
+
+<p>其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  </p>
+
+<h2 id="【安装时报错no-compatible-network-adapter-found】">【安装时报错<code>No compatible network adapter found</code>】</h2>
+
+<p>解决方案参考<a href="http://bbs.51cto.com/thread-1165256-1-1.html">这篇文章</a> ，简单来讲：  </p>
+
+<ul>
+<li>从<a href="https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers">这个网站</a> 下载对应的网卡驱动</li>
+<li>下载并使用<a href="http://pan.baidu.com/s/1eQ2f822">ESXi-Customizer-v2.7.2</a> 将网卡驱动写入ISO镜像<br></li>
+</ul>
+
+<h2 id="【安装时提示内存不足4gb】">【安装时提示内存不足4GB】</h2>
+
+<p>坑爹啊（╯‵□′）╯︵┴─┴~~<br>
+虽然说这台笔记本号称是有&#39;4G内存&#39;，然而却被集显吃掉了部分内存，实际只有3.8G。  </p>
+
+<p><strong>安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！</strong>  </p>
+
+<p>这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃(’╥ω╥‘)  </p>
+
+<h1 id="下载esx-5-1">下载ESX 5.1</h1>
+
+<p>首先登录到<a href="http://www.vmware.com/cn">VMware官网</a> ，点击<code>下载</code>-&gt;<code>所有下载、驱动程序和工具</code> 进入到搜索页面<br>
+或者直接点击<a href="https://my.vmware.com/cn/web/vmware/downloads">这个链接</a><br>
+在该页面搜索&#39;hypervisor 5.1&#39;就可以找到对应的ISO镜像啦！<br>
+　<br>
+　<em>PS:<br>
+　你需要注册一个VMWARE帐号来获得免费使用的licence<br>
+　由于现在的最新版本是ESXi 6.x，直接点<code>下载</code>-&gt;<code>vSphere Hypervisor</code>是找不到5.x的版本的！</em>  </p>
+
+<h1 id="使用ultraiso制作安装u盘">使用UltraISO制作安装U盘</h1>
+
+<p>UltraISO可以直接<a href="https://www.baidu.com/s?wd=ultraiso">百度下载</a><br>
+<strong>注意：ESX 5.1自带了很多网卡驱动（比如常见的Realtek 8118/8168），你不需要再自制ISO了，如果按照6.0的方式自制ISO反而会报<code>No compatible network adapter found</code>的错误！</strong>  </p>
+
+<p>在UltraISO中选择<code>文件</code>-&gt;<code>打开</code>来载入ISO镜像，随后选择<code>启动</code>-&gt;<code>写入硬盘镜像</code>来制作安装U盘。<em>记得要把<code>硬盘驱动器</code>改为你的U盘哦！</em>  </p>
+
+<h1 id="安装esxi系统">安装ESXi系统</h1>
+
+<p>将做好的U盘插入笔记本，开机时长按<F12>进入boot menu，选择U盘引导进入安装向导<br>
+向导部分还是很简单的，一路根据提示选择，可以参考<a href="http://www.osyunwei.com/archives/6586.html">这篇文章</a><br>
+安装完成后又遇到了一个问题：  </p>
+
+<h2 id="【系统无法正常引导，仅提示boot-up-failed！】">【系统无法正常引导，仅提示boot up failed！】</h2>
+
+<p>一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。<br>
+在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置...<br>
+最后的解决方案如下：</p>
+
+<ul>
+<li>在一开始那个<code>Loading ESXi installer</code>的界面键入Shift+O<br></li>
+<li>下方会出现一个输入框，并且已经自动键入了<code>runweasel</code>指令<br></li>
+<li>在<code>runweasel</code>后添加<code>formatwithmbr</code>，即最后输入框中的指令变成<code>runweasel formatwithmbr</code>，回车继续安装<br></li>
+</ul>
+
+<p>这次安装完成后就可以进入ESXi系统啦！ (^o^)/<br>
+　<br>
+　<em>PS:顺手查了一下<a href="http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html">GPT和MBR的区别</a></em></p>
+
+<h2 id="安装opensuse-13-2">安装OpenSUSE 13.2</h2>
+
+<p>装完Hypervisor开始部署VM~
+首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。<br>
+随后把VM开机，载入client端上的ISO，再用<code>CTRL+ALT+INSERT</code>重启虚机即可进入安装界面，一路NEXT...<br>
+如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项<br>
+<img src="/images/2015-10-05-00/00.JPG" alt=""></p>
 
         </div>
     </div>
@@ -133,9 +365,6 @@
     <div class="well">
         <h1><a href="/2015/10/first-blog">博客搭建完成啦！</a></h1>
 		<p class="author">Oct 4, 2015</p>
-		<!--
-        
-		-->
         <div class="content">
             <h2 id="嘿，你好！">嘿，你好！</h2>
 
@@ -150,16 +379,85 @@
     <div class="well">
         <h1><a href="/2014/08/jekyll-clean-theme">Jekyll Clean Theme</a></h1>
 		<p class="author">Aug 23, 2014</p>
-		<!--
-        
-          <p class="author"><a href="/2014/08/jekyll-clean-theme/#ds-thread">Comments</a></p>
-        
-		-->
         <div class="content">
             <ul>
 <li>Get it from <a href="https://github.com/scotte/jekyll-clean">github</a>.</li>
 <li>See the <a href="https://scotte.github.io/jekyll-clean">live demo</a>.</li>
 <li>See it <a href="https://scotte.github.io">in action on my own blog</a>.</li>
+</ul>
+
+<p>Welcome to the sample post for the Jekyll Clean theme.</p>
+
+<p>A simple and clean Jekyll theme using <a href="http://getbootstrap.com">bootstrap</a>
+(not to be confused with jekyll-bootstrap) that&#39;s easy to modify and very
+modular in component and element reuse.</p>
+
+<p>It uses Disqus for comments and includes Google Analytics support. Both of
+these features are disabled by default and can be enabled via _config.yml. You
+can also rip this code out of the templates if you like (footer.html and post.html).
+The beauty of Jekyll - keep things clean... Jekyll Clean!</p>
+
+<p>The theme works well on mobile phones, using a collapsable nav bar and hiding the
+sidebar. The links pane in the sidebar is available on mobile through the nav menu,
+and you can do the same thing for any other sections added to the sidebar.</p>
+
+<p>Don&#39;t forget to occassionally merge against my upstream repository so you can get
+the latest changes. Pull requests are encouraged and accepted!</p>
+
+<h1 id="installation">Installation</h1>
+
+<p>If you don&#39;t have a blog already on github, start by cloning this repository.
+Best to do that directly on github and then clone that down to your computer.</p>
+
+<p>If you already do have a blog, You can certainly apply this theme to your existing
+blog in place, but then you won&#39;t be able to merge as the theme changes. If you
+re-apply your blog history on top of this theme&#39;s <strong>gh-pages</strong> branch, it&#39;s then
+easy to update to the latest version of the theme. You also don&#39;t want to have to
+deal with resolving old conflicts from your existing history, so you may wish to to
+push your existing master off to a new branch so you have the old history and start
+a new branch with this as the start, merging in your _posts and other assets (after
+git rm&#39;ing the current _posts.</p>
+
+<p>Not ideal, but you have to make a choice - either apply it manually or base your
+blog off this theme&#39;s branch. Either way it will work, and both have their own
+pros and cons.</p>
+
+<p>You can setup an upstream tracking repository like so:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ git remote add upstream git@github.com:scotte/jekyll-clean.git
+</code></pre></div>
+<p>And now when you wish to merge your own branch onto the latest version of the
+theme, simply do:</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ git fetch upstream
+$ git merge upstream/gh-pages
+</code></pre></div>
+<p>Of course you will have to resolve conflicts for _config.yml, _includes/links-list.html,
+and _posts, and so on, but in practice this is pretty simple.</p>
+
+<p>This is how I maintain my own blog which is based on this theme. The old history is
+sitting in an <strong>old-master</strong> branch that I can refer to when I need to.</p>
+
+<h1 id="license">License</h1>
+
+<p>The content of this theme is distributed and licensed under a
+<img src="/images/cc_by_88x31.png" alt="License Badge">
+<a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 License</a></p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">This license lets others distribute, remix, tweak, and build upon your work,
+even commercially, as long as they credit you for the original creation. This
+is the most accommodating of licenses offered. Recommended for maximum
+dissemination and use of licensed materials.
+</code></pre></div>
+<p>In other words: you can do anything you want with this theme on any site, just please
+provide a link to <a href="https://github.com/scotte/jekyll-clean">the original theme on github</a>
+so I get credit for the original design. Beyond that, have at it!</p>
+
+<p>This theme includes the following files which are the properties of their
+respective owners:</p>
+
+<ul>
+<li>js/bootstrap.min.js - <a href="http://getbootstrap.com">bootstrap</a></li>
+<li>css/bootstrap.min.css - <a href="http://getbootstrap.com">bootstrap</a></li>
+<li>js/jquery.min.js - <a href="https://jquery.com">jquery</a></li>
+<li>images/cc_by_88x31.png - <a href="https://creativecommons.org">creative commons</a></li>
 </ul>
 
         </div>
@@ -180,7 +478,7 @@
 <div class="container-fluid">
     <div class="row-fluid">
         <div class="span12 footer navbar-inverse navbar-fixed-bottom">
-            <p class="copyright">&copy;2015 ArthurMMM's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, <a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
+            <p class="copyright">&copy;2015 ArthurMMM's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, <a href="http://getbootstrap.com/">bootstrap</a>, <a href="https://jquery.com/">jquery</a>, <a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
         </div>
     </div>
 </div>

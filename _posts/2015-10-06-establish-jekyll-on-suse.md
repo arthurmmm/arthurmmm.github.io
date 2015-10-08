@@ -7,9 +7,6 @@ comments: true
 category: Linux
 ---
 
-这个博客站点是使用gitpage+jekyll搭建而成的，为了在部署到github前在本地做测试，需要搭建jekyll+gitpage的测试服务器。  
-本文记录了在OpenSUSE环境下搭建jekyll+gitpage服务器的过程  
-
 ## 安装Ruby
 
 OpenSUSE 13.2自带了ruby2.1，无需额外安装  
@@ -21,10 +18,10 @@ ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
 
 ## 安装bundler
 
-1] 将gem源替换成国内的taobao镜像以提升速度
+1] 将gem源替换成国内的taobao镜像源
 
 ```
-# gem source -r https://ruby.taobao.org
+# gem source -r https://rubygems.org
 https://ruby.taobao.org removed from sources
 # gem sources -a https://ruby.taobao.org
 https://ruby.taobao.org added to sources
@@ -68,5 +65,3 @@ gem 'github-pages'
 ```
 
 4] 切换到gitpage根目录即可  
-
-后续如何在jekyll+gitpage上创建站点这里暂不做详细介绍，想要了解的话推荐这篇博文：[一步步在GitHub上创建博客主页](http://www.pchou.info/web-build/2014/07/04/build-github-blog-page-08.html) 

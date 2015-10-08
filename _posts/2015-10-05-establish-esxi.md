@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  '使用笔记本搭建ESXi环境'
+title:  '在笔记本上搭建ESXi环境'
 date:   2015-10-05 12:31 +0800
 comments: true
 imagedir: /images/2015-10-05-00/
 category: ESXi
 ---
 
-本文记录了将一台笔记本配置成ESXi的过程。  
+博主国庆期间闲着蛋疼把闲置笔记本改造成ESXi服务器了..记录一下服务器搭建的过程和遇到的问题。
 
 # 准备工作
 

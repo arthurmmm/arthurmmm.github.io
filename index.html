@@ -7,13 +7,8 @@ layout: default
     <div class="well">
         <h1><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></h1>
 		<p class="author">{{ post.date | date: "%b %-d, %Y" }}</p>
-		<!--
-        {% if site.comments == true and post.comments == true and site.ds != '' %}
-          <p class="author"><a href="{{ site.baseurl }}{{ post.url }}/#ds-thread">Comments</a></p>
-        {% endif %}
-		-->
         <div class="content">
-            {{ post.excerpt }}
+            {{ post.content }}
         </div>
     </div>
 </div>
