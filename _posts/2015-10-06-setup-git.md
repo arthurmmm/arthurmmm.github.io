@@ -1,0 +1,53 @@
+---
+layout: post
+title:  '配置和安装GIT'
+imagedir:  /images/2015-10-06/
+date:   2015-10-06 19:53 +0800
+comments: true
+category: Linux
+---
+
+>记录一下LINUX上GITHUB的配置过程，供备忘。
+
+# 安装GIT：  
+
+1] 使用zypper安装GIT程序包：  
+
+```
+$ zypper install git
+```
+  
+2] 配置GIT用户名和邮箱：  
+
+```
+$ git config --global user.name "arthurmmm"
+$ git config --global user.email "arthur_mao@live.com"
+```   
+
+3] 生成ssh密钥：   
+
+```
+$ ssh-keygen -t rsa -C "arthur_mao@live.com"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+//不用更改目录和密码，敲3次回车即可
+```  
+
+4] 登陆`github`，展开右上角箭头找到并进入`setting`页面  
+![]({{site.baseurl}}{{page.imagedir}}00.JPG)  
+
+5] 进入右侧`SSH Keys`页面，点击`Add SSH key`，把`/root/.ssh/id_rsa.pub`中的内容复制到`Key`中再点击`Add key`   
+
+6] 测试  
+
+```
+$ ssh git@github.com
+Warning: Permanently added the RSA host key for IP address '192.30.252.128' to the list of known hosts.
+PTY allocation request failed on channel 0
+Hi arthurmmm! You've successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+```

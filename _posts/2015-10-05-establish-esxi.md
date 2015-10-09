@@ -3,11 +3,11 @@ layout: post
 title:  '在笔记本上搭建ESXi环境'
 date:   2015-10-05 12:31 +0800
 comments: true
-imagedir: /images/2015-10-05-00/
+imagedir: /images/2015-10-05/
 category: ESXi
 ---
 
-博主国庆期间闲着蛋疼把闲置笔记本改造成ESXi服务器了..记录一下服务器搭建的过程和遇到的问题。
+>让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！
 
 # 准备工作
 
@@ -25,18 +25,18 @@ category: ESXi
 
 * ESXi 5.1 ISO 镜像（VMware Hypervisor）
 
-# 为什么不安装更新的ESXi 5.5或者6.0?
+## 为什么不安装更新的ESXi 5.5或者6.0?
 
 其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  
 
-## 【安装时报错`No compatible network adapter found`】
+**【安装时报错`No compatible network adapter found`】**
 
 解决方案参考[这篇文章](http://bbs.51cto.com/thread-1165256-1-1.html) ，简单来讲：  
 
 * 从[这个网站](https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers) 下载对应的网卡驱动
 * 下载并使用[ESXi-Customizer-v2.7.2](http://pan.baidu.com/s/1eQ2f822) 将网卡驱动写入ISO镜像  
 
-## 【安装时提示内存不足4GB】
+**【安装时提示内存不足4GB】**
 
 坑爹啊（╯‵□′）╯︵┴─┴~~  
 虽然说这台笔记本号称是有'4G内存'，然而却被集显吃掉了部分内存，实际只有3.8G。  
@@ -82,7 +82,7 @@ UltraISO可以直接[百度下载](https://www.baidu.com/s?wd=ultraiso)
 　  
 　*PS:顺手查了一下[GPT和MBR的区别](http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html)*
 
-## 安装OpenSUSE 13.2  
+# 安装OpenSUSE 13.2  
 
 装完Hypervisor开始部署VM~
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。  

@@ -3,7 +3,10 @@ body {
     padding-bottom: 60px;
 	font-family: "Microsoft YaHei";
 }
-
+blockquote{  
+    font-size: 1em;
+}   
+  
 .copyright {
     color: #ffffff;
 }
@@ -23,7 +26,8 @@ body {
 
 .sidebar h2 {
     color: #000066;
-    font-size: 1em;
+    font-size: 1.1em;
+	font-weight: bold;
 }
 
 .sidebar a {
@@ -54,8 +58,8 @@ body {
 
 .well h2 {
     color: #000066;
-    font-size: 1em;
-
+    font-size: 1.1em;
+	font-weight: bold;
 }
 
 .author {

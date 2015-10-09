@@ -74,28 +74,79 @@
 	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
 </div>
 <div class="sidebar" align="center">
-	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/first-blog"/>
+	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse"/>
 </div>
         </div>
         <div class="col-sm-9">
           <div class="article">
             <div class="well">
-                <h1><a href="/2015/10/first-blog">博客搭建完成啦！</a></h1>
-				<p class="author">Oct 4, 2015</p>
+                <h1><a href="/2015/10/establish-jekyll-on-suse">在OpenSUSE上搭建jekyll服务器</a></h1>
+				<p class="author">Oct 6, 2015</p>
             <div class="post-content">
-            <h2 id="嘿，你好！">嘿，你好！</h2>
+            <blockquote>
+<p>本文简单介绍在Open SUSE环境下如何搭建本地jekyll服务器。</p>
+</blockquote>
 
-<p>我的博客终于搭完啦！！（擦汗）<br>
-目前还没有什么干货，会尽量慢慢更新哒，敬请期待╰(<em>´︶`</em>)╯♡</p>
+<h1 id="安装ruby">安装Ruby</h1>
+
+<p>OpenSUSE 13.2自带了ruby2.1，无需额外安装  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># ruby --version
+ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
+</code></pre></div>
+<h1 id="安装bundler">安装bundler</h1>
+
+<p>1] 将gem源替换成国内的taobao镜像源</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># gem source -r https://rubygems.org
+https://ruby.taobao.org removed from sources
+# gem sources -a https://ruby.taobao.org
+https://ruby.taobao.org added to sources
+# gem sources
+*** CURRENT SOURCES ***
+
+https://ruby.taobao.org
+</code></pre></div>
+<p>2] 安装bundle  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># gem install bundler
+Fetching: bundler-1.10.6.gem (100%)
+Successfully installed bundler-1.10.6
+Parsing documentation for bundler-1.10.6
+Installing ri documentation for bundler-1.10.6
+Done installing documentation for bundler after 6 seconds
+1 gem installed
+</code></pre></div>
+<h1 id="使用bundler安装github-pages">使用bundler安装github-pages</h1>
+
+<p>1] 在根目录下创建<code>Gemfile</code>文件，并写入以下内容  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">source &#39;https://ruby.taobao.org&#39;
+gem &#39;github-pages&#39;
+</code></pre></div>
+<p>2] 对于全新的OpenSUSE 13.2需要额外安装以下依赖包  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># zypper install ruby-devel make zlib-devel patch gcc nodejs
+</code></pre></div>
+<p>3] 启动bundler安装github-pages，如果报错请检查一下必要的依赖包是否都装了  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># bundle.ruby2.1 install
+</code></pre></div>
+<p>4] 在gitpage根目录下执行<code>bundle.ruby2.1 exec jekyll serve</code>即可启动服务器  </p>
+
+<h2 id="小贴士">小贴士</h2>
+
+<p>1] 由于指令比较长，建议使用alias替换，比如：  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">alias jekyll=&#39;bundle.ruby2.1 exec jekyll serve&#39;
+</code></pre></div>
+<p>2] OpenSUSE默认的防火墙会屏蔽掉4000端口，如需外部访问请配置防火墙打开4000端口！  </p>
+
+<p><a href="/images/2015-10-06/01.JPG">YaST中配置防火墙截图</a>  </p>
 
             </div>
+            
+            <div class="ds-thread" data-thread-key=/2015/10/establish-jekyll-on-suse data-title=在OpenSUSE上搭建jekyll服务器 data-url=http://arthurmmm.github.io//2015/10/establish-jekyll-on-suse></div>
             
             </div>
           </div>
           <div class="pagination">
               
-                <a class="btn btn-default" href="/2015/10/establish-esxi" class="next">Newer Post</a>
               
+                <a class="btn btn-default" href="/2015/10/setup-git" class="previous">Older Post</a>
               
 	
 		  </div>

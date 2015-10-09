@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ArthurMao's Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">ArthurMao's Blog</a>
+              </div>
+              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/">Home</a></li>
+                    <li class="active visible-xs-block"><a href="/categories.html">Categories</a></li>
+                    <li class="active"><a href="/archive.html">Archive</a></li>
+					<li class="active"><a href="/feed.xml">RSS</a></li>
+					<li class="active"><a href="/about.html">About Me</a></li>
+                </ul>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container container-left">
+    <div class="row">
+        <div class="col-sm-3 hidden-xs">
+            
+<div class="sidebar well">
+    <h1>Recent Posts</h1>
+    <ul>
+        
+          <li><a href="/2015/10/establish-jekyll-on-suse">在OpenSUSE上搭建jekyll服务器</a></li>
+        
+          <li><a href="/2015/10/setup-git">配置和安装GIT</a></li>
+        
+          <li><a href="/2015/10/replace-zypper-repo">快速为OpenSUSE配置国内源</a></li>
+        
+          <li><a href="/2015/10/establish-esxi">在笔记本上搭建ESXi环境</a></li>
+        
+          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
+        
+    </ul>
+</div>
+
+<div class="sidebar well">
+    <h1>Categories</h1>
+    <ul>
+        
+			<li><a href="/categories.html#esxi">esxi  [1]</a></li>
+        
+			<li><a href="/categories.html#linux">linux  [3]</a></li>
+        
+    </ul>
+</div>
+<div class="sidebar" align="center">
+	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
+</div>
+<div class="sidebar" align="center">
+	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/replace-zypper-repo"/>
+</div>
+        </div>
+        <div class="col-sm-9">
+          <div class="article">
+            <div class="well">
+                <h1><a href="/2015/10/replace-zypper-repo">快速为OpenSUSE配置国内源</a></h1>
+				<p class="author">Oct 5, 2015</p>
+            <div class="post-content">
+            <blockquote>
+<p>OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
+本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。</p>
+</blockquote>
+
+<h1 id="查看zypper帮助文档：">查看zypper帮助文档：</h1>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -h | less
+</code></pre></div>
+<h1 id="列出所有安装源：">列出所有安装源：</h1>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -lr
+ | Alias                     | Name                               | Enabled | Refresh | Type
+--+---------------------------+------------------------------------+---------+---------+------
+1 | openSUSE-13.2-0           | openSUSE-13.2-0                    | Yes     | No      | yast2
+2 | repo-debug                | openSUSE-13.2-Debug                | No      | Yes     | NONE
+3 | repo-debug-update         | openSUSE-13.2-Update-Debug         | No      | Yes     | NONE
+4 | repo-debug-update-non-oss | openSUSE-13.2-Update-Debug-Non-Oss | No      | Yes     | NONE
+5 | repo-non-oss              | openSUSE-13.2-Non-Oss              | Yes     | Yes     | yast2
+6 | repo-oss                  | openSUSE-13.2-Oss                  | Yes     | Yes     | yast2
+7 | repo-source               | openSUSE-13.2-Source               | No      | Yes     | NONE
+8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
+9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
+</code></pre></div>
+<h1 id="禁用并停止更新自带源：">禁用并停止更新自带源：</h1>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper mr -d -R --all
+</code></pre></div>
+<h1 id="配置浙大源：">配置浙大源：</h1>
+
+<p>1] 进入<code>/etc/zypp/repos.d</code>文件夹  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ ll
+total 36
+-rw-r--r-- 1 root root 191 Oct  5 23:22 openSUSE-13.2-0.repo
+-rw-r--r-- 1 root root 188 Oct  5 23:25 repo-debug-update-non-oss.repo
+-rw-r--r-- 1 root root 164 Oct  5 23:25 repo-debug-update.repo
+-rw-r--r-- 1 root root 165 Oct  5 23:25 repo-debug.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-non-oss.repo
+-rw-r--r-- 1 root root 156 Oct  5 23:25 repo-oss.repo
+-rw-r--r-- 1 root root 168 Oct  5 23:25 repo-source.repo
+-rw-r--r-- 1 root root 170 Oct  5 23:25 repo-update-non-oss.repo
+-rw-r--r-- 1 root root 146 Oct  5 23:25 repo-update.repo
+</code></pre></div>
+<p>2] 执行以下指令批量创建ZJU源(<a href="http://mirrors.zju.edu.cn/opensuse">http://mirrors.zju.edu.cn/opensuse</a>)  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ find . -name &quot;repo*&quot; | sed &#39;s/.\///g&#39; | xargs -i sh -c &quot;cat {} | sed &#39;s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g&#39; | sed &#39;s/repo-/zju\/repo-/g&#39; | sed &#39;s/openSUSE-13.2/zju\/openSUSE-13.2/g&#39; &gt; zju-{}&quot;
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | No      | No
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | No      | No
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | No      | No
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | No      | No
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | No      | No
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | No      | No
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | No      | No
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | No      | No
+</code></pre></div>
+<p>3] 执行以下指令启用zju源并打开自动更新   </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper lr | grep zju | awk &#39;{print $3}&#39; | xargs -i zypper mr -e -r {}
+Repository &#39;zju/repo-debug&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug&#39;.
+Repository &#39;zju/repo-debug-update&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug-update&#39;.
+Repository &#39;zju/repo-debug-update-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-debug-update-non-oss&#39;.
+Repository &#39;zju/repo-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-non-oss&#39;.
+Repository &#39;zju/repo-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-oss&#39;.
+Repository &#39;zju/repo-source&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-source&#39;.
+Repository &#39;zju/repo-update&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-update&#39;.
+Repository &#39;zju/repo-update-non-oss&#39; has been successfully enabled.
+Autorefresh has been enabled for repository &#39;zju/repo-update-non-oss&#39;.
+
+$ zypper lr
+#  | Alias                         | Name                                   | Enabled | Refresh
+---+-------------------------------+----------------------------------------+---------+--------
+ 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
+ 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
+ 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
+ 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
+ 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
+ 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
+ 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
+ 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
+ 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
+10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | Yes     | Yes
+11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | Yes     | Yes
+12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | Yes     | Yes
+13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | Yes     | Yes
+14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | Yes     | Yes
+15 | zju/repo-source               | zju/openSUSE-13.2-Source               | Yes     | Yes
+16 | zju/repo-update               | zju/openSUSE-13.2-Update               | Yes     | Yes
+17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | Yes     | Yes
+</code></pre></div>
+<p>4] 更新源  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper refresh
+Retrieving repository &#39;zju/openSUSE-13.2-Debug&#39; metadata ............................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Debug&#39; cache .................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug&#39; metadata .....................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Debug&#39; cache ..........................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; metadata .............................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; cache ..................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Non-Oss&#39; metadata ..........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Non-Oss&#39; cache ...............................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Oss&#39; metadata ..............................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Oss&#39; cache ...................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Source&#39; metadata ...........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Source&#39; cache ................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update&#39; metadata ...........................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update&#39; cache ................................................................................................[done]
+Retrieving repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; metadata ...................................................................................[done]
+Building repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; cache ........................................................................................[done]
+</code></pre></div>
+<p><EOF></p>
+
+            </div>
+            
+            <div class="ds-thread" data-thread-key=/2015/10/replace-zypper-repo data-title=快速为OpenSUSE配置国内源 data-url=http://arthurmmm.github.io//2015/10/replace-zypper-repo></div>
+            
+            </div>
+          </div>
+          <div class="pagination">
+              
+                <a class="btn btn-default" href="/2015/10/setup-git" class="next">Newer Post</a>
+              
+              
+                <a class="btn btn-default" href="/2015/10/establish-esxi" class="previous">Older Post</a>
+              
+	
+		  </div>
+        </div>
+		
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"arthurmmm"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12 footer navbar-inverse navbar-fixed-bottom">
+            <p class="copyright">&copy;2015 ArthurMao's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, <a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
+        </div>
+    </div>
+</div>
+
+
+  <script type="text/javascript">
+    var disqus_shortname = '';
+
+   (function () {
+     var s = document.createElement('script'); s.async = true;
+     s.type = 'text/javascript';
+     s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+     (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+   }());
+ </script>
+
+
+
+
+
+</body>
+</html>
+

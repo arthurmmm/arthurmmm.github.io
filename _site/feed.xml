@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>ArthurMMM's Blog</title>
+		<title>ArthurMao's Blog</title>
 		<description>你好喵 ・ω・~☆</description>
 		<link>http://arthurmmm.github.io</link>
 		<atom:link href="http://arthurmmm.github.io/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
 				<title>在OpenSUSE上搭建jekyll服务器</title>
-				<description>&lt;h2 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h2&gt;
+				<description>&lt;blockquote&gt;
+&lt;p&gt;本文简单介绍在Open SUSE环境下如何搭建本地jekyll服务器。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h1&gt;
 
 &lt;p&gt;OpenSUSE 13.2自带了ruby2.1，无需额外安装  &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# ruby --version
 ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;安装bundler&quot;&gt;安装bundler&lt;/h2&gt;
+&lt;h1 id=&quot;安装bundler&quot;&gt;安装bundler&lt;/h1&gt;
 
-&lt;p&gt;1] 将gem源替换成国内的taobao镜像以提升速度&lt;/p&gt;
+&lt;p&gt;1] 将gem源替换成国内的taobao镜像源&lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# gem source -r https://rubygems.org
 https://ruby.taobao.org removed from sources
 # gem sources -a https://ruby.taobao.org
@@ -35,7 +39,7 @@ Installing ri documentation for bundler-1.10.6
 Done installing documentation for bundler after 6 seconds
 1 gem installed
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;使用bundler安装github-pages&quot;&gt;使用bundler安装github-pages&lt;/h2&gt;
+&lt;h1 id=&quot;使用bundler安装github-pages&quot;&gt;使用bundler安装github-pages&lt;/h1&gt;
 
 &lt;p&gt;1] 在根目录下创建&lt;code&gt;Gemfile&lt;/code&gt;文件，并写入以下内容  &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;source &amp;#39;https://ruby.taobao.org&amp;#39;
@@ -47,7 +51,16 @@ gem &amp;#39;github-pages&amp;#39;
 &lt;p&gt;3] 启动bundler安装github-pages，如果报错请检查一下必要的依赖包是否都装了  &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# bundle.ruby2.1 install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;4] 切换到gitpage根目录即可  &lt;/p&gt;
+&lt;p&gt;4] 在gitpage根目录下执行&lt;code&gt;bundle.ruby2.1 exec jekyll serve&lt;/code&gt;即可启动服务器  &lt;/p&gt;
+
+&lt;h2 id=&quot;小贴士&quot;&gt;小贴士&lt;/h2&gt;
+
+&lt;p&gt;1] 由于指令比较长，建议使用alias替换，比如：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;alias jekyll=&amp;#39;bundle.ruby2.1 exec jekyll serve&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] OpenSUSE默认的防火墙会屏蔽掉4000端口，如需外部访问请配置防火墙打开4000端口！  &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/2015-10-06/01.JPG&quot;&gt;YaST中配置防火墙截图&lt;/a&gt;  &lt;/p&gt;
 </description>
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
@@ -55,14 +68,58 @@ gem &amp;#39;github-pages&amp;#39;
 			</item>
 		
 			<item>
-				<title>快速为OpenSUSE配置国内源</title>
-				<description>&lt;p&gt;OpenSUSE的YaST图形化工具用来做配置是很方便的，然而在配置下载源的时候，由于要配置的条目众多，还是略显麻烦。&lt;br&gt;
-这里介绍如何在命令行下，利用xargs/awk/sed工具快速的将zypper替换成国内源（以浙大的镜像为例）。   &lt;/p&gt;
+				<title>配置和安装GIT</title>
+				<description>&lt;blockquote&gt;
+&lt;p&gt;记录一下LINUX上GITHUB的配置过程，供备忘。&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;h2 id=&quot;首先查看zypper帮助文档熟悉下操作：&quot;&gt;首先查看zypper帮助文档熟悉下操作：&lt;/h2&gt;
+&lt;h1 id=&quot;安装git：&quot;&gt;安装GIT：&lt;/h1&gt;
+
+&lt;p&gt;1] 使用zypper安装GIT程序包：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper install git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 配置GIT用户名和邮箱：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git config --global user.name &amp;quot;arthurmmm&amp;quot;
+$ git config --global user.email &amp;quot;arthur_mao@live.com&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 生成ssh密钥：   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh-keygen -t rsa -C &amp;quot;arthur_mao@live.com&amp;quot;
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+//不用更改目录和密码，敲3次回车即可
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 登陆&lt;code&gt;github&lt;/code&gt;，展开右上角箭头找到并进入&lt;code&gt;setting&lt;/code&gt;页面&lt;br&gt;
+&lt;img src=&quot;/images/2015-10-06/00.JPG&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+
+&lt;p&gt;5] 进入右侧&lt;code&gt;SSH Keys&lt;/code&gt;页面，点击&lt;code&gt;Add SSH key&lt;/code&gt;，把&lt;code&gt;/root/.ssh/id_rsa.pub&lt;/code&gt;中的内容复制到&lt;code&gt;Key&lt;/code&gt;中再点击&lt;code&gt;Add key&lt;/code&gt;   &lt;/p&gt;
+
+&lt;p&gt;6] 测试  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh git@github.com
+Warning: Permanently added the RSA host key for IP address &amp;#39;192.30.252.128&amp;#39; to the list of known hosts.
+PTY allocation request failed on channel 0
+Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+				<pubDate>Tue, 06 Oct 2015 19:53:00 +0800</pubDate>
+				<link>http://arthurmmm.github.io/2015/10/setup-git</link>
+				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/setup-git</guid>
+			</item>
+		
+			<item>
+				<title>快速为OpenSUSE配置国内源</title>
+				<description>&lt;blockquote&gt;
+&lt;p&gt;OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
+本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;查看zypper帮助文档：&quot;&gt;查看zypper帮助文档：&lt;/h1&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -h | less
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;列出所有安装源：&quot;&gt;列出所有安装源：&lt;/h2&gt;
+&lt;h1 id=&quot;列出所有安装源：&quot;&gt;列出所有安装源：&lt;/h1&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -lr
  | Alias                     | Name                               | Enabled | Refresh | Type
 --+---------------------------+------------------------------------+---------+---------+------
@@ -76,10 +133,10 @@ gem &amp;#39;github-pages&amp;#39;
 8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
 9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;禁用并停止更新自带源：&quot;&gt;禁用并停止更新自带源：&lt;/h2&gt;
+&lt;h1 id=&quot;禁用并停止更新自带源：&quot;&gt;禁用并停止更新自带源：&lt;/h1&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper mr -d -R --all
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;配置浙大源：&quot;&gt;配置浙大源：&lt;/h2&gt;
+&lt;h1 id=&quot;配置浙大源：&quot;&gt;配置浙大源：&lt;/h1&gt;
 
 &lt;p&gt;1] 进入&lt;code&gt;/etc/zypp/repos.d&lt;/code&gt;文件夹  &lt;/p&gt;
 &lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ll
@@ -185,8 +242,12 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 			</item>
 		
 			<item>
-				<title>使用笔记本搭建ESXi环境</title>
-				<description>&lt;h1 id=&quot;准备工作&quot;&gt;准备工作&lt;/h1&gt;
+				<title>在笔记本上搭建ESXi环境</title>
+				<description>&lt;blockquote&gt;
+&lt;p&gt;让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h1 id=&quot;准备工作&quot;&gt;准备工作&lt;/h1&gt;
 
 &lt;p&gt;&lt;strong&gt;硬件：&lt;/strong&gt;  &lt;/p&gt;
 
@@ -208,11 +269,11 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 &lt;li&gt;ESXi 5.1 ISO 镜像（VMware Hypervisor）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;为什么不安装更新的esxi-5-5或者6-0&quot;&gt;为什么不安装更新的ESXi 5.5或者6.0?&lt;/h1&gt;
+&lt;h2 id=&quot;为什么不安装更新的esxi-5-5或者6-0&quot;&gt;为什么不安装更新的ESXi 5.5或者6.0?&lt;/h2&gt;
 
 &lt;p&gt;其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  &lt;/p&gt;
 
-&lt;h2 id=&quot;【安装时报错no-compatible-network-adapter-found】&quot;&gt;【安装时报错&lt;code&gt;No compatible network adapter found&lt;/code&gt;】&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;【安装时报错&lt;code&gt;No compatible network adapter found&lt;/code&gt;】&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;解决方案参考&lt;a href=&quot;http://bbs.51cto.com/thread-1165256-1-1.html&quot;&gt;这篇文章&lt;/a&gt; ，简单来讲：  &lt;/p&gt;
 
@@ -221,7 +282,7 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 &lt;li&gt;下载并使用&lt;a href=&quot;http://pan.baidu.com/s/1eQ2f822&quot;&gt;ESXi-Customizer-v2.7.2&lt;/a&gt; 将网卡驱动写入ISO镜像&lt;br&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;【安装时提示内存不足4gb】&quot;&gt;【安装时提示内存不足4GB】&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;【安装时提示内存不足4GB】&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;坑爹啊（╯‵□′）╯︵┴─┴~~&lt;br&gt;
 虽然说这台笔记本号称是有&amp;#39;4G内存&amp;#39;，然而却被集显吃掉了部分内存，实际只有3.8G。  &lt;/p&gt;
@@ -269,13 +330,13 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 　&lt;br&gt;
 　&lt;em&gt;PS:顺手查了一下&lt;a href=&quot;http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html&quot;&gt;GPT和MBR的区别&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;安装opensuse-13-2&quot;&gt;安装OpenSUSE 13.2&lt;/h2&gt;
+&lt;h1 id=&quot;安装opensuse-13-2&quot;&gt;安装OpenSUSE 13.2&lt;/h1&gt;
 
 &lt;p&gt;装完Hypervisor开始部署VM~
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。&lt;br&gt;
 随后把VM开机，载入client端上的ISO，再用&lt;code&gt;CTRL+ALT+INSERT&lt;/code&gt;重启虚机即可进入安装界面，一路NEXT...&lt;br&gt;
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项&lt;br&gt;
-&lt;img src=&quot;/images/2015-10-05-00/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;img src=&quot;/images/2015-10-05/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
 </description>
 				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-esxi</link>
@@ -292,93 +353,6 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 				<pubDate>Sun, 04 Oct 2015 23:34:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/first-blog</link>
 				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/first-blog</guid>
-			</item>
-		
-			<item>
-				<title>Jekyll Clean Theme</title>
-				<description>&lt;ul&gt;
-&lt;li&gt;Get it from &lt;a href=&quot;https://github.com/scotte/jekyll-clean&quot;&gt;github&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;See the &lt;a href=&quot;https://scotte.github.io/jekyll-clean&quot;&gt;live demo&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;See it &lt;a href=&quot;https://scotte.github.io&quot;&gt;in action on my own blog&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Welcome to the sample post for the Jekyll Clean theme.&lt;/p&gt;
-
-&lt;p&gt;A simple and clean Jekyll theme using &lt;a href=&quot;http://getbootstrap.com&quot;&gt;bootstrap&lt;/a&gt;
-(not to be confused with jekyll-bootstrap) that&amp;#39;s easy to modify and very
-modular in component and element reuse.&lt;/p&gt;
-
-&lt;p&gt;It uses Disqus for comments and includes Google Analytics support. Both of
-these features are disabled by default and can be enabled via _config.yml. You
-can also rip this code out of the templates if you like (footer.html and post.html).
-The beauty of Jekyll - keep things clean... Jekyll Clean!&lt;/p&gt;
-
-&lt;p&gt;The theme works well on mobile phones, using a collapsable nav bar and hiding the
-sidebar. The links pane in the sidebar is available on mobile through the nav menu,
-and you can do the same thing for any other sections added to the sidebar.&lt;/p&gt;
-
-&lt;p&gt;Don&amp;#39;t forget to occassionally merge against my upstream repository so you can get
-the latest changes. Pull requests are encouraged and accepted!&lt;/p&gt;
-
-&lt;h1 id=&quot;installation&quot;&gt;Installation&lt;/h1&gt;
-
-&lt;p&gt;If you don&amp;#39;t have a blog already on github, start by cloning this repository.
-Best to do that directly on github and then clone that down to your computer.&lt;/p&gt;
-
-&lt;p&gt;If you already do have a blog, You can certainly apply this theme to your existing
-blog in place, but then you won&amp;#39;t be able to merge as the theme changes. If you
-re-apply your blog history on top of this theme&amp;#39;s &lt;strong&gt;gh-pages&lt;/strong&gt; branch, it&amp;#39;s then
-easy to update to the latest version of the theme. You also don&amp;#39;t want to have to
-deal with resolving old conflicts from your existing history, so you may wish to to
-push your existing master off to a new branch so you have the old history and start
-a new branch with this as the start, merging in your _posts and other assets (after
-git rm&amp;#39;ing the current _posts.&lt;/p&gt;
-
-&lt;p&gt;Not ideal, but you have to make a choice - either apply it manually or base your
-blog off this theme&amp;#39;s branch. Either way it will work, and both have their own
-pros and cons.&lt;/p&gt;
-
-&lt;p&gt;You can setup an upstream tracking repository like so:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git remote add upstream git@github.com:scotte/jekyll-clean.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;And now when you wish to merge your own branch onto the latest version of the
-theme, simply do:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git fetch upstream
-$ git merge upstream/gh-pages
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Of course you will have to resolve conflicts for _config.yml, _includes/links-list.html,
-and _posts, and so on, but in practice this is pretty simple.&lt;/p&gt;
-
-&lt;p&gt;This is how I maintain my own blog which is based on this theme. The old history is
-sitting in an &lt;strong&gt;old-master&lt;/strong&gt; branch that I can refer to when I need to.&lt;/p&gt;
-
-&lt;h1 id=&quot;license&quot;&gt;License&lt;/h1&gt;
-
-&lt;p&gt;The content of this theme is distributed and licensed under a
-&lt;img src=&quot;/images/cc_by_88x31.png&quot; alt=&quot;License Badge&quot;&gt;
-&lt;a href=&quot;https://creativecommons.org/licenses/by/4.0/legalcode&quot;&gt;Creative Commons Attribution 4.0 License&lt;/a&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;This license lets others distribute, remix, tweak, and build upon your work,
-even commercially, as long as they credit you for the original creation. This
-is the most accommodating of licenses offered. Recommended for maximum
-dissemination and use of licensed materials.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;In other words: you can do anything you want with this theme on any site, just please
-provide a link to &lt;a href=&quot;https://github.com/scotte/jekyll-clean&quot;&gt;the original theme on github&lt;/a&gt;
-so I get credit for the original design. Beyond that, have at it!&lt;/p&gt;
-
-&lt;p&gt;This theme includes the following files which are the properties of their
-respective owners:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;js/bootstrap.min.js - &lt;a href=&quot;http://getbootstrap.com&quot;&gt;bootstrap&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;css/bootstrap.min.css - &lt;a href=&quot;http://getbootstrap.com&quot;&gt;bootstrap&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;js/jquery.min.js - &lt;a href=&quot;https://jquery.com&quot;&gt;jquery&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;images/cc_by_88x31.png - &lt;a href=&quot;https://creativecommons.org&quot;&gt;creative commons&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				<pubDate>Sat, 23 Aug 2014 07:25:06 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2014/08/jekyll-clean-theme</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2014/08/jekyll-clean-theme</guid>
 			</item>
 		
 	</channel>
