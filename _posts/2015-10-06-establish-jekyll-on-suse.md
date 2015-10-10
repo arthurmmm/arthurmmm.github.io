@@ -7,7 +7,7 @@ comments: true
 category: Linux
 ---
 
-简单介绍在Open SUSE环境下搭建本地jekyll服务器的步骤
+Open SUSE环境下搭建本地jekyll服务器的步骤
 
 ## 安装Ruby
 

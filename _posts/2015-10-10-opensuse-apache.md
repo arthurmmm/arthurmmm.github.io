@@ -7,6 +7,6 @@ comments: true
 category: Linux
 ---
 
-简要介绍在OpenSUSE 13.2上搭建apache+SQLite服务器的步骤
+OpenSUSE 13.2上搭建apache+SQLite服务器的步骤
 
 TODO
