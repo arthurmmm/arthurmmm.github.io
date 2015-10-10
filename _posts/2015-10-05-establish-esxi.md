@@ -87,6 +87,6 @@ UltraISO可以直接[百度下载](https://www.baidu.com/s?wd=ultraiso)
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。  
 随后把VM开机，载入client端上的ISO，再用`CTRL+ALT+INSERT`重启虚机即可进入安装界面，一路NEXT...  
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项  
-![]({{site.baseurl}}{{page.imagedir}}00.JPG)
+[![]({{site.baseurl}}{{page.imagedir}}00.JPG)]({{site.baseurl}}{{page.imagedir}}00.JPG)
 
 

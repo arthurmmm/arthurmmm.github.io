@@ -78,4 +78,4 @@ alias jekyll='bundle.ruby2.1 exec jekyll serve'
 
 2] OpenSUSE默认的防火墙会屏蔽掉4000端口，如需外部访问请配置防火墙打开4000端口！  
 
-[YaST中配置防火墙截图]({{site.baseurl}}{{page.imagedir}}01.JPG)  
+[![]({{site.baseurl}}{{page.imagedir}}01.JPG)]({{site.baseurl}}{{page.imagedir}}01.JPG)  

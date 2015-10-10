@@ -8,7 +8,7 @@
 		
 			<item>
 				<title>OpenSUSE搭建apache+SQLite</title>
-				<description>&lt;p&gt;简要介绍在OpenSUSE 13.2上搭建apache+SQLite服务器的步骤&lt;/p&gt;
+				<description>&lt;p&gt;OpenSUSE 13.2上搭建apache+SQLite服务器的步骤&lt;/p&gt;
 
 &lt;p&gt;TODO&lt;/p&gt;
 </description>
@@ -19,7 +19,7 @@
 		
 			<item>
 				<title>OpenSUSE搭建jekyll服务器</title>
-				<description>&lt;p&gt;简单介绍在Open SUSE环境下搭建本地jekyll服务器的步骤&lt;/p&gt;
+				<description>&lt;p&gt;Open SUSE环境下搭建本地jekyll服务器的步骤&lt;/p&gt;
 
 &lt;h2 id=&quot;安装ruby&quot;&gt;安装Ruby&lt;/h2&gt;
 
@@ -69,7 +69,7 @@ gem &amp;#39;github-pages&amp;#39;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;2] OpenSUSE默认的防火墙会屏蔽掉4000端口，如需外部访问请配置防火墙打开4000端口！  &lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/images/2015-10-06/01.JPG&quot;&gt;YaST中配置防火墙截图&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/images/2015-10-06/01.JPG&quot;&gt;&lt;img src=&quot;/images/2015-10-06/01.JPG&quot; alt=&quot;&quot;&gt;&lt;/a&gt;  &lt;/p&gt;
 </description>
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
@@ -78,7 +78,7 @@ gem &amp;#39;github-pages&amp;#39;
 		
 			<item>
 				<title>配置和安装GIT</title>
-				<description>&lt;p&gt;记录一下LINUX上GITHUB的配置过程，供备忘。&lt;/p&gt;
+				<description>&lt;p&gt;LINUX上GITHUB的配置过程，供备忘。&lt;/p&gt;
 
 &lt;h2 id=&quot;安装git：&quot;&gt;安装GIT：&lt;/h2&gt;
 
@@ -338,7 +338,7 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。&lt;br&gt;
 随后把VM开机，载入client端上的ISO，再用&lt;code&gt;CTRL+ALT+INSERT&lt;/code&gt;重启虚机即可进入安装界面，一路NEXT...&lt;br&gt;
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项&lt;br&gt;
-&lt;img src=&quot;/images/2015-10-05/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;a href=&quot;/images/2015-10-05/00.JPG&quot;&gt;&lt;img src=&quot;/images/2015-10-05/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
 </description>
 				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-esxi</link>
