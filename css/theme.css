@@ -1,3 +1,6 @@
+html { 
+	overflow: scroll; 
+}
 body {
     padding-top: 60px;
     padding-bottom: 60px;
@@ -9,6 +12,22 @@ blockquote{
 }   
 pre{
 	font-size: 0.9em;
+}
+
+h1 {
+    color: #ee4444;
+    font-size: 1.8em;
+}
+
+h2 {
+    color: #ee4444;
+    font-size: 1.3em;
+}
+
+h3 {
+    color: #000066;
+    font-size: 1.1em;
+	font-weight: bold;
 }
 
 .copyright {
@@ -25,7 +44,7 @@ pre{
 
 .sidebar h1 {
     color: #ee4444;
-    font-size: 1.3em;
+    font-size: 1.8em;
 }
 
 .sidebar ul li span {
@@ -45,11 +64,14 @@ pre{
 
 .sidebar ul{
 	padding-left: 20px;
+	list-style: none;
 }
 
 .sidebar li {
-    margin-top: .7em;
+    margin-top: 1em;
+	padding-bottom: 0.5em;
     line-height: 1em;
+	border-bottom: 1px solid #969696;
 }
 
 .sidebar a:hover {
@@ -62,22 +84,6 @@ pre{
 
 .language-text{
 	font-family: "Courier New";
-}
-
-.well h1 {
-    color: #ee4444;
-    font-size: 1.8em;
-}
-
-.well h2 {
-    color: #ee4444;
-    font-size: 1.3em;
-}
-
-.well h3 {
-    color: #000066;
-    font-size: 1.1em;
-	font-weight: bold;
 }
 
 .author {
