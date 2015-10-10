@@ -7,17 +7,6 @@
 		<atom:link href="http://arthurmmm.github.io/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>OpenSUSE搭建apache+SQLite</title>
-				<description>&lt;p&gt;OpenSUSE 13.2上搭建apache+SQLite服务器的步骤&lt;/p&gt;
-
-&lt;p&gt;TODO&lt;/p&gt;
-</description>
-				<pubDate>Sat, 10 Oct 2015 16:04:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/opensuse-apache</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/opensuse-apache</guid>
-			</item>
-		
-			<item>
 				<title>OpenSUSE搭建jekyll服务器</title>
 				<description>&lt;p&gt;Open SUSE环境下搭建本地jekyll服务器的步骤&lt;/p&gt;
 
@@ -74,46 +63,6 @@ gem &amp;#39;github-pages&amp;#39;
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
 				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</guid>
-			</item>
-		
-			<item>
-				<title>配置和安装GIT</title>
-				<description>&lt;p&gt;LINUX上GITHUB的配置过程，供备忘。&lt;/p&gt;
-
-&lt;h2 id=&quot;安装git：&quot;&gt;安装GIT：&lt;/h2&gt;
-
-&lt;p&gt;1] 使用zypper安装GIT程序包：  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper install git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;2] 配置GIT用户名和邮箱：  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git config --global user.name &amp;quot;arthurmmm&amp;quot;
-$ git config --global user.email &amp;quot;arthur_mao@live.com&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;3] 生成ssh密钥：   &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh-keygen -t rsa -C &amp;quot;arthur_mao@live.com&amp;quot;
-Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/id_rsa.
-Your public key has been saved in /root/.ssh/id_rsa.pub.
-//不用更改目录和密码，敲3次回车即可
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;4] 登陆&lt;code&gt;github&lt;/code&gt;，展开右上角箭头找到并进入&lt;code&gt;setting&lt;/code&gt;页面&lt;br&gt;
-&lt;img src=&quot;/images/2015-10-06/00.JPG&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
-
-&lt;p&gt;5] 进入右侧&lt;code&gt;SSH Keys&lt;/code&gt;页面，点击&lt;code&gt;Add SSH key&lt;/code&gt;，把&lt;code&gt;/root/.ssh/id_rsa.pub&lt;/code&gt;中的内容复制到&lt;code&gt;Key&lt;/code&gt;中再点击&lt;code&gt;Add key&lt;/code&gt;   &lt;/p&gt;
-
-&lt;p&gt;6] 测试  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh git@github.com
-Warning: Permanently added the RSA host key for IP address &amp;#39;192.30.252.128&amp;#39; to the list of known hosts.
-PTY allocation request failed on channel 0
-Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-				<pubDate>Tue, 06 Oct 2015 19:53:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/setup-git</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/setup-git</guid>
 			</item>
 		
 			<item>
@@ -339,7 +288,38 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 随后把VM开机，载入client端上的ISO，再用&lt;code&gt;CTRL+ALT+INSERT&lt;/code&gt;重启虚机即可进入安装界面，一路NEXT...&lt;br&gt;
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项&lt;br&gt;
 &lt;a href=&quot;/images/2015-10-05/00.JPG&quot;&gt;&lt;img src=&quot;/images/2015-10-05/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-</description>
+
+&lt;h2 id=&quot;配置和安装git&quot;&gt;配置和安装GIT&lt;/h2&gt;
+
+&lt;p&gt;1] 使用zypper安装GIT程序包：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper install git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 配置GIT用户名和邮箱：  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git config --global user.name &amp;quot;arthurmmm&amp;quot;
+$ git config --global user.email &amp;quot;arthur_mao@live.com&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 生成ssh密钥：   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh-keygen -t rsa -C &amp;quot;arthur_mao@live.com&amp;quot;
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+//不用更改目录和密码，敲3次回车即可
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 登陆&lt;code&gt;github&lt;/code&gt;，展开右上角箭头找到并进入&lt;code&gt;setting&lt;/code&gt;页面&lt;br&gt;
+&lt;img src=&quot;/images/2015-10-05/01.JPG&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
+
+&lt;p&gt;5] 进入右侧&lt;code&gt;SSH Keys&lt;/code&gt;页面，点击&lt;code&gt;Add SSH key&lt;/code&gt;，把&lt;code&gt;/root/.ssh/id_rsa.pub&lt;/code&gt;中的内容复制到&lt;code&gt;Key&lt;/code&gt;中再点击&lt;code&gt;Add key&lt;/code&gt;   &lt;/p&gt;
+
+&lt;p&gt;6] 测试  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh git@github.com
+Warning: Permanently added the RSA host key for IP address &amp;#39;192.30.252.128&amp;#39; to the list of known hosts.
+PTY allocation request failed on channel 0
+Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
 				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
 				<link>http://arthurmmm.github.io/2015/10/establish-esxi</link>
 				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-esxi</guid>
