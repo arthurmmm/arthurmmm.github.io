@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  '快速为OpenSUSE配置国内源'
+title:  'OpenSUSE配置国内源'
 date:   2015-10-05 23:31 +0800
 comments: true
 category: Linux

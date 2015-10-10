@@ -24,6 +24,11 @@ blockquote{
     font-size: 1.3em;
 }
 
+.sidebar ul li span {
+    float: right;
+	color: #428bca;
+}
+
 .sidebar h2 {
     color: #000066;
     font-size: 1.1em;

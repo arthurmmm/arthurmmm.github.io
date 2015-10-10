@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  '在笔记本上搭建ESXi环境'
+title:  '笔记本搭建ESXi服务器'
 date:   2015-10-05 12:31 +0800
 comments: true
 imagedir: /images/2015-10-05/
