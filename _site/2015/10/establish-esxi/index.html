@@ -9,6 +9,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/theme.css" rel="stylesheet">
+	
+	<link href="/css/pygments.css" rel="stylesheet">
 </head>
 
 <body>
@@ -39,15 +41,15 @@
 </div>
 
 
-<div class="container container-left">
+<div class="container container-left col-sm-12">
     <div class="row">
         <div class="col-sm-3 hidden-xs">
             
 <div class="sidebar well">
-    <h1>Recent Posts</h1>
+    <h1>最新文章</h1>
     <ul>
         
-          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache + SQLite</a></li>
+          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache+SQLite</a></li>
         
           <li><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></li>
         
@@ -57,11 +59,13 @@
         
           <li><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></li>
         
+          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
+        
     </ul>
 </div>
 
 <div class="sidebar well">
-    <h1>Categories</h1>
+    <h1>文章分类</h1>
     <ul>
         
 			<li><a href="/categories.html#esxi">esxi</a><span>[1]</span></li>
@@ -70,24 +74,26 @@
         
     </ul>
 </div>
+
 <div class="sidebar" align="center">
 	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
 </div>
 <div class="sidebar" align="center">
-	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/establish-esxi"/>
+	<img width="200" height="200" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/establish-esxi"/>
 </div>
+
         </div>
         <div class="col-sm-9">
           <div class="article">
             <div class="well">
-                <h1><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></h1>
-				<p class="author">Oct 5, 2015</p>
-            <div class="post-content">
-            <blockquote>
-<p>让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！</p>
-</blockquote>
+				<div class="page-header">
+					<h1><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></h1>
+				</div>
+				<p class="author" id="page">Oct 5, 2015</p>
+				<div class="post-content">
+					<p>让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！</p>
 
-<h1 id="准备工作">准备工作</h1>
+<h2 id="准备工作">准备工作</h2>
 
 <p><strong>硬件：</strong>  </p>
 
@@ -125,13 +131,12 @@
 <p><strong>【安装时提示内存不足4GB】</strong></p>
 
 <p>坑爹啊（╯‵□′）╯︵┴─┴~~<br>
-虽然说这台笔记本号称是有&#39;4G内存&#39;，然而却被集显吃掉了部分内存，实际只有3.8G。  </p>
-
-<p><strong>安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！</strong>  </p>
+虽然说这台笔记本号称是有&#39;4G内存&#39;，然而却被集显吃掉了部分内存，实际只有3.8G。<br>
+<strong>安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！</strong>  </p>
 
 <p>这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃(’╥ω╥‘)  </p>
 
-<h1 id="下载esx-5-1">下载ESX 5.1</h1>
+<h2 id="下载esx-5-1">下载ESX 5.1</h2>
 
 <p>首先登录到<a href="http://www.vmware.com/cn">VMware官网</a> ，点击<code>下载</code>-&gt;<code>所有下载、驱动程序和工具</code> 进入到搜索页面<br>
 或者直接点击<a href="https://my.vmware.com/cn/web/vmware/downloads">这个链接</a><br>
@@ -141,20 +146,20 @@
 　你需要注册一个VMWARE帐号来获得免费使用的licence<br>
 　由于现在的最新版本是ESXi 6.x，直接点<code>下载</code>-&gt;<code>vSphere Hypervisor</code>是找不到5.x的版本的！</em>  </p>
 
-<h1 id="使用ultraiso制作安装u盘">使用UltraISO制作安装U盘</h1>
+<h2 id="使用ultraiso制作安装u盘">使用UltraISO制作安装U盘</h2>
 
 <p>UltraISO可以直接<a href="https://www.baidu.com/s?wd=ultraiso">百度下载</a><br>
 <strong>注意：ESX 5.1自带了很多网卡驱动（比如常见的Realtek 8118/8168），你不需要再自制ISO了，如果按照6.0的方式自制ISO反而会报<code>No compatible network adapter found</code>的错误！</strong>  </p>
 
 <p>在UltraISO中选择<code>文件</code>-&gt;<code>打开</code>来载入ISO镜像，随后选择<code>启动</code>-&gt;<code>写入硬盘镜像</code>来制作安装U盘。<em>记得要把<code>硬盘驱动器</code>改为你的U盘哦！</em>  </p>
 
-<h1 id="安装esxi系统">安装ESXi系统</h1>
+<h2 id="安装esxi系统">安装ESXi系统</h2>
 
 <p>将做好的U盘插入笔记本，开机时长按<F12>进入boot menu，选择U盘引导进入安装向导<br>
 向导部分还是很简单的，一路根据提示选择，可以参考<a href="http://www.osyunwei.com/archives/6586.html">这篇文章</a><br>
 安装完成后又遇到了一个问题：  </p>
 
-<h2 id="【系统无法正常引导，仅提示boot-up-failed！】">【系统无法正常引导，仅提示boot up failed！】</h2>
+<p><strong>【系统无法正常引导，仅提示boot up failed！】</strong> </p>
 
 <p>一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。<br>
 在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置...<br>
@@ -170,7 +175,7 @@
 　<br>
 　<em>PS:顺手查了一下<a href="http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html">GPT和MBR的区别</a></em></p>
 
-<h1 id="安装opensuse-13-2">安装OpenSUSE 13.2</h1>
+<h2 id="安装opensuse-13-2">安装OpenSUSE 13.2</h2>
 
 <p>装完Hypervisor开始部署VM~
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。<br>
@@ -178,15 +183,15 @@
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项<br>
 <img src="/images/2015-10-05/00.JPG" alt=""></p>
 
-            </div>
-            
-            <div class="ds-thread" data-thread-key=/2015/10/establish-esxi data-title=笔记本搭建ESXi服务器 data-url=http://arthurmmm.github.io//2015/10/establish-esxi></div>
-            
-            </div>
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/10/establish-esxi data-title=笔记本搭建ESXi服务器 data-url=http://arthurmmm.github.io//2015/10/establish-esxi></div>
+				
+			</div>
           </div>
           <div class="pagination">
               
-                <a class="btn btn-default" href="/2015/10/replace-zypper-repo" class="next">Newer Post</a>
+              <a class="btn btn-default" href="/2015/10/replace-zypper-repo" class="next">Newer Post</a>
               
               
                 <a class="btn btn-default" href="/2015/10/first-blog" class="previous">Older Post</a>
@@ -194,7 +199,6 @@
 	
 		  </div>
         </div>
-		
     </div>
 </div>
 

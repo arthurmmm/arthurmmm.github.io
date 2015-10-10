@@ -1,6 +1,6 @@
 {% include header.html %}
 
-<div class="container container-left">
+<div class="container container-left col-sm-12">
     <div class="row">
         <div class="col-sm-3 hidden-xs">
             {% include lsidebar.html %}
@@ -8,19 +8,21 @@
         <div class="col-sm-9">
           <div class="article">
             <div class="well">
-                <h1><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></h1>
-				<p class="author">{{ page.date | date: "%b %-d, %Y" }}</p>
-            <div class="post-content">
-            {{ content }}
-            </div>
-            {% if page.comments %}
-            <div class="ds-thread" data-thread-key={{ page.id }} data-title={{ page.title }} data-url={{ site.url }}/{{ page.url }}></div>
-            {% endif %}
-            </div>
+				<div class="page-header">
+					<h1><a href="{{ site.baseurl}}{{ page.url }}">{{ page.title }}</a></h1>
+				</div>
+				<p class="author" id="page">{{ page.date | date: "%b %-d, %Y" }}</p>
+				<div class="post-content">
+					{{ content }}
+				</div>
+				{% if page.comments %}
+				<div class="ds-thread" data-thread-key={{ page.id }} data-title={{ page.title }} data-url={{ site.url }}/{{ page.url }}></div>
+				{% endif %}
+			</div>
           </div>
           <div class="pagination">
               {% if page.next %}
-                <a class="btn btn-default" href="{{ site.baseurl}}{{ page.next.url }}" class="next">Newer Post</a>
+              <a class="btn btn-default" href="{{ site.baseurl}}{{ page.next.url }}" class="next">Newer Post</a>
               {% endif %}
               {% if page.previous %}
                 <a class="btn btn-default" href="{{ site.baseurl}}{{ page.previous.url }}" class="previous">Older Post</a>
@@ -28,7 +30,6 @@
 	
 		  </div>
         </div>
-		
     </div>
 </div>
 

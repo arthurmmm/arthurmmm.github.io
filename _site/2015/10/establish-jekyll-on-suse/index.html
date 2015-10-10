@@ -9,6 +9,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/theme.css" rel="stylesheet">
+	
+	<link href="/css/pygments.css" rel="stylesheet">
 </head>
 
 <body>
@@ -39,15 +41,15 @@
 </div>
 
 
-<div class="container container-left">
+<div class="container container-left col-sm-12">
     <div class="row">
         <div class="col-sm-3 hidden-xs">
             
 <div class="sidebar well">
-    <h1>Recent Posts</h1>
+    <h1>最新文章</h1>
     <ul>
         
-          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache + SQLite</a></li>
+          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache+SQLite</a></li>
         
           <li><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></li>
         
@@ -57,11 +59,13 @@
         
           <li><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></li>
         
+          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
+        
     </ul>
 </div>
 
 <div class="sidebar well">
-    <h1>Categories</h1>
+    <h1>文章分类</h1>
     <ul>
         
 			<li><a href="/categories.html#esxi">esxi</a><span>[1]</span></li>
@@ -70,30 +74,32 @@
         
     </ul>
 </div>
+
 <div class="sidebar" align="center">
 	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
 </div>
 <div class="sidebar" align="center">
-	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse"/>
+	<img width="200" height="200" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse"/>
 </div>
+
         </div>
         <div class="col-sm-9">
           <div class="article">
             <div class="well">
-                <h1><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></h1>
-				<p class="author">Oct 6, 2015</p>
-            <div class="post-content">
-            <blockquote>
-<p>本文简单介绍在Open SUSE环境下如何搭建本地jekyll服务器。</p>
-</blockquote>
+				<div class="page-header">
+					<h1><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></h1>
+				</div>
+				<p class="author" id="page">Oct 6, 2015</p>
+				<div class="post-content">
+					<p>简单介绍在Open SUSE环境下搭建本地jekyll服务器的步骤</p>
 
-<h1 id="安装ruby">安装Ruby</h1>
+<h2 id="安装ruby">安装Ruby</h2>
 
 <p>OpenSUSE 13.2自带了ruby2.1，无需额外安装  </p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"># ruby --version
 ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
 </code></pre></div>
-<h1 id="安装bundler">安装bundler</h1>
+<h2 id="安装bundler">安装bundler</h2>
 
 <p>1] 将gem源替换成国内的taobao镜像源</p>
 <div class="highlight"><pre><code class="language-text" data-lang="text"># gem source -r https://rubygems.org
@@ -114,7 +120,7 @@ Installing ri documentation for bundler-1.10.6
 Done installing documentation for bundler after 6 seconds
 1 gem installed
 </code></pre></div>
-<h1 id="使用bundler安装github-pages">使用bundler安装github-pages</h1>
+<h2 id="使用bundler安装github-pages">使用bundler安装github-pages</h2>
 
 <p>1] 在根目录下创建<code>Gemfile</code>文件，并写入以下内容  </p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">source &#39;https://ruby.taobao.org&#39;
@@ -128,7 +134,7 @@ gem &#39;github-pages&#39;
 </code></pre></div>
 <p>4] 在gitpage根目录下执行<code>bundle.ruby2.1 exec jekyll serve</code>即可启动服务器  </p>
 
-<h2 id="小贴士">小贴士</h2>
+<h3 id="小贴士">小贴士</h3>
 
 <p>1] 由于指令比较长，建议使用alias替换，比如：  </p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">alias jekyll=&#39;bundle.ruby2.1 exec jekyll serve&#39;
@@ -137,15 +143,15 @@ gem &#39;github-pages&#39;
 
 <p><a href="/images/2015-10-06/01.JPG">YaST中配置防火墙截图</a>  </p>
 
-            </div>
-            
-            <div class="ds-thread" data-thread-key=/2015/10/establish-jekyll-on-suse data-title=OpenSUSE搭建jekyll服务器 data-url=http://arthurmmm.github.io//2015/10/establish-jekyll-on-suse></div>
-            
-            </div>
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/10/establish-jekyll-on-suse data-title=OpenSUSE搭建jekyll服务器 data-url=http://arthurmmm.github.io//2015/10/establish-jekyll-on-suse></div>
+				
+			</div>
           </div>
           <div class="pagination">
               
-                <a class="btn btn-default" href="/2015/10/opensuse-apache" class="next">Newer Post</a>
+              <a class="btn btn-default" href="/2015/10/opensuse-apache" class="next">Newer Post</a>
               
               
                 <a class="btn btn-default" href="/2015/10/setup-git" class="previous">Older Post</a>
@@ -153,7 +159,6 @@ gem &#39;github-pages&#39;
 	
 		  </div>
         </div>
-		
     </div>
 </div>
 

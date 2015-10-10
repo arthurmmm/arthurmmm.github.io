@@ -2,11 +2,15 @@ body {
     padding-top: 60px;
     padding-bottom: 60px;
 	font-family: "Microsoft YaHei";
+	font-size: 16px;
 }
 blockquote{  
     font-size: 1em;
 }   
-  
+pre{
+	font-size: 0.9em;
+}
+
 .copyright {
     color: #ffffff;
 }
@@ -62,19 +66,41 @@ blockquote{
 
 .well h1 {
     color: #ee4444;
-    font-size: 1.3em;
+    font-size: 1.8em;
 }
 
 .well h2 {
+    color: #ee4444;
+    font-size: 1.3em;
+}
+
+.well h3 {
     color: #000066;
     font-size: 1.1em;
 	font-weight: bold;
 }
 
 .author {
-    color: #ee4444;
+    color: #969696;
+}
+
+.author #page{
+	padding-bottom: 2em;
 }
 
 .author a {
     color: #ee4444;
+}
+
+.page-header{
+	border-bottom: 1px solid #E3E3E3
+}
+
+.post-content{
+	margin-top: 1.8em;
+}
+
+.post-content h1,h2,h3{
+	margin-top: 0.8em;
+	margin-bottom: 0.8em;
 }

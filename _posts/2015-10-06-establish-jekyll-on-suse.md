@@ -7,9 +7,9 @@ comments: true
 category: Linux
 ---
 
->本文简单介绍在Open SUSE环境下如何搭建本地jekyll服务器。
+简单介绍在Open SUSE环境下搭建本地jekyll服务器的步骤
 
-# 安装Ruby
+## 安装Ruby
 
 OpenSUSE 13.2自带了ruby2.1，无需额外安装  
 
@@ -18,7 +18,7 @@ OpenSUSE 13.2自带了ruby2.1，无需额外安装
 ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
 ```
 
-# 安装bundler
+## 安装bundler
 
 1] 将gem源替换成国内的taobao镜像源
 
@@ -45,7 +45,7 @@ Done installing documentation for bundler after 6 seconds
 1 gem installed
 ```
 
-# 使用bundler安装github-pages  
+## 使用bundler安装github-pages  
 
 1] 在根目录下创建`Gemfile`文件，并写入以下内容  
 
@@ -68,7 +68,7 @@ gem 'github-pages'
 
 4] 在gitpage根目录下执行`bundle.ruby2.1 exec jekyll serve`即可启动服务器  
 
-## 小贴士
+### 小贴士
 
 1] 由于指令比较长，建议使用alias替换，比如：  
 

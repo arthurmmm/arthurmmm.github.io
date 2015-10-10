@@ -9,6 +9,8 @@
     <script src="/js/bootstrap.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/theme.css" rel="stylesheet">
+	
+	<link href="/css/pygments.css" rel="stylesheet">
 </head>
 
 <body>
@@ -39,15 +41,15 @@
 </div>
 
 
-<div class="container container-left">
+<div class="container container-left col-sm-12">
     <div class="row">
         <div class="col-sm-3 hidden-xs">
             
 <div class="sidebar well">
-    <h1>Recent Posts</h1>
+    <h1>最新文章</h1>
     <ul>
         
-          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache + SQLite</a></li>
+          <li><a href="/2015/10/opensuse-apache">OpenSUSE搭建apache+SQLite</a></li>
         
           <li><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></li>
         
@@ -57,11 +59,13 @@
         
           <li><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></li>
         
+          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
+        
     </ul>
 </div>
 
 <div class="sidebar well">
-    <h1>Categories</h1>
+    <h1>文章分类</h1>
     <ul>
         
 			<li><a href="/categories.html#esxi">esxi</a><span>[1]</span></li>
@@ -70,24 +74,26 @@
         
     </ul>
 </div>
+
 <div class="sidebar" align="center">
 	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
 </div>
 <div class="sidebar" align="center">
-	<img width="150" height="150" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/setup-git"/>
+	<img width="200" height="200" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text=http://arthurmmm.github.io/2015/10/setup-git"/>
 </div>
+
         </div>
         <div class="col-sm-9">
           <div class="article">
             <div class="well">
-                <h1><a href="/2015/10/setup-git">配置和安装GIT</a></h1>
-				<p class="author">Oct 6, 2015</p>
-            <div class="post-content">
-            <blockquote>
-<p>记录一下LINUX上GITHUB的配置过程，供备忘。</p>
-</blockquote>
+				<div class="page-header">
+					<h1><a href="/2015/10/setup-git">配置和安装GIT</a></h1>
+				</div>
+				<p class="author" id="page">Oct 6, 2015</p>
+				<div class="post-content">
+					<p>记录一下LINUX上GITHUB的配置过程，供备忘。</p>
 
-<h1 id="安装git：">安装GIT：</h1>
+<h2 id="安装git：">安装GIT：</h2>
 
 <p>1] 使用zypper安装GIT程序包：  </p>
 <div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper install git
@@ -118,15 +124,15 @@ PTY allocation request failed on channel 0
 Hi arthurmmm! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
 Connection to github.com closed.
 </code></pre></div>
-            </div>
-            
-            <div class="ds-thread" data-thread-key=/2015/10/setup-git data-title=配置和安装GIT data-url=http://arthurmmm.github.io//2015/10/setup-git></div>
-            
-            </div>
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/10/setup-git data-title=配置和安装GIT data-url=http://arthurmmm.github.io//2015/10/setup-git></div>
+				
+			</div>
           </div>
           <div class="pagination">
               
-                <a class="btn btn-default" href="/2015/10/establish-jekyll-on-suse" class="next">Newer Post</a>
+              <a class="btn btn-default" href="/2015/10/establish-jekyll-on-suse" class="next">Newer Post</a>
               
               
                 <a class="btn btn-default" href="/2015/10/replace-zypper-repo" class="previous">Older Post</a>
@@ -134,7 +140,6 @@ Connection to github.com closed.
 	
 		  </div>
         </div>
-		
     </div>
 </div>
 

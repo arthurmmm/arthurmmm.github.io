@@ -6,16 +6,16 @@ comments: true
 category: Linux
 ---
 
->OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
->本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。
+OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
+本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。
 
-# 查看zypper帮助文档：
+## 查看zypper帮助文档：
 
 ```
 $ zypper -h | less
 ```
 
-# 列出所有安装源：
+## 列出所有安装源：
 
 ```
 $ zypper -lr
@@ -32,14 +32,14 @@ $ zypper -lr
 9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
 ```
 
-# 禁用并停止更新自带源：
+## 禁用并停止更新自带源：
 
 ```
 $ zypper mr -d -R --all
 ```
 
 
-# 配置浙大源：
+## 配置浙大源：
 
 
 1] 进入`/etc/zypp/repos.d`文件夹  

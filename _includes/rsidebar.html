@@ -1,8 +1,16 @@
-<div align="center">
-<h3>本页二维码</h3>
-</div>
-<div align="center">
-<img width="150" height="150" src="http://qr.liantu.com/api.php?text={{ site.url }}{{ page.url }}"/>
+<div class="sidebar well">
+    <h1>文章分类</h1>
+    <ul>
+        {% for category  in site.categories %}
+			<li><a href="{{ site.baseurl}}/categories.html#{{ category | first }}">{{ category | first }}</a><span>[{{ category | last | size }}]</span></li>
+        {% endfor %}
+    </ul>
 </div>
 
+<div class="sidebar" align="center">
+	<h1><b>手机阅读( •̀ ω •́ )✧</b></h1>
+</div>
+<div class="sidebar" align="center">
+	<img width="200" height="200" src="http://qr.liantu.com/api.php?fg=ee4444&gc=000066&el=l&m=5&text={{ site.url }}{{ page.url }}"/>
+</div>
 
