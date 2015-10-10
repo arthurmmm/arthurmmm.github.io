@@ -39,6 +39,10 @@ blockquote{
     color: #428bca;
 }
 
+.sidebar ul{
+	padding-left: 20px;
+}
+
 .sidebar li {
     margin-top: .7em;
     line-height: 1em;
