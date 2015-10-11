@@ -8,9 +8,9 @@
 		
 			<item>
 				<title>Bootstrap学习笔记</title>
-				<description>&lt;p&gt;前端接触的不多，在做这个博客的时候基本都是在别人模板的基础上做一些调整。&lt;br&gt;
-无奈现成模板的布局不是很对我的胃口，所以又花了些时间研究Bootstrap的布局，简单的做一些记录&lt;br&gt;
-详细的帮助文档&lt;a href=&quot;http://getbootstrap.com/css/&quot;&gt;在这里&lt;/a&gt;&lt;/p&gt;
+				<description>&lt;p&gt;这个博客的前端是在&lt;a href=&quot;https://github.com/scotte/jekyll-clean&quot;&gt;jekyll-clean&lt;/a&gt; 模板的基础上进行的二次开发。&lt;br&gt;
+在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。&lt;br&gt;
+Bootstrap详细的帮助文档&lt;a href=&quot;http://getbootstrap.com/css/&quot;&gt;在这里&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;xs-lt-sm-lt-md-lt-lg&quot;&gt;xs &amp;lt; sm &amp;lt; md &amp;lt; lg&lt;/h2&gt;
 

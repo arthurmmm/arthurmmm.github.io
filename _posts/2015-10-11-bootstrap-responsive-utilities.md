@@ -7,9 +7,9 @@ category: front-end
 tags: [Bootstrap, CSS]
 ---
 
-前端接触的不多，在做这个博客的时候基本都是在别人模板的基础上做一些调整。  
-无奈现成模板的布局不是很对我的胃口，所以又花了些时间研究Bootstrap的布局，简单的做一些记录  
-详细的帮助文档[在这里](http://getbootstrap.com/css/)
+这个博客的前端是在[jekyll-clean](https://github.com/scotte/jekyll-clean) 模板的基础上进行的二次开发。  
+在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。  
+Bootstrap详细的帮助文档[在这里](http://getbootstrap.com/css/)
 
 ## xs < sm < md < lg
 
