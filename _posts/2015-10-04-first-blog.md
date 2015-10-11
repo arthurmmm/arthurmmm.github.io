@@ -3,7 +3,7 @@ layout: post
 title:  '博客搭建完成啦！'
 date:   2015-10-04 23:34
 comments: true
-category: 公告
+category: News
 ---
 
 ### 嘿，你好！

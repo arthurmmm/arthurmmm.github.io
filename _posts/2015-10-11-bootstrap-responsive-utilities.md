@@ -3,7 +3,7 @@ layout: post
 title:  'Bootstrap学习笔记'
 date:   2015-10-11 22:04 +0800
 comments: true
-category: 技术笔记
+category: front-end 
 tags: [Bootstrap, CSS]
 ---
 

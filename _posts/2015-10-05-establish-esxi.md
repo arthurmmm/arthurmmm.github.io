@@ -4,7 +4,7 @@ title:  '笔记本搭建ESXi服务器'
 date:   2015-10-05 12:31 +0800
 comments: true
 imagedir: /images/2015-10-05/
-category: 技术笔记
+category: OS
 tags: [ESXi, Linux, OpenSUSE, Git]
 ---
 

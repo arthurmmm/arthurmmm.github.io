@@ -4,7 +4,7 @@ title:  'OpenSUSE搭建jekyll服务器'
 imagedir:  /images/2015-10-06/
 date:   2015-10-06 20:10 +0800
 comments: true
-category: 技术笔记
+category: OS
 tags: [Linux, OpenSUSE, jekyll]
 ---
 

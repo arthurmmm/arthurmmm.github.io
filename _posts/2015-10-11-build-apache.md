@@ -3,7 +3,7 @@ layout: post
 title:  'OpenSUSE搭建apache环境'
 date:   2015-10-11 11:30 +0800
 comments: true
-category: 技术笔记
+category: OS
 tags: [Linux, OpenSUSE, apache]
 ---
 

@@ -3,7 +3,7 @@ layout: post
 title:  'OpenSUSE配置国内源'
 date:   2015-10-05 23:31 +0800
 comments: true
-category: 技术笔记
+category: OS
 tags: [Linux, OpenSUSE]
 ---
 

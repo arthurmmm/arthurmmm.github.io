@@ -1,5 +1,5 @@
 <div class="sidebar" style="padding: 1.5em; padding-top: 2.6em;">
-    <h1>最新文章</h1>
+    <h1>Recent Posts</h1>
     <ul>
         {% for post in site.posts limit:5 %}
           <li><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></li>
@@ -8,7 +8,7 @@
 </div>
 
 <div class="sidebar" style="padding: 1.5em;">
-    <h1>分类目录</h1>
+    <h1>Categories</h1>
     <ul>
         {% for category  in site.categories %}
 			<a href="{{ site.baseurl}}/categories.html#{{ category | first }}"><li>{{ category | first }}<span>[{{ category | last | size }}]</span></li></a>

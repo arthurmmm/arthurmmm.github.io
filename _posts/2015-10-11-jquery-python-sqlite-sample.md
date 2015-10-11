@@ -3,7 +3,7 @@ layout: post
 title:  '创建JQuery PythonCGI SQLite示例'
 date:   2015-10-11 17:40 +0800
 comments: true
-category: 技术笔记
+category: web-build
 tags: [JQuery, Python, SQLite, CGI]
 ---
 
