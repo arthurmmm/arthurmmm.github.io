@@ -3,8 +3,76 @@
 	<channel>
 		<title>ArthurMao's Blog</title>
 		<description>你好喵 ・ω・~☆</description>
-		<link>http://arthurmmm.github.io</link>
-		<atom:link href="http://arthurmmm.github.io/feed.xml" rel="self" type="application/rss+xml" />
+		<link>http://www.arthurmao.me</link>
+		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
+		
+			<item>
+				<title>OpenSUSE搭建apache环境</title>
+				<description>&lt;p&gt;OpenSUSE上搭建apache服务器的步骤&lt;/p&gt;
+
+&lt;h2 id=&quot;安装apache&quot;&gt;安装apache&lt;/h2&gt;
+
+&lt;p&gt;1] 下载apache包  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# zypper install apache2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 打开apache服务  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# systemctl enable apache2.service
+# systemctl start apache2.service
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;或者  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# rcapache2 start
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 在浏览器中打开&lt;code&gt;http://localhost/&lt;/code&gt;测试，出现403 ERROR就说明apache已经成功启动  &lt;/p&gt;
+
+&lt;h2 id=&quot;更改站点目录&quot;&gt;更改站点目录&lt;/h2&gt;
+
+&lt;p&gt;默认的站点目录在LINUX文件系统中，为了方便使用WINDOWS编辑文件，这里需要将它移到SAMBA共享目录上。  &lt;/p&gt;
+
+&lt;h3 id=&quot;默认目录：&quot;&gt;默认目录：&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;站点位置&lt;code&gt;/srv/www/htdocs/&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;li&gt;配置文件：&lt;code&gt;/etc/apache2/&lt;/code&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;1] 将原先的站点文件复制到新位置  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# cp -a /srv/www /mnt/NETSTORAGE/scripts/ApacheSite/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;2] 创建&lt;code&gt;changedir.sh&lt;/code&gt;脚本用于批量修改  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# vim changedir.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;3] 脚本如下，复制到&lt;code&gt;changedir.sh&lt;/code&gt;中，保存并更改为可执行权限&lt;code&gt;chmod +x changedir.sh&lt;/code&gt;  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+usage&lt;span class=&quot;o&quot;&gt;(){&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Usage: changedir [source] [target]&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;SOURCE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TARGET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;SOURCE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SOURCE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;//\//\\\/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;TARGET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TARGET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;//\//\\\/&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$SOURCE&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$TARGET&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$# &lt;/span&gt;-le &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+    usage
+    &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+
+grep -r /srv * &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk -F &lt;span class=&quot;s1&quot;&gt;&amp;#39;:&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;{print $1}&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; uniq &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; egrep -v &lt;span class=&quot;s2&quot;&gt;&amp;quot;changedir|.new|.bak&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; xargs -i cp &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;.bak
+grep -r /srv * &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk -F &lt;span class=&quot;s1&quot;&gt;&amp;#39;:&amp;#39;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;{print $1}&amp;#39;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; uniq &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; egrep -v &lt;span class=&quot;s2&quot;&gt;&amp;quot;changedir|.new|.bak&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;  xargs -i sh -c &lt;span class=&quot;s2&quot;&gt;&amp;quot;sed &amp;#39;s/$SOURCE/$TARGET/g&amp;#39; {} &amp;gt; {}.new&amp;quot;&lt;/span&gt;
+find . -name &lt;span class=&quot;s2&quot;&gt;&amp;quot;*.new&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sed &lt;span class=&quot;s2&quot;&gt;&amp;quot;s/.new//g&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; xargs -i mv &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;.new &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;4] 执行脚本  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# ./changedir.sh /srv/www /mnt/NETSTORAGE/scripts/ApacheSite
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+				<pubDate>Sun, 11 Oct 2015 11:30:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2015/10/build-apache</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/build-apache</guid>
+			</item>
 		
 			<item>
 				<title>OpenSUSE搭建jekyll服务器</title>
@@ -61,8 +129,8 @@ gem &amp;#39;github-pages&amp;#39;
 &lt;p&gt;&lt;a href=&quot;/images/2015-10-06/01.JPG&quot;&gt;&lt;img src=&quot;/images/2015-10-06/01.JPG&quot; alt=&quot;&quot;&gt;&lt;/a&gt;  &lt;/p&gt;
 </description>
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-jekyll-on-suse</guid>
+				<link>http://www.arthurmao.me/2015/10/establish-jekyll-on-suse</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/establish-jekyll-on-suse</guid>
 			</item>
 		
 			<item>
@@ -191,8 +259,8 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 &lt;p&gt;&lt;EOF&gt;&lt;/p&gt;
 </description>
 				<pubDate>Mon, 05 Oct 2015 23:31:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/replace-zypper-repo</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/replace-zypper-repo</guid>
+				<link>http://www.arthurmao.me/2015/10/replace-zypper-repo</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/replace-zypper-repo</guid>
 			</item>
 		
 			<item>
@@ -321,8 +389,8 @@ Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not pro
 Connection to github.com closed.
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
 				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/establish-esxi</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/establish-esxi</guid>
+				<link>http://www.arthurmao.me/2015/10/establish-esxi</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/establish-esxi</guid>
 			</item>
 		
 			<item>
@@ -333,8 +401,8 @@ Connection to github.com closed.
 目前还没有什么干货，会尽量慢慢更新哒，敬请期待╰(&lt;em&gt;´︶`&lt;/em&gt;)╯♡&lt;/p&gt;
 </description>
 				<pubDate>Sun, 04 Oct 2015 23:34:00 +0800</pubDate>
-				<link>http://arthurmmm.github.io/2015/10/first-blog</link>
-				<guid isPermaLink="true">http://arthurmmm.github.io/2015/10/first-blog</guid>
+				<link>http://www.arthurmao.me/2015/10/first-blog</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/first-blog</guid>
 			</item>
 		
 	</channel>

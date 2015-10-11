@@ -1,4 +1,11 @@
 
 <div class="sidebar" align="left" style="padding-top: 2em;">
-	<img src="http://qr.liantu.com/api.php?el=l&m=5&w=200&text={{ site.url }}{{ page.url }}"/>
+	<div id="qrcodeCanvas"></div>
+	<script>
+		jQuery("#qrcodeCanvas").qrcode({
+			width:	200,
+			height:	200,
+			text:	"{{ site.url }}{{ page.url }}"
+		});
+	</script>
 </div>

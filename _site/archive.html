@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+	<script src="/js/jquery.qrcode.min.js"></script>
     <link href="/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/theme.css" rel="stylesheet">
 	
@@ -48,6 +49,8 @@
     <h1>最新文章</h1>
     <ul>
         
+          <li><a href="/2015/10/build-apache">OpenSUSE搭建apache环境</a></li>
+        
           <li><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></li>
         
           <li><a href="/2015/10/replace-zypper-repo">OpenSUSE配置国内源</a></li>
@@ -63,9 +66,7 @@
     <h1>文章分类</h1>
     <ul>
         
-			<a href="/categories.html#esxi"><li>esxi<span>[1]</span></li></a>
-        
-			<a href="/categories.html#linux"><li>linux<span>[2]</span></li></a>
+			<a href="/categories.html#linux/unix"><li>linux/unix<span>[4]</span></li></a>
         
     </ul>
 </div>
@@ -78,6 +79,13 @@
     
         <h1>2015</h1>
         <ul>
+    
+    <li><a href="/2015/10/build-apache">Oct 11 - OpenSUSE搭建apache环境</a></li>
+
+    
+        
+        
+        
     
     <li><a href="/2015/10/establish-jekyll-on-suse">Oct 6 - OpenSUSE搭建jekyll服务器</a></li>
 
@@ -109,7 +117,14 @@
 		<div class="col-sm-3 hidden-xs">
 			
 <div class="sidebar" align="left" style="padding-top: 2em;">
-	<img src="http://qr.liantu.com/api.php?el=l&m=5&w=200&text=http://arthurmmm.github.io/archive.html"/>
+	<div id="qrcodeCanvas"></div>
+	<script>
+		jQuery("#qrcodeCanvas").qrcode({
+			width:	200,
+			height:	200,
+			text:	"http://www.arthurmao.me/archive.html"
+		});
+	</script>
 </div>
 		</div>
     </div>
@@ -118,7 +133,12 @@
 <div class="container-fluid hidden-xs">
     <div class="row-fluid">
         <div class="span12 footer navbar-inverse navbar-fixed-bottom ">
-            <p class="copyright">&copy;2015 ArthurMao's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>,<a href="http://www.bootcss.com/">Bootstrap</a>,<a href="https://github.com/">GitHub</a>,<a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a>
+            <p class="copyright">&copy;2015 ArthurMao's Blog. Powered by 
+			<a href="http://jekyllrb.com">Jekyll</a> 
+			<a href="http://www.bootcss.com/">Bootstrap</a> 
+			<a href="https://github.com/">GitHub</a> 
+			<a href="https://github.com/scotte/jekyll-clean">Scott Emmons</a> 
+			<a href="https://github.com/jeromeetienne/jquery-qrcode">jquery-qrcode</a> 
         </div>
     </div>
 </div>

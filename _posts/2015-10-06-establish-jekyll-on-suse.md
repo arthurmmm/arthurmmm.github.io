@@ -4,7 +4,7 @@ title:  'OpenSUSE搭建jekyll服务器'
 imagedir:  /images/2015-10-06/
 date:   2015-10-06 20:10 +0800
 comments: true
-category: Linux
+category: Linux/Unix
 ---
 
 Open SUSE环境下搭建本地jekyll服务器的步骤

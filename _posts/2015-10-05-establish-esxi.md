@@ -4,7 +4,7 @@ title:  '笔记本搭建ESXi服务器'
 date:   2015-10-05 12:31 +0800
 comments: true
 imagedir: /images/2015-10-05/
-category: ESXi
+category: Linux/Unix
 ---
 
 让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！

@@ -4,7 +4,7 @@ name: ArthurMao's Blog
 description: 你好喵 ・ω・~☆
 
 # url is currently only used only for the RSS feed in feed.xml
-url: http://arthurmmm.github.io
+url: http://www.arthurmao.me
 
 # baseurl will often be '', but for a project page on gh-pages, it needs to
 # be the project name.
