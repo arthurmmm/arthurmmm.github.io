@@ -27,16 +27,17 @@
                   <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/">ArthurMao's Blog</a>
-              </div>
-              <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">Home</a></li>
-                    <li class="active visible-xs-block"><a href="/categories.html">Categories</a></li>
-                    <li class="active"><a href="/archive.html">Archive</a></li>
-					<li class="active"><a href="/feed.xml">RSS</a></li>
-					<li class="active"><a href="/about.html">About Me</a></li>
-                </ul>
-              </div>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+              <ul class="nav navbar-nav">
+                  <li class="active"><a href="/">Home</a></li>
+                  <li class="active visible-xs-block visible-sm-block"><a href="/categories.html">Categories</a></li>
+				  <li class="active visible-xs-block visible-sm-block"><a href="/tags.html">Tags</a></li>
+                  <li class="active"><a href="/archive.html">Archive</a></li>
+				  <li class="active"><a href="/feed.xml">RSS</a></li>
+				  <li class="active"><a href="/about.html">About Me</a></li>
+              </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -44,10 +45,14 @@
 
 <div class="container container-left col-sm-12">
     <div class="row">
-        <div class="col-sm-3 hidden-xs">
+        <div class="col-md-3 hidden-xs hidden-sm">
             <div class="sidebar" style="padding: 1.5em; padding-top: 2.6em;">
     <h1>最新文章</h1>
     <ul>
+        
+          <li><a href="/2015/10/bootstrap-responsive-utilities">Bootstrap学习笔记</a></li>
+        
+          <li><a href="/2015/10/jquery-python-sqlite-sample">创建JQuery PythonCGI SQLite示例</a></li>
         
           <li><a href="/2015/10/build-apache">OpenSUSE搭建apache环境</a></li>
         
@@ -55,31 +60,52 @@
         
           <li><a href="/2015/10/replace-zypper-repo">OpenSUSE配置国内源</a></li>
         
-          <li><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></li>
-        
-          <li><a href="/2015/10/first-blog">博客搭建完成啦！</a></li>
-        
     </ul>
 </div>
 
 <div class="sidebar" style="padding: 1.5em;">
-    <h1>文章分类</h1>
+    <h1>分类目录</h1>
     <ul>
         
-			<a href="/categories.html#linux/unix"><li>linux/unix<span>[4]</span></li></a>
+			<a href="/categories.html#公告"><li>公告<span>[1]</span></li></a>
+        
+			<a href="/categories.html#技术笔记"><li>技术笔记<span>[6]</span></li></a>
         
     </ul>
 </div>
 
-
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-6">
 			
 <div class="article">
     <div class="well">
+		<span class="author" id="page">Oct 11, 2015</span>
+        <h1><a href="/2015/10/bootstrap-responsive-utilities">Bootstrap学习笔记</a></h1>
+        <div class="post-content">
+            <p>前端接触的不多，在做这个博客的时候基本都是在别人模板的基础上做一些调整。<br>
+无奈现成模板的布局不是很对我的胃口，所以又花了些时间研究Bootstrap的布局，简单的做一些记录<br>
+详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</a></p>
+
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Oct 11, 2015</span>
+        <h1><a href="/2015/10/jquery-python-sqlite-sample">创建JQuery PythonCGI SQLite示例</a></h1>
+        <div class="post-content">
+            <p>学习过程中制作的一个简单的JQuery+PythonCGI+SQLite站点</p>
+
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Oct 11, 2015</span>
         <h1><a href="/2015/10/build-apache">OpenSUSE搭建apache环境</a></h1>
-		<p class="author">Oct 11, 2015</p>
-        <div class="content">
+        <div class="post-content">
             <p>OpenSUSE上搭建apache服务器的步骤</p>
 
         </div>
@@ -88,9 +114,9 @@
 
 <div class="article">
     <div class="well">
+		<span class="author" id="page">Oct 6, 2015</span>
         <h1><a href="/2015/10/establish-jekyll-on-suse">OpenSUSE搭建jekyll服务器</a></h1>
-		<p class="author">Oct 6, 2015</p>
-        <div class="content">
+        <div class="post-content">
             <p>Open SUSE环境下搭建本地jekyll服务器的步骤</p>
 
         </div>
@@ -99,36 +125,11 @@
 
 <div class="article">
     <div class="well">
+		<span class="author" id="page">Oct 5, 2015</span>
         <h1><a href="/2015/10/replace-zypper-repo">OpenSUSE配置国内源</a></h1>
-		<p class="author">Oct 5, 2015</p>
-        <div class="content">
+        <div class="post-content">
             <p>OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
 本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。</p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-        <h1><a href="/2015/10/establish-esxi">笔记本搭建ESXi服务器</a></h1>
-		<p class="author">Oct 5, 2015</p>
-        <div class="content">
-            <p>让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！</p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-        <h1><a href="/2015/10/first-blog">博客搭建完成啦！</a></h1>
-		<p class="author">Oct 4, 2015</p>
-        <div class="content">
-            <h3 id="嘿，你好！">嘿，你好！</h3>
-
-<p>我的博客终于搭完啦！！（擦汗）<br>
-目前还没有什么干货，会尽量慢慢更新哒，敬请期待╰(<em>´︶`</em>)╯♡</p>
 
         </div>
     </div>
@@ -137,15 +138,183 @@
 
 <div class="pagination">
   
-  <span class="page_number ">Page: 1 of 1</span>
+  <span class="page_number ">Page: 1 of 2</span>
+  
+    <a class="btn btn-default" href="/page2" class="next">Older</a>
   
 </div>
 			
 		</div>
-		<div class="col-sm-3 hidden-xs">
+		<div class="col-md-3 hidden-xs hidden-sm">
 			
-<div class="sidebar" align="left" style="padding-top: 2em;">
-	<div id="qrcodeCanvas"></div>
+<div class="sidebar" align="center" style="padding-top: 3em;">
+
+	<div style="padding-bottom: 3em;">
+	
+	
+	
+	
+	  
+		
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	
+	
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#ESXi" style="font-size: 16pt; color: #999;">ESXi</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Linux" style="font-size: 25pt; color: #000;">Linux</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#OpenSUSE" style="font-size: 25pt; color: #000;">OpenSUSE</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Git" style="font-size: 16pt; color: #999;">Git</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#jekyll" style="font-size: 16pt; color: #999;">jekyll</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#apache" style="font-size: 16pt; color: #999;">apache</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#JQuery" style="font-size: 16pt; color: #999;">JQuery</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Python" style="font-size: 16pt; color: #999;">Python</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#SQLite" style="font-size: 16pt; color: #999;">SQLite</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#CGI" style="font-size: 16pt; color: #999;">CGI</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Bootstrap" style="font-size: 16pt; color: #999;">Bootstrap</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#CSS" style="font-size: 16pt; color: #999;">CSS</a>
+	
+	</div>
+		<div id="qrcodeCanvas"></div>
 	<script>
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
@@ -153,6 +322,7 @@
 			text:	"http://www.arthurmao.me/index.html"
 		});
 	</script>
+	
 </div>
 		</div>
     </div>

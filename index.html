@@ -5,9 +5,9 @@ layout: default
 {% for post in paginator.posts %}
 <div class="article">
     <div class="well">
+		<span class="author" id="page">{{ post.date | date: "%b %-d, %Y" }}</span>
         <h1><a href="{{ site.baseurl}}{{ post.url }}">{{ post.title }}</a></h1>
-		<p class="author">{{ post.date | date: "%b %-d, %Y" }}</p>
-        <div class="content">
+        <div class="post-content">
             {{ post.excerpt }}
         </div>
     </div>

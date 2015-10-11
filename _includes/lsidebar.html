@@ -8,11 +8,10 @@
 </div>
 
 <div class="sidebar" style="padding: 1.5em;">
-    <h1>文章分类</h1>
+    <h1>分类目录</h1>
     <ul>
         {% for category  in site.categories %}
 			<a href="{{ site.baseurl}}/categories.html#{{ category | first }}"><li>{{ category | first }}<span>[{{ category | last | size }}]</span></li></a>
         {% endfor %}
     </ul>
 </div>
-

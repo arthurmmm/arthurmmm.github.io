@@ -3,7 +3,8 @@ layout: post
 title:  'OpenSUSE配置国内源'
 date:   2015-10-05 23:31 +0800
 comments: true
-category: Linux/Unix
+category: 技术笔记
+tags: [Linux, OpenSUSE]
 ---
 
 OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
