@@ -7,6 +7,80 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>配置安装CentOS</title>
+				<description>&lt;p&gt;配置和安装CentOS的笔记，主要包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;配置国内源&lt;/li&gt;
+&lt;li&gt;配置jekyll&lt;/li&gt;
+&lt;li&gt;打开防火墙端口&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;安装过程&quot;&gt;安装过程&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;配置IP信息&lt;/li&gt;
+&lt;li&gt;选择webserver安装并勾选python/perl/java等常用开发包&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;配置国内源&quot;&gt;配置国内源&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;进入&lt;a href=&quot;http://mirrors.zju.edu.cn/&quot;&gt;浙大源&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;在配置生成器中选择CentOS及对应版本，按提示设置&lt;code&gt;CentOS-Base.repo&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[root@ArthurCentOS yum.repos.d]# vim CentOS-Base.repo
+[root@ArthurCentOS yum.repos.d]# ll
+total 28
+-rw-r--r--. 1 root root  526 Oct 26 23:04 CentOS-Base.repo
+-rw-r--r--. 1 root root 1664 Apr  1  2015 CentOS-Base.repo.save
+-rw-r--r--. 1 root root 1309 Apr  1  2015 CentOS-CR.repo
+-rw-r--r--. 1 root root  649 Apr  1  2015 CentOS-Debuginfo.repo
+-rw-r--r--. 1 root root  290 Apr  1  2015 CentOS-fasttrack.repo
+-rw-r--r--. 1 root root 1331 Apr  1  2015 CentOS-Sources.repo
+-rw-r--r--. 1 root root 1002 Apr  1  2015 CentOS-Vault.repo
+[root@ArthurCentOS yum.repos.d]# yum makecache
+Loaded plugins: fastestmirror, langpacks
+base                                                                                                                                | 3.6 kB  00:00:00
+extras                                                                                                                              | 3.4 kB  00:00:00
+updates                                                                                                                             | 3.4 kB  00:00:00
+updates/7/x86_64/other_db                                                                                                           |  25 MB  00:00:01
+Determining fastest mirrors
+
+Metadata Cache Created
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;使用&lt;code&gt;yum update&lt;/code&gt;更新系统包&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;安装jekyll&quot;&gt;安装jekyll&lt;/h2&gt;
+
+&lt;p&gt;基本与OpenSUSE类似，参考：&lt;a href=&quot;http://www.arthurmao.me/2015/10/establish-jekyll-on-suse/&quot;&gt;OpenSUSE搭建jekyll服务器&lt;/a&gt;&lt;br&gt;
+要注意的是yum没有自带nodejs，需要安装EPEL库后再安装nodejs：&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;# yum install epel-release
+# yum install nodejs
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;打开防火墙端口&quot;&gt;打开防火墙端口&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;//暂时打开
+# firewall-cmd --add-port=4000/tcp
+
+//永久打开
+# firewall-cmd --permanent --add-port=4000/tcp
+
+//测试端口状态
+# firewall-cmd --permanent --query-port=4000/tcp
+yes
+
+//关闭端口
+# firewall-cmd --permanent --remove-port=4000/tcp
+success
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+				<pubDate>Sat, 24 Oct 2015 23:00:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2015/10/config-centOS</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/config-centOS</guid>
+			</item>
+		
+			<item>
 				<title>NO SQL in your code! SQLAlchemy学习</title>
 				<description>&lt;p&gt;SQLAlchemy是很棒的python ORM工具，下面简要介绍一下它的安装使用方法。  &lt;/p&gt;
 
