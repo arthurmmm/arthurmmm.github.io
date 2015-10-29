@@ -7,11 +7,7 @@ category: os
 tags: [centOS, Linux]
 ---
 
-配置和安装CentOS的笔记，主要包括：
-
-* 配置国内源
-* 配置jekyll
-* 打开防火墙端口
+配置和安装CentOS的笔记，包括：配置国内源，配置jekyll，打开防火墙端口
 
 ## 安装过程
 
