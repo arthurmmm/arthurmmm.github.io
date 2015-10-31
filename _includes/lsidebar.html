@@ -11,7 +11,7 @@
     <h1>Categories</h1>
     <ul>
         {% for category  in site.categories %}
-			<a href="{{ site.baseurl}}/categories.html#{{ category | first }}"><li>{{ category | first }}<span>[{{ category | last | size }}]</span></li></a>
+			<a href="{{ site.baseurl}}/categories.html#{{ category | first }}"><li>{{ category | first }}<span class='badge'>{{ category | last | size }}</span></li></a>
         {% endfor %}
     </ul>
 </div>

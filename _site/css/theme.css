@@ -53,12 +53,6 @@ h3 {
     font-size: 1.8em;
 }
 
-.sidebar ul li span {
-    float: right;
-	color: #428bca;
-	
-}
-
 .sidebar h2 {
     color: #000066;
     font-size: 1.1em;
@@ -84,6 +78,11 @@ h3 {
 	overflow:hidden; 
 	text-overflow:ellipsis;
 }
+.sidebar .badge{
+	color: #FFFFFF;
+	float: right;
+	margin-right: 1px;
+}
 
 .sidebar a:hover {
     color: #3071a9;
@@ -97,15 +96,12 @@ h3 {
 	font-family: "Courier New";
 }
 
-.tag{
-	color: #969696;
+.article .label{
 	font-size: 0.6em;
 	float: right; 
-	padding: 2px; 
 	margin-left: 0.5em;
-	border: 1px solid #aaaaaa; 
-	border-radius: 5px 5px 5px 5px;
 }
+
 
 .author {
 	padding-top: 5px;

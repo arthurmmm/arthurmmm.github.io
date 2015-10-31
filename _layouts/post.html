@@ -10,7 +10,7 @@
             <div class="well">
 				<span class="author" id="page">{{ page.date | date: "%b %-d, %Y" }}</span>
 				{% for tag in page.tags %}
-					<span class="tag"> {{tag}} </span>
+					<span class="label label-default"> {{tag}} </span>
 				{% endfor %}
 				<div class="page-header">	
 					<h1>{{ page.title }}</h1>
