@@ -7,6 +7,36 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>手工安装和配置Python</title>
+				<description>&lt;p&gt;Python2/Python3 多版本安装和配置&lt;/p&gt;
+
+&lt;h2 id=&quot;下载python包&quot;&gt;下载python包&lt;/h2&gt;
+
+&lt;p&gt;网站：&lt;a href=&quot;https://www.python.org/ftp/python/&quot;&gt;https://www.python.org/ftp/python/&lt;/a&gt;  &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz   
+$ wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;配置和安装&quot;&gt;配置和安装&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ yum install sqlite-devel openssl openssl-devel
+
+$ tar xvzf Python-2.7.9.tgz    
+$ ./configure --with-ensurepip=install
+$ make  
+$ make install
+
+$ tar xvzf Python-3.4.3.tgz    
+$ ./configure --with-ensurepip=install
+$ make  
+$ make altinstall
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;注意对于多个版本的python，主要版本使用&lt;code&gt;make install&lt;/code&gt;安装，其他版本使用&lt;code&gt;make altinstall&lt;/code&gt;安装！  &lt;/p&gt;
+</description>
+				<pubDate>Sat, 14 Nov 2015 23:00:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2015/11/manual-install-python</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/11/manual-install-python</guid>
+			</item>
+		
+			<item>
 				<title>Python正则表达式用法</title>
 				<description>&lt;p&gt;最近做项目遇到了一个匹配引号的问题，记录一下&lt;/p&gt;
 
@@ -126,32 +156,10 @@
 
 &lt;h2 id=&quot;配置国内源&quot;&gt;配置国内源&lt;/h2&gt;
 
-&lt;ul&gt;
-&lt;li&gt;进入&lt;a href=&quot;http://mirrors.zju.edu.cn/&quot;&gt;浙大源&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;在配置生成器中选择CentOS及对应版本，按提示设置&lt;code&gt;CentOS-Base.repo&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;[root@ArthurCentOS yum.repos.d]# vim CentOS-Base.repo
-[root@ArthurCentOS yum.repos.d]# ll
-total 28
--rw-r--r--. 1 root root  526 Oct 26 23:04 CentOS-Base.repo
--rw-r--r--. 1 root root 1664 Apr  1  2015 CentOS-Base.repo.save
--rw-r--r--. 1 root root 1309 Apr  1  2015 CentOS-CR.repo
--rw-r--r--. 1 root root  649 Apr  1  2015 CentOS-Debuginfo.repo
--rw-r--r--. 1 root root  290 Apr  1  2015 CentOS-fasttrack.repo
--rw-r--r--. 1 root root 1331 Apr  1  2015 CentOS-Sources.repo
--rw-r--r--. 1 root root 1002 Apr  1  2015 CentOS-Vault.repo
-[root@ArthurCentOS yum.repos.d]# yum makecache
-Loaded plugins: fastestmirror, langpacks
-base                                                                                                                                | 3.6 kB  00:00:00
-extras                                                                                                                              | 3.4 kB  00:00:00
-updates                                                                                                                             | 3.4 kB  00:00:00
-updates/7/x86_64/other_db                                                                                                           |  25 MB  00:00:01
-Determining fastest mirrors
+&lt;p&gt;推荐使用中科大源：&lt;a href=&quot;https://lug.ustc.edu.cn/wiki/mirrors/help&quot;&gt;https://lug.ustc.edu.cn/wiki/mirrors/help&lt;/a&gt;&lt;/p&gt;
 
-Metadata Cache Created
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
-&lt;li&gt;使用&lt;code&gt;yum update&lt;/code&gt;更新系统包&lt;/li&gt;
+&lt;li&gt;配置完成后可以&lt;code&gt;yum makecache&lt;/code&gt;和&lt;code&gt;yum update&lt;/code&gt;更新一下系统包&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;安装jekyll&quot;&gt;安装jekyll&lt;/h2&gt;
@@ -924,18 +932,6 @@ Connection to github.com closed.
 				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/10/establish-esxi</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/establish-esxi</guid>
-			</item>
-		
-			<item>
-				<title>博客搭建完成啦！</title>
-				<description>&lt;h3 id=&quot;嘿，你好！&quot;&gt;嘿，你好！&lt;/h3&gt;
-
-&lt;p&gt;我的博客终于搭完啦！！
-目前还没有什么干货，会尽量慢慢更新哒，有空多来踩踩哟╰(*´︶`*)╯♡&lt;/p&gt;
-</description>
-				<pubDate>Sun, 04 Oct 2015 23:34:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/10/first-blog</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/first-blog</guid>
 			</item>
 		
 	</channel>

@@ -16,32 +16,9 @@ tags: [centOS, Linux]
 
 ## 配置国内源
 
-* 进入[浙大源](http://mirrors.zju.edu.cn/)
-* 在配置生成器中选择CentOS及对应版本，按提示设置`CentOS-Base.repo`
+推荐使用中科大源：https://lug.ustc.edu.cn/wiki/mirrors/help
 
-```
-[root@ArthurCentOS yum.repos.d]# vim CentOS-Base.repo
-[root@ArthurCentOS yum.repos.d]# ll
-total 28
--rw-r--r--. 1 root root  526 Oct 26 23:04 CentOS-Base.repo
--rw-r--r--. 1 root root 1664 Apr  1  2015 CentOS-Base.repo.save
--rw-r--r--. 1 root root 1309 Apr  1  2015 CentOS-CR.repo
--rw-r--r--. 1 root root  649 Apr  1  2015 CentOS-Debuginfo.repo
--rw-r--r--. 1 root root  290 Apr  1  2015 CentOS-fasttrack.repo
--rw-r--r--. 1 root root 1331 Apr  1  2015 CentOS-Sources.repo
--rw-r--r--. 1 root root 1002 Apr  1  2015 CentOS-Vault.repo
-[root@ArthurCentOS yum.repos.d]# yum makecache
-Loaded plugins: fastestmirror, langpacks
-base                                                                                                                                | 3.6 kB  00:00:00
-extras                                                                                                                              | 3.4 kB  00:00:00
-updates                                                                                                                             | 3.4 kB  00:00:00
-updates/7/x86_64/other_db                                                                                                           |  25 MB  00:00:01
-Determining fastest mirrors
-
-Metadata Cache Created
-```
-
-* 使用`yum update`更新系统包
+* 配置完成后可以`yum makecache`和`yum update`更新一下系统包
 
 ## 安装jekyll
 
