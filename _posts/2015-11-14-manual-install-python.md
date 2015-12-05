@@ -3,8 +3,8 @@ layout: post
 title:  '手工安装和配置Python'
 date:   2015-11-14 23:00 +0800
 comments: true
-category: os
-tags: [Python]
+category: python
+tags: [Python, Linux]
 ---
 
 Python2/Python3 多版本安装和配置
@@ -35,4 +35,4 @@ $ make altinstall
 ```
 
 注意对于多个版本的python，主要版本使用`make install`安装，其他版本使用`make altinstall`安装！  
-
+在python 2.7或者3.4之后，使用--with-ensurepip=install可以自带pip，非常方便。

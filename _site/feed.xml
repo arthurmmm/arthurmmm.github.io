@@ -7,6 +7,213 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Python logging模块介绍</title>
+				<description>&lt;p&gt;Python logging模块介绍&lt;/p&gt;
+
+&lt;h2 id=&quot;logging-模块的基本用法&quot;&gt;logging 模块的基本用法&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;logging&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;level设定显示log的级别&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;datefmt是时间的显示方式&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;FORMAT是一个自定义的字符串，用于定义日志的格式。&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basicConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;level&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;format&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;datefmt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;%Y-%m-&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; %H:%M:%S&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;默认情况下日志输出到屏幕，&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;需要写文件时得加上filename属性&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;basicConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;format&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;filename&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;test.log&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;需要打印信息的时候这样做&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;debug&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;warning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;critical&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;也可以打印异常堆栈&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exception&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;a debug message&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;推荐的基本格式，显示时间、事件级别和日志信息&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(asctime)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(levelname)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(message)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;额外显示了线程号，模块名和代码行号，调试的时候非常有用&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(thread)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(asctime)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(levelname)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(module)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(lineno)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(message)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;还可以自定义一些额外的字段，例如下面的username，在打印时需要用extra指定一个dict用于解释自定义字段&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(thread)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(asctime)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(levelname)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(module)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(lineno)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(username)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;]: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(message)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;arthur&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;warning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;hihi&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;logging模块的一些参考表格&quot;&gt;logging模块的一些参考表格&lt;/h2&gt;
+
+&lt;h3 id=&quot;basicconfig的属性&quot;&gt;basicConfig的属性&lt;/h3&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Format&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;filename&lt;/td&gt;
+&lt;td&gt;Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;filemode&lt;/td&gt;
+&lt;td&gt;Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to ‘a’).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;format&lt;/td&gt;
+&lt;td&gt;Use the specified format string for the handler.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;datefmt&lt;/td&gt;
+&lt;td&gt;Use the specified date/time format.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;level&lt;/td&gt;
+&lt;td&gt;Set the root logger level to the specified level.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;stream&lt;/td&gt;
+&lt;td&gt;Use the specified stream to initialize the StreamHandler. Note that this argument is incompatible with ‘filename’ - if both are present, ‘stream’ is ignored.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+
+&lt;h3 id=&quot;format中可以使用的参数&quot;&gt;FORMAT中可以使用的参数&lt;/h3&gt;
+
+&lt;table&gt;&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Attribute&lt;/th&gt;
+&lt;th&gt;Format&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;args&lt;/td&gt;
+&lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
+&lt;td&gt;The tuple of arguments merged into msg to produce message, or a dict whose values are used for the merge (when there is only one argument, and it is a dictionary).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;asctime&lt;/td&gt;
+&lt;td&gt;%(asctime)s&lt;/td&gt;
+&lt;td&gt;Human-readable time when the LogRecord was created. By default this is of the form ‘2003-07-08 16:49:45,896’ (the numbers after the comma are millisecond portion of the time).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;created&lt;/td&gt;
+&lt;td&gt;%(created)f&lt;/td&gt;
+&lt;td&gt;Time when the LogRecord was created (as returned by time.time()).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;exc_info&lt;/td&gt;
+&lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
+&lt;td&gt;Exception tuple (à la sys.exc_info) or, if no exception has occurred, None.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;filename&lt;/td&gt;
+&lt;td&gt;%(filename)s&lt;/td&gt;
+&lt;td&gt;Filename portion of pathname.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;funcName&lt;/td&gt;
+&lt;td&gt;%(funcName)s&lt;/td&gt;
+&lt;td&gt;Name of function containing the logging call.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;levelname&lt;/td&gt;
+&lt;td&gt;%(levelname)s&lt;/td&gt;
+&lt;td&gt;Text logging level for the message (&amp;#39;DEBUG&amp;#39;, &amp;#39;INFO&amp;#39;, &amp;#39;WARNING&amp;#39;, &amp;#39;ERROR&amp;#39;, &amp;#39;CRITICAL&amp;#39;).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;levelno&lt;/td&gt;
+&lt;td&gt;%(levelno)s&lt;/td&gt;
+&lt;td&gt;Numeric logging level for the message (DEBUG, INFO, WARNING, ERROR, CRITICAL).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;lineno&lt;/td&gt;
+&lt;td&gt;%(lineno)d&lt;/td&gt;
+&lt;td&gt;Source line number where the logging call was issued (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;module&lt;/td&gt;
+&lt;td&gt;%(module)s&lt;/td&gt;
+&lt;td&gt;Module (name portion of filename).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;msecs&lt;/td&gt;
+&lt;td&gt;%(msecs)d&lt;/td&gt;
+&lt;td&gt;Millisecond portion of the time when the LogRecord was created.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;message&lt;/td&gt;
+&lt;td&gt;%(message)s&lt;/td&gt;
+&lt;td&gt;The logged message, computed as msg % args. This is set when Formatter.format() is invoked.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;msg&lt;/td&gt;
+&lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
+&lt;td&gt;The format string passed in the original logging call. Merged with args to produce message, or an arbitrary object (see Using arbitrary objects as messages).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;name&lt;/td&gt;
+&lt;td&gt;%(name)s&lt;/td&gt;
+&lt;td&gt;Name of the logger used to log the call.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;pathname&lt;/td&gt;
+&lt;td&gt;%(pathname)s&lt;/td&gt;
+&lt;td&gt;Full pathname of the source file where the logging call was issued (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;process&lt;/td&gt;
+&lt;td&gt;%(process)d&lt;/td&gt;
+&lt;td&gt;Process ID (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;processName&lt;/td&gt;
+&lt;td&gt;%(processName)s&lt;/td&gt;
+&lt;td&gt;Process name (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;relativeCreated&lt;/td&gt;
+&lt;td&gt;%(relativeCreated)d&lt;/td&gt;
+&lt;td&gt;Time in milliseconds when the LogRecord was created, relative to the time the logging module was loaded.&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;thread&lt;/td&gt;
+&lt;td&gt;%(thread)d&lt;/td&gt;
+&lt;td&gt;Thread ID (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;threadName&lt;/td&gt;
+&lt;td&gt;%(threadName)s&lt;/td&gt;
+&lt;td&gt;Thread name (if available).&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+</description>
+				<pubDate>Sat, 05 Dec 2015 20:22:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2015/12/python-logging-argparse</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/python-logging-argparse</guid>
+			</item>
+		
+			<item>
 				<title>手工安装和配置Python</title>
 				<description>&lt;p&gt;Python2/Python3 多版本安装和配置&lt;/p&gt;
 
@@ -29,7 +236,8 @@ $ ./configure --with-ensurepip=install
 $ make  
 $ make altinstall
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;注意对于多个版本的python，主要版本使用&lt;code&gt;make install&lt;/code&gt;安装，其他版本使用&lt;code&gt;make altinstall&lt;/code&gt;安装！  &lt;/p&gt;
+&lt;p&gt;注意对于多个版本的python，主要版本使用&lt;code&gt;make install&lt;/code&gt;安装，其他版本使用&lt;code&gt;make altinstall&lt;/code&gt;安装！&lt;br&gt;
+在python 2.7或者3.4之后，使用--with-ensurepip=install可以自带pip，非常方便。&lt;/p&gt;
 </description>
 				<pubDate>Sat, 14 Nov 2015 23:00:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/11/manual-install-python</link>
@@ -802,136 +1010,6 @@ Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ...
 				<pubDate>Mon, 05 Oct 2015 23:31:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/10/replace-zypper-repo</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/replace-zypper-repo</guid>
-			</item>
-		
-			<item>
-				<title>笔记本搭建ESXi服务器</title>
-				<description>&lt;p&gt;让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！&lt;/p&gt;
-
-&lt;h2 id=&quot;准备工作&quot;&gt;准备工作&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;硬件：&lt;/strong&gt;  &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;CPU: Intel i5 520 M&lt;/li&gt;
-&lt;li&gt;内存：4GB&lt;/li&gt;
-&lt;li&gt;网卡: Realtek 8118/8168&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;安装介质：&lt;/strong&gt;  &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;4GB U盘一枚&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;ESXi版本：&lt;/strong&gt;  &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ESXi 5.1 ISO 镜像（VMware Hypervisor）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;为什么不安装更新的esxi-5-5或者6-0&quot;&gt;为什么不安装更新的ESXi 5.5或者6.0?&lt;/h2&gt;
-
-&lt;p&gt;其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  &lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;【安装时报错&lt;code&gt;No compatible network adapter found&lt;/code&gt;】&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;解决方案参考&lt;a href=&quot;http://bbs.51cto.com/thread-1165256-1-1.html&quot;&gt;这篇文章&lt;/a&gt; ，简单来讲：  &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;从&lt;a href=&quot;https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers&quot;&gt;这个网站&lt;/a&gt; 下载对应的网卡驱动&lt;/li&gt;
-&lt;li&gt;下载并使用&lt;a href=&quot;http://pan.baidu.com/s/1eQ2f822&quot;&gt;ESXi-Customizer-v2.7.2&lt;/a&gt; 将网卡驱动写入ISO镜像&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;【安装时提示内存不足4GB】&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;坑爹啊（╯‵□′）╯︵┴─┴~~&lt;br&gt;
-虽然说这台笔记本号称是有&amp;#39;4G内存&amp;#39;，然而却被集显吃掉了部分内存，实际只有3.8G。&lt;br&gt;
-&lt;strong&gt;安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！&lt;/strong&gt;  &lt;/p&gt;
-
-&lt;p&gt;这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃(’╥ω╥‘)  &lt;/p&gt;
-
-&lt;h2 id=&quot;下载esx-5-1&quot;&gt;下载ESX 5.1&lt;/h2&gt;
-
-&lt;p&gt;首先登录到&lt;a href=&quot;http://www.vmware.com/cn&quot;&gt;VMware官网&lt;/a&gt; ，点击&lt;code&gt;下载&lt;/code&gt;-&amp;gt;&lt;code&gt;所有下载、驱动程序和工具&lt;/code&gt; 进入到搜索页面&lt;br&gt;
-或者直接点击&lt;a href=&quot;https://my.vmware.com/cn/web/vmware/downloads&quot;&gt;这个链接&lt;/a&gt;&lt;br&gt;
-在该页面搜索&amp;#39;hypervisor 5.1&amp;#39;就可以找到对应的ISO镜像啦！&lt;br&gt;
-　&lt;br&gt;
-　&lt;em&gt;PS:&lt;br&gt;
-　你需要注册一个VMWARE帐号来获得免费使用的licence&lt;br&gt;
-　由于现在的最新版本是ESXi 6.x，直接点&lt;code&gt;下载&lt;/code&gt;-&amp;gt;&lt;code&gt;vSphere Hypervisor&lt;/code&gt;是找不到5.x的版本的！&lt;/em&gt;  &lt;/p&gt;
-
-&lt;h2 id=&quot;使用ultraiso制作安装u盘&quot;&gt;使用UltraISO制作安装U盘&lt;/h2&gt;
-
-&lt;p&gt;UltraISO可以直接&lt;a href=&quot;https://www.baidu.com/s?wd=ultraiso&quot;&gt;百度下载&lt;/a&gt;&lt;br&gt;
-&lt;strong&gt;注意：ESX 5.1自带了很多网卡驱动（比如常见的Realtek 8118/8168），你不需要再自制ISO了，如果按照6.0的方式自制ISO反而会报&lt;code&gt;No compatible network adapter found&lt;/code&gt;的错误！&lt;/strong&gt;  &lt;/p&gt;
-
-&lt;p&gt;在UltraISO中选择&lt;code&gt;文件&lt;/code&gt;-&amp;gt;&lt;code&gt;打开&lt;/code&gt;来载入ISO镜像，随后选择&lt;code&gt;启动&lt;/code&gt;-&amp;gt;&lt;code&gt;写入硬盘镜像&lt;/code&gt;来制作安装U盘。&lt;em&gt;记得要把&lt;code&gt;硬盘驱动器&lt;/code&gt;改为你的U盘哦！&lt;/em&gt;  &lt;/p&gt;
-
-&lt;h2 id=&quot;安装esxi系统&quot;&gt;安装ESXi系统&lt;/h2&gt;
-
-&lt;p&gt;将做好的U盘插入笔记本，开机时长按&lt;F12&gt;进入boot menu，选择U盘引导进入安装向导&lt;br&gt;
-向导部分还是很简单的，一路根据提示选择，可以参考&lt;a href=&quot;http://www.osyunwei.com/archives/6586.html&quot;&gt;这篇文章&lt;/a&gt;&lt;br&gt;
-安装完成后又遇到了一个问题：  &lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;【系统无法正常引导，仅提示boot up failed！】&lt;/strong&gt; &lt;/p&gt;
-
-&lt;p&gt;一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。&lt;br&gt;
-在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置...&lt;br&gt;
-最后的解决方案如下：&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;在一开始那个&lt;code&gt;Loading ESXi installer&lt;/code&gt;的界面键入Shift+O&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;下方会出现一个输入框，并且已经自动键入了&lt;code&gt;runweasel&lt;/code&gt;指令&lt;br&gt;&lt;/li&gt;
-&lt;li&gt;在&lt;code&gt;runweasel&lt;/code&gt;后添加&lt;code&gt;formatwithmbr&lt;/code&gt;，即最后输入框中的指令变成&lt;code&gt;runweasel formatwithmbr&lt;/code&gt;，回车继续安装&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这次安装完成后就可以进入ESXi系统啦！ (^o^)/&lt;br&gt;
-　&lt;br&gt;
-　&lt;em&gt;PS:顺手查了一下&lt;a href=&quot;http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html&quot;&gt;GPT和MBR的区别&lt;/a&gt;&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;安装opensuse-13-2&quot;&gt;安装OpenSUSE 13.2&lt;/h2&gt;
-
-&lt;p&gt;装完Hypervisor开始部署VM~
-首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。&lt;br&gt;
-随后把VM开机，载入client端上的ISO，再用&lt;code&gt;CTRL+ALT+INSERT&lt;/code&gt;重启虚机即可进入安装界面，一路NEXT...&lt;br&gt;
-如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项&lt;br&gt;
-&lt;a href=&quot;/images/2015-10-05/00.JPG&quot;&gt;&lt;img src=&quot;/images/2015-10-05/00.JPG&quot; alt=&quot;&quot;&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;配置和安装git&quot;&gt;配置和安装GIT&lt;/h2&gt;
-
-&lt;p&gt;1] 使用zypper安装GIT程序包：  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper install git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;2] 配置GIT用户名和邮箱：  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ git config --global user.name &amp;quot;arthurmmm&amp;quot;
-$ git config --global user.email &amp;quot;arthur_mao@live.com&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;3] 生成ssh密钥：   &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh-keygen -t rsa -C &amp;quot;arthur_mao@live.com&amp;quot;
-Generating public/private rsa key pair.
-Enter file in which to save the key (/root/.ssh/id_rsa):
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /root/.ssh/id_rsa.
-Your public key has been saved in /root/.ssh/id_rsa.pub.
-//不用更改目录和密码，敲3次回车即可
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;4] 登陆&lt;code&gt;github&lt;/code&gt;，展开右上角箭头找到并进入&lt;code&gt;setting&lt;/code&gt;页面&lt;br&gt;
-&lt;img src=&quot;/images/2015-10-05/01.JPG&quot; alt=&quot;&quot;&gt;  &lt;/p&gt;
-
-&lt;p&gt;5] 进入右侧&lt;code&gt;SSH Keys&lt;/code&gt;页面，点击&lt;code&gt;Add SSH key&lt;/code&gt;，把&lt;code&gt;/root/.ssh/id_rsa.pub&lt;/code&gt;中的内容复制到&lt;code&gt;Key&lt;/code&gt;中再点击&lt;code&gt;Add key&lt;/code&gt;   &lt;/p&gt;
-
-&lt;p&gt;6] 测试  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ssh git@github.com
-Warning: Permanently added the RSA host key for IP address &amp;#39;192.30.252.128&amp;#39; to the list of known hosts.
-PTY allocation request failed on channel 0
-Hi arthurmmm! You&amp;#39;ve successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-				<pubDate>Mon, 05 Oct 2015 12:31:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/10/establish-esxi</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/establish-esxi</guid>
 			</item>
 		
 	</channel>

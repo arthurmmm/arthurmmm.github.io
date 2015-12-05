@@ -2,44 +2,44 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>ArthurMao's Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-	<script src="/js/jquery.qrcode.min.js"></script>
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/theme.css" rel="stylesheet">
-	
-	<link href="/css/pygments.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>ArthurMao's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.qrcode.min.js"></script>
+  <script src="/js/arthurmmm.js"></script>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/theme.css" rel="stylesheet">
+  <link href="/css/pygments.css" rel="stylesheet">
 </head>
 
 <body>
 
 <div class="container-fluid">
-    <div class="row-fluid">
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                  <span class="sr-only">Toggle navigation</span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                  <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">ArthurMao's Blog</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                  <li class="active"><a href="/">Home</a></li>
-                  <li class="active visible-xs-block visible-sm-block"><a href="/categories.html">Categories</a></li>
-				  <li class="active visible-xs-block visible-sm-block"><a href="/tags.html">Tags</a></li>
-                  <li class="active"><a href="/archive.html">Archive</a></li>
-				  <li class="active"><a href="/feed.xml">RSS</a></li>
-				  <li class="active"><a href="/about.html">About Me</a></li>
-              </ul>
-            </div>
-        </div>
+  <div class="row-fluid">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">ArthurMao's Blog</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li class="active visible-xs-block visible-sm-block"><a href="/categories.html">Categories</a></li>
+          <li class="active visible-xs-block visible-sm-block"><a href="/tags.html">Tags</a></li>
+          <li class="active"><a href="/archive.html">Archive</a></li>
+          <li class="active"><a href="/feed.xml">RSS</a></li>
+          <li class="active"><a href="/about.html">About Me</a></li>
+        </ul>
+      </div>
     </div>
+  </div>
 </div>
 
 
@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2015/12/python-logging-argparse">Python logging模块介绍</a></li>
+        
           <li><a href="/2015/11/manual-install-python">手工安装和配置Python</a></li>
         
           <li><a href="/2015/10/python-re">Python正则表达式用法</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2015/10/config-centOS">配置安装CentOS</a></li>
         
           <li><a href="/2015/10/sqlalchemy-intro">NO SQL in your code! SQLAlchemy学习</a></li>
-        
-          <li><a href="/2015/10/bootstrap-responsive-utilities">Bootstrap学习笔记</a></li>
         
     </ul>
 </div>
@@ -75,7 +75,7 @@
         
 			<a href="/categories.html#front-end"><li>front-end<span class='badge'>1</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>2</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>3</span></li></a>
         
     </ul>
 </div>
@@ -83,6 +83,17 @@
         </div>
         <div class="col-md-6">
 			
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Dec 5, 2015</span>
+        <h1><a href="/2015/12/python-logging-argparse">Python logging模块介绍</a></h1>
+        <div class="post-content">
+            <p>Python logging模块介绍</p>
+
+        </div>
+    </div>
+</div>
+
 <div class="article">
     <div class="well">
 		<span class="author" id="page">Nov 14, 2015</span>
@@ -122,19 +133,6 @@
         <h1><a href="/2015/10/sqlalchemy-intro">NO SQL in your code! SQLAlchemy学习</a></h1>
         <div class="post-content">
             <p>SQLAlchemy是很棒的python ORM工具，下面简要介绍一下它的安装使用方法。  </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 11, 2015</span>
-        <h1><a href="/2015/10/bootstrap-responsive-utilities">Bootstrap学习笔记</a></h1>
-        <div class="post-content">
-            <p>这个博客的前端是在<a href="https://github.com/scotte/jekyll-clean">jekyll-clean</a> 模板的基础上进行的二次开发。<br>
-在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。<br>
-Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</a></p>
 
         </div>
     </div>
@@ -223,7 +221,7 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 23pt; color: #222;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 21.5pt; color: #444;">OpenSUSE</a>
 	
 	  
 	  
@@ -289,7 +287,7 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	  
 		
 	  
-	  <a href="/tags.html#SQLite" style="font-size: 18.5pt; color: #777;">SQLite</a>
+	  <a href="/tags.html#SQLite" style="font-size: 18pt; color: #777;">SQLite</a>
 	
 	  
 	  
