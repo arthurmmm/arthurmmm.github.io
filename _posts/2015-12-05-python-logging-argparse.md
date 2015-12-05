@@ -3,7 +3,7 @@ layout: post
 title:  'Python logging模块介绍'
 date:   2015-12-05 20:22 +0800
 comments: true
-category: os
+category: python
 tags: [Python]
 ---
 
