@@ -84,17 +84,73 @@
 
         </div>
         <div class="col-md-6">
-			<div class="well">
-    <div class="page-header">
-		<h1>About Me</h1>
-	</div>
-	<p>欢迎勾搭，联系方式↓↓↓↓</p>
-    <ul>
-		<li>Weibo：<a href="http://weibo.com/u/2522714682">@ArthurMao一_一</a></li>
-		<li>Email：<a href="mailto:arthur_mao@live.com">arthur_mao@live.com</a></li>
-	</ul>
-</div>			
-		</div>
+          <div class="article">
+            <div class="well">
+				<span class="author" id="page">Oct 24, 2015</span>
+				
+					<span class="label label-default"> centOS </span>
+				
+					<span class="label label-default"> Linux </span>
+				
+				<div class="page-header">	
+					<h1>配置安装CentOS</h1>
+				</div>
+
+				<div class="post-content">
+					<p>配置和安装CentOS的笔记，包括：配置国内源，配置jekyll，打开防火墙端口</p>
+
+<h2 id="安装过程">安装过程</h2>
+
+<ul>
+<li>配置IP信息</li>
+<li>选择webserver安装并勾选python/perl/java等常用开发包</li>
+</ul>
+
+<h2 id="配置国内源">配置国内源</h2>
+
+<p>推荐使用中科大源：<a href="https://lug.ustc.edu.cn/wiki/mirrors/help">https://lug.ustc.edu.cn/wiki/mirrors/help</a></p>
+
+<ul>
+<li>配置完成后可以<code>yum makecache</code>和<code>yum update</code>更新一下系统包</li>
+</ul>
+
+<h2 id="安装jekyll">安装jekyll</h2>
+
+<p>基本与OpenSUSE类似，参考：<a href="http://www.arthurmao.me/2015/10/establish-jekyll-on-suse/">OpenSUSE搭建jekyll服务器</a><br>
+要注意的是yum没有自带nodejs，需要安装EPEL库后再安装nodejs：</p>
+<div class="highlight"><pre><code class="language-text" data-lang="text"># yum install epel-release
+# yum install nodejs
+</code></pre></div>
+<h2 id="打开防火墙端口">打开防火墙端口</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">//暂时打开
+# firewall-cmd --add-port=4000/tcp
+
+//永久打开
+# firewall-cmd --permanent --add-port=4000/tcp
+
+//测试端口状态
+# firewall-cmd --permanent --query-port=4000/tcp
+yes
+
+//关闭端口
+# firewall-cmd --permanent --remove-port=4000/tcp
+success
+</code></pre></div>
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/10/config-centOS data-title=配置安装CentOS data-url=http://www.arthurmao.me//2015/10/config-centOS></div>
+				
+			</div>
+          </div>
+          <div class="pagination">
+              
+              <a class="btn btn-default" href="/2015/10/python-re" class="next">Newer Post</a>
+              
+              
+                <a class="btn btn-default" href="/2015/10/sqlalchemy-intro" class="previous">Older Post</a>
+              
+		  </div>
+        </div>
 		<div class="col-md-3 hidden-xs hidden-sm">
 			
 <div class="sidebar" align="center" style="padding-top: 3em;">
@@ -321,7 +377,7 @@
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
 			height:	200,
-			text:	"http://www.arthurmao.me/about.html"
+			text:	"http://www.arthurmao.me/2015/10/config-centOS"
 		});
 	</script>
 	
@@ -329,6 +385,21 @@
 		</div>
     </div>
 </div>
+
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"arthurmmm"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
 
 <div class="container-fluid hidden-xs">
     <div class="row-fluid">

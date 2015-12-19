@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></li>
+        
           <li><a href="/2015/12/python-logging-argparse">Python logging模块介绍</a></li>
         
           <li><a href="/2015/11/manual-install-python">手工安装和配置Python</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2015/10/python-re">Python正则表达式用法</a></li>
         
           <li><a href="/2015/10/config-centOS">配置安装CentOS</a></li>
-        
-          <li><a href="/2015/10/sqlalchemy-intro">NO SQL in your code! SQLAlchemy学习</a></li>
         
     </ul>
 </div>
@@ -77,12 +77,27 @@
         
 			<a href="/categories.html#python"><li>python<span class='badge'>4</span></li></a>
         
+			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
+        
     </ul>
 </div>
 
         </div>
         <div class="col-md-6">
 			
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Dec 19, 2015</span>
+        <h1><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></h1>
+        <div class="post-content">
+            <p>Linux的可用内存算法如下：<br>
+<code>available = free + cached + buffer</code><br>
+现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   </p>
+
+        </div>
+    </div>
+</div>
+
 <div class="article">
     <div class="well">
 		<span class="author" id="page">Dec 5, 2015</span>
@@ -127,17 +142,6 @@
     </div>
 </div>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 16, 2015</span>
-        <h1><a href="/2015/10/sqlalchemy-intro">NO SQL in your code! SQLAlchemy学习</a></h1>
-        <div class="post-content">
-            <p>SQLAlchemy是很棒的python ORM工具，下面简要介绍一下它的安装使用方法。  </p>
-
-        </div>
-    </div>
-</div>
-
 
 <div class="pagination">
   
@@ -159,6 +163,8 @@
 	
 	  
 		
+	  
+	
 	  
 	
 	  
@@ -354,6 +360,17 @@
 		
 	  
 	  <a href="/tags.html#Regex" style="font-size: 16pt; color: #999;">Regex</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>

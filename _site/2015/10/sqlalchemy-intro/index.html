@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ArthurMao's Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/bootstrap.min.js"></script>
+  <script src="/js/jquery.qrcode.min.js"></script>
+  <script src="/js/arthurmmm.js"></script>
+  <link href="/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/theme.css" rel="stylesheet">
+  <link href="/css/pygments.css" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">ArthurMao's Blog</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          <li class="active visible-xs-block visible-sm-block"><a href="/categories.html">Categories</a></li>
+          <li class="active visible-xs-block visible-sm-block"><a href="/tags.html">Tags</a></li>
+          <li class="active"><a href="/archive.html">Archive</a></li>
+          <li class="active"><a href="/feed.xml">RSS</a></li>
+          <li class="active"><a href="/about.html">About Me</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container container-left col-sm-12">
+    <div class="row">
+        <div class="col-md-3 hidden-xs hidden-sm">
+            <div class="sidebar" style="padding: 1.5em; padding-top: 2.6em;">
+    <h1>Recent Posts</h1>
+    <ul>
+        
+          <li><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></li>
+        
+          <li><a href="/2015/12/python-logging-argparse">Python logging模块介绍</a></li>
+        
+          <li><a href="/2015/11/manual-install-python">手工安装和配置Python</a></li>
+        
+          <li><a href="/2015/10/python-re">Python正则表达式用法</a></li>
+        
+          <li><a href="/2015/10/config-centOS">配置安装CentOS</a></li>
+        
+    </ul>
+</div>
+
+<div class="sidebar" style="padding: 1.5em;">
+    <h1>Categories</h1>
+    <ul>
+        
+			<a href="/categories.html#news"><li>news<span class='badge'>1</span></li></a>
+        
+			<a href="/categories.html#os"><li>os<span class='badge'>5</span></li></a>
+        
+			<a href="/categories.html#web-build"><li>web-build<span class='badge'>1</span></li></a>
+        
+			<a href="/categories.html#front-end"><li>front-end<span class='badge'>1</span></li></a>
+        
+			<a href="/categories.html#python"><li>python<span class='badge'>4</span></li></a>
+        
+			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
+        
+    </ul>
+</div>
+
+        </div>
+        <div class="col-md-6">
+          <div class="article">
+            <div class="well">
+				<span class="author" id="page">Oct 16, 2015</span>
+				
+					<span class="label label-default"> SQLAlchemy </span>
+				
+					<span class="label label-default"> SQLite </span>
+				
+					<span class="label label-default"> Python </span>
+				
+				<div class="page-header">	
+					<h1>NO SQL in your code! SQLAlchemy学习</h1>
+				</div>
+
+				<div class="post-content">
+					<p>SQLAlchemy是很棒的python ORM工具，下面简要介绍一下它的安装使用方法。  </p>
+
+<p><strong>Links：</strong><br>
+<a href="http://www.sqlalchemy.org/">SQLAchemy官网</a><br>
+<a href="http://docs.sqlalchemy.org/en/rel_1_0/index.html">SQLAchemy1.0帮助文档</a></p>
+
+<h2 id="安装sqlalchemy">安装SQLAlchemy</h2>
+
+<p>推荐使用pip安装：   </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">确认pip版本
+# pip -V
+pip 1.5.6 from /usr/lib/python3.4/site-packages (python 3.4)
+这里发现系统自带的pip是for python3的，我们需要的是2.7的版本
+
+安装pip for python 2.x
+# zypper install python-pip
+Loading repository data...
+Reading installed packages...
+Resolving package dependencies...
+
+The following NEW package is going to be installed:
+  python-pip
+
+1 new package to install.
+Overall download size: 1.0 MiB. Already cached: 0 B  After the operation, additional 4.7 MiB will be used.
+Continue? [y/n/? shows all options] (y):
+Retrieving package python-pip-1.5-2.1.4.noarch                                                                                          (1/1),   1.0 MiB (  4.7 MiB unpacked)
+Retrieving: python-pip-1.5-2.1.4.noarch.rpm .............................................................................................................[done (266.5 KiB/s)]
+Checking for file conflicts: ..........................................................................................................................................[done]
+(1/1) Installing: python-pip-1.5-2.1.4 ................................................................................................................................[done]
+
+使用python2.x调用pip，确认版本
+# python -m pip -V
+pip 1.5 from /usr/lib/python2.7/site-packages (python 2.7)
+
+安装SQLAlchemy
+# python -m pip install SQLAlchemy
+</code></pre></div>
+<h2 id="连接数据库">连接数据库</h2>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">DB</span> <span class="o">=</span> <span class="s">&#39;/mnt/NETSTORAGE/scripts/Test/VSC.db&#39;</span>
+<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">DB</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">BASE</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
+<span class="n">SESSION</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">ENGINE</span><span class="p">)()</span>
+</code></pre></div>
+<p>DB定义了数据库的位置，ENGINE用来连接数据库，这里<code>echo = True</code>用来显示调试信息<br>
+BASE是一个ORM基本类，之后的ORM表类需要继承这个类<br>
+SESSION是用来进行查询的指针，类似Sqlite3包中的cursor  </p>
+
+<h2 id="建立表映射">建立表映射</h2>
+
+<p>对于一个并不复杂的数据库，它所包含的表的映射关系完全可以通过类的结构表达清楚。<br>
+以下是一个简单的例子：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># ORM CLASSES</span>
+<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Person&#39;</span>
+
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+
+    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">,</span> <span class="n">viewonly</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Account</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Account&#39;</span>
+
+    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">account</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">atype</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span>
+
+    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">,</span> <span class="n">viewonly</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">PersonAccount</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;PersonAccount&#39;</span>
+
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">],</span> <span class="p">[</span><span class="n">Person</span><span class="o">.</span><span class="n">pid</span><span class="p">])</span>
+    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">Account</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
+
+    <span class="n">account</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Account&#39;</span><span class="p">)</span>
+    <span class="n">person</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Person&#39;</span><span class="p">)</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Login&#39;</span>
+
+    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;persionId&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;accountId&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Date</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">],</span> <span class="p">[</span><span class="n">Person</span><span class="o">.</span><span class="n">pid</span><span class="p">])</span>
+    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">Account</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
+    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">,</span> <span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">PersonAccount</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="n">PersonAccount</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
+
+    <span class="n">pa_map</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;PersonAccount&#39;</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li>属性<code>__tablename__</code>映射数据库中的表名。</li>
+<li>凡是映射到<code>Column(Integer, primary_key = True)</code>的类成员，都对应数据库中的一列。</li>
+<li><code>ForeignKeyConstraint</code>定义了外键关系，这是之后建立表之间<code>relationship</code>的关键。</li>
+<li><code>relationship</code>定义了表之间的关系，很多人会用<code>backref</code>的参数提供反向查找，但我更倾向于在两个类上都使用<code>relationship</code>，这样表逻辑更清楚。</li>
+</ul>
+
+<p>如果不做插入的话，类的属性不用覆盖所有表的列，<code>primary_key</code>之类的设置也不用和数据库一致。<br>
+对于多对多映射，创建relationship太麻烦，建议还是用到的时候用<code>join</code>查询吧。  </p>
+
+<h2 id="查询">查询</h2>
+
+<p>一些查询实例：</p>
+<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&quot;Print Arthur&#39;s name&quot;</span>
+<span class="n">arthur</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">arthur</span><span class="o">.</span><span class="n">name</span>
+
+<span class="k">print</span> <span class="s">&quot;Print Arthur&#39;s login history&quot;</span>
+<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">arthur</span><span class="o">.</span><span class="n">login</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">l</span><span class="o">.</span><span class="n">date</span>
+    <span class="k">print</span> <span class="s">&quot;&gt; 2015-10-14:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">l</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>
+
+<span class="k">print</span> <span class="s">&quot;Arthur&#39;s account&quot;</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PersonAccount</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="k">print</span> <span class="n">record</span>
+
+<span class="k">print</span> <span class="s">&quot;&gt; 2015-10-14 Login History for arthur&quot;</span>
+<span class="n">record</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Login</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Account</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Account</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Login</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>\
+        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span>\
+        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">d</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">a</span> <span class="ow">in</span> <span class="n">record</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> use </span><span class="si">%s</span><span class="s"> login when </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+</code></pre></div>
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/10/sqlalchemy-intro data-title=NO SQL in your code! SQLAlchemy学习 data-url=http://www.arthurmao.me//2015/10/sqlalchemy-intro></div>
+				
+			</div>
+          </div>
+          <div class="pagination">
+              
+              <a class="btn btn-default" href="/2015/10/config-centOS" class="next">Newer Post</a>
+              
+              
+                <a class="btn btn-default" href="/2015/10/bootstrap-responsive-utilities" class="previous">Older Post</a>
+              
+		  </div>
+        </div>
+		<div class="col-md-3 hidden-xs hidden-sm">
+			
+<div class="sidebar" align="center" style="padding-top: 3em;">
+
+	<div style="padding-bottom: 3em;">
+	
+	
+	
+	
+	  
+		
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	  
+	
+	
+	
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#ESXi" style="font-size: 16pt; color: #999;">ESXi</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Linux" style="font-size: 25pt; color: #000;">Linux</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#OpenSUSE" style="font-size: 21.5pt; color: #444;">OpenSUSE</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Git" style="font-size: 16pt; color: #999;">Git</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#jekyll" style="font-size: 16pt; color: #999;">jekyll</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#apache" style="font-size: 16pt; color: #999;">apache</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#JQuery" style="font-size: 16pt; color: #999;">JQuery</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Python" style="font-size: 23pt; color: #222;">Python</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#SQLite" style="font-size: 18pt; color: #777;">SQLite</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#CGI" style="font-size: 16pt; color: #999;">CGI</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Bootstrap" style="font-size: 16pt; color: #999;">Bootstrap</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#CSS" style="font-size: 16pt; color: #999;">CSS</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#SQLAlchemy" style="font-size: 16pt; color: #999;">SQLAlchemy</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#centOS" style="font-size: 16pt; color: #999;">centOS</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Regex" style="font-size: 16pt; color: #999;">Regex</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
+	
+	</div>
+		<div id="qrcodeCanvas"></div>
+	<script>
+		jQuery("#qrcodeCanvas").qrcode({
+			width:	200,
+			height:	200,
+			text:	"http://www.arthurmao.me/2015/10/sqlalchemy-intro"
+		});
+	</script>
+	
+</div>
+		</div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"arthurmmm"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
+
+<div class="container-fluid hidden-xs">
+    <div class="row-fluid">
+        <div class="span12 footer navbar-inverse navbar-fixed-bottom ">
+            <p class="copyright">&copy;2015 ArthurMao's Blog. Powered by <a href="http://jekyllrb.com">Jekyll</a>, build upon <a href="https://github.com/scotte/jekyll-clean">jekyll-clean</a>
+            under
+            <a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution</a></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+

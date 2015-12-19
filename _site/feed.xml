@@ -7,6 +7,66 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>使用Splunk生成Linux系统内存用量图</title>
+				<description>&lt;p&gt;Linux的可用内存算法如下：&lt;br&gt;
+&lt;code&gt;available = free + cached + buffer&lt;/code&gt;&lt;br&gt;
+现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&amp;lt;timestamp&amp;gt; &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;host&amp;gt; &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.free &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+&amp;lt;timestamp&amp;gt; &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;host&amp;gt; &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.cached &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+&amp;lt;timestamp&amp;gt; &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;host&amp;gt; &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.buffers &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+&amp;lt;timestamp&amp;gt; &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;host&amp;gt; &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.total &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+&amp;lt;timestamp&amp;gt; &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;host&amp;gt; &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.free &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;value&amp;gt;
+...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;现在需要使用Splunk统计若干个host的内存用量并生成报表&lt;br&gt;
+由于需要做计算的信息分布在不同行上，涉及到了Splunk的分组计算，最后的搜索语句如下：   &lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;xxx
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;host1 OR
+    &lt;span class=&quot;nv&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;host2 OR
+    ...
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;memory.* &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# 第一步使用BUCKET进行强制分片，计算每分钟的平均值，避免timestamp不同步的问题&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 比如下面这个数据：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#     11:30 itemKey=memory.cached value = 1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#     11:30 itemKey=memory.free value = 1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#     11:31 itemKey=memory.buffers value = 1&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#     11:31 itemKey=memory.total value = 5&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# 如果不进行显式分片的话默认按照时间戳分片，就会把同一组的值分到两组中去，导致结果不正确。&lt;/span&gt;
+
+BUCKET _time &lt;span class=&quot;nv&quot;&gt;span&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1m &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+STATS AVG&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;value&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; AS value BY _time hostname itemKey &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+
+&lt;span class=&quot;c&quot;&gt;# 由于stats不能做除法，这里需要把memory.total和其他值分开放在不同的field中，做法如下：&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# - 使用IF语句区分value的含义并存到指定的field中，如果不是指定的类型就设为0&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# - 使用STATS语句将相同的field求和，这样就能将不同行的数据处理到同一行中&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# - 最后使用EVAL进行同行数据计算&lt;/span&gt;
+
+EVAL &lt;span class=&quot;nv&quot;&gt;memfree&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; IF&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;memory.cached&amp;quot;&lt;/span&gt; OR
+    &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;memory.free&amp;quot;&lt;/span&gt; OR
+    &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;memory.buffers&amp;quot;&lt;/span&gt;
+    , value, 0
+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+EVAL &lt;span class=&quot;nv&quot;&gt;memtotal&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; IF&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;itemKey&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;memory.total&amp;quot;&lt;/span&gt;
+    , value, 0
+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+STATS
+    SUM&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;memfree&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; AS memfree
+    SUM&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;memtotal&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; AS memtotal
+BY hostname, _time &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+EVAL &lt;span class=&quot;nv&quot;&gt;memuseage&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;memtotal - memfree&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; / memtotal * &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; 
+TIMECHART &lt;span class=&quot;nv&quot;&gt;minspan&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1m AVG&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;memuseage&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; BY hostname
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+				<pubDate>Sat, 19 Dec 2015 15:20:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2015/12/splunk-memory-usage</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/splunk-memory-usage</guid>
+			</item>
+		
+			<item>
 				<title>Python logging模块介绍</title>
 				<description>&lt;p&gt;Python logging模块介绍&lt;/p&gt;
 
@@ -60,6 +120,42 @@
 &lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(thread)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(asctime)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(levelname)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(module)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(lineno)d&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(username)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;]: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(message)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;d&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;arthur&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;warning&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;hihi&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extra&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;d&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&quot;日志分卷归档-log-rotation&quot;&gt;日志分卷归档(log rotation)&lt;/h2&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;logging.handlers&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;使用RotatingFileHandler按日志大小分卷&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;mylogger&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;getLogger&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;mylogger&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mylogger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setLevel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(asctime)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;%(message)s&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handlers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;RotatingFileHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;#39;mylog&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; 
+    &lt;span class=&quot;n&quot;&gt;maxBytes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 1M per log&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;backupCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 10 logs in total&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# class logging.handlers.RotatingFileHandler(filename, mode=&amp;#39;a&amp;#39;, maxBytes=0, backupCount=0, encoding=None, delay=0)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Formatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FORMAT&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# If you want to use GMT t/z&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;time&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;converter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gmtime&lt;/span&gt; 
+&lt;span class=&quot;c&quot;&gt;####&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;setFormatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;formatter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mylogger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;addHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mylogger&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;#39;Log a message here&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;按照时间分卷只需将上面例子中的logging.handlers.RotatingFileHandler替换成logging.handlers.TimedRotatingFileHandler&lt;/span&gt;
+&lt;span class=&quot;sd&quot;&gt;&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;handler&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;handlers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TimedRotatingFileHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;#39;mylog&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;when&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;W0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;utc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# class logging.handlers.TimedRotatingFileHandler(filename, when=&amp;#39;h&amp;#39;, interval=1, backupCount=0, encoding=None, delay=False, utc=False)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&quot;logging模块的一些参考表格&quot;&gt;logging模块的一些参考表格&lt;/h2&gt;
 
@@ -880,136 +976,6 @@ gem &amp;#39;github-pages&amp;#39;
 				<pubDate>Tue, 06 Oct 2015 20:10:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/10/establish-jekyll-on-suse</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/establish-jekyll-on-suse</guid>
-			</item>
-		
-			<item>
-				<title>OpenSUSE配置国内源</title>
-				<description>&lt;p&gt;OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
-本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。&lt;/p&gt;
-
-&lt;h2 id=&quot;查看zypper帮助文档：&quot;&gt;查看zypper帮助文档：&lt;/h2&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -h | less
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;列出所有安装源：&quot;&gt;列出所有安装源：&lt;/h2&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper -lr
- | Alias                     | Name                               | Enabled | Refresh | Type
---+---------------------------+------------------------------------+---------+---------+------
-1 | openSUSE-13.2-0           | openSUSE-13.2-0                    | Yes     | No      | yast2
-2 | repo-debug                | openSUSE-13.2-Debug                | No      | Yes     | NONE
-3 | repo-debug-update         | openSUSE-13.2-Update-Debug         | No      | Yes     | NONE
-4 | repo-debug-update-non-oss | openSUSE-13.2-Update-Debug-Non-Oss | No      | Yes     | NONE
-5 | repo-non-oss              | openSUSE-13.2-Non-Oss              | Yes     | Yes     | yast2
-6 | repo-oss                  | openSUSE-13.2-Oss                  | Yes     | Yes     | yast2
-7 | repo-source               | openSUSE-13.2-Source               | No      | Yes     | NONE
-8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
-9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;禁用并停止更新自带源：&quot;&gt;禁用并停止更新自带源：&lt;/h2&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper mr -d -R --all
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&quot;配置浙大源：&quot;&gt;配置浙大源：&lt;/h2&gt;
-
-&lt;p&gt;1] 进入&lt;code&gt;/etc/zypp/repos.d&lt;/code&gt;文件夹  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ ll
-total 36
--rw-r--r-- 1 root root 191 Oct  5 23:22 openSUSE-13.2-0.repo
--rw-r--r-- 1 root root 188 Oct  5 23:25 repo-debug-update-non-oss.repo
--rw-r--r-- 1 root root 164 Oct  5 23:25 repo-debug-update.repo
--rw-r--r-- 1 root root 165 Oct  5 23:25 repo-debug.repo
--rw-r--r-- 1 root root 168 Oct  5 23:25 repo-non-oss.repo
--rw-r--r-- 1 root root 156 Oct  5 23:25 repo-oss.repo
--rw-r--r-- 1 root root 168 Oct  5 23:25 repo-source.repo
--rw-r--r-- 1 root root 170 Oct  5 23:25 repo-update-non-oss.repo
--rw-r--r-- 1 root root 146 Oct  5 23:25 repo-update.repo
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;2] 执行以下指令批量创建ZJU源(&lt;a href=&quot;http://mirrors.zju.edu.cn/opensuse&quot;&gt;http://mirrors.zju.edu.cn/opensuse&lt;/a&gt;)  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ find . -name &amp;quot;repo*&amp;quot; | sed &amp;#39;s/.\///g&amp;#39; | xargs -i sh -c &amp;quot;cat {} | sed &amp;#39;s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g&amp;#39; | sed &amp;#39;s/repo-/zju\/repo-/g&amp;#39; | sed &amp;#39;s/openSUSE-13.2/zju\/openSUSE-13.2/g&amp;#39; &amp;gt; zju-{}&amp;quot;
-
-$ zypper lr
-#  | Alias                         | Name                                   | Enabled | Refresh
----+-------------------------------+----------------------------------------+---------+--------
- 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
- 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
- 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
- 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
- 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
- 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
- 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
- 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
- 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
-10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | No      | No
-11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | No      | No
-12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | No      | No
-13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | No      | No
-14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | No      | No
-15 | zju/repo-source               | zju/openSUSE-13.2-Source               | No      | No
-16 | zju/repo-update               | zju/openSUSE-13.2-Update               | No      | No
-17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | No      | No
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;3] 执行以下指令启用zju源并打开自动更新   &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper lr | grep zju | awk &amp;#39;{print $3}&amp;#39; | xargs -i zypper mr -e -r {}
-Repository &amp;#39;zju/repo-debug&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-debug&amp;#39;.
-Repository &amp;#39;zju/repo-debug-update&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-debug-update&amp;#39;.
-Repository &amp;#39;zju/repo-debug-update-non-oss&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-debug-update-non-oss&amp;#39;.
-Repository &amp;#39;zju/repo-non-oss&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-non-oss&amp;#39;.
-Repository &amp;#39;zju/repo-oss&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-oss&amp;#39;.
-Repository &amp;#39;zju/repo-source&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-source&amp;#39;.
-Repository &amp;#39;zju/repo-update&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-update&amp;#39;.
-Repository &amp;#39;zju/repo-update-non-oss&amp;#39; has been successfully enabled.
-Autorefresh has been enabled for repository &amp;#39;zju/repo-update-non-oss&amp;#39;.
-
-$ zypper lr
-#  | Alias                         | Name                                   | Enabled | Refresh
----+-------------------------------+----------------------------------------+---------+--------
- 1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
- 2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
- 3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
- 4 | repo-debug-update-non-oss     | openSUSE-13.2-Update-Debug-Non-Oss     | No      | No
- 5 | repo-non-oss                  | openSUSE-13.2-Non-Oss                  | No      | No
- 6 | repo-oss                      | openSUSE-13.2-Oss                      | No      | No
- 7 | repo-source                   | openSUSE-13.2-Source                   | No      | No
- 8 | repo-update                   | openSUSE-13.2-Update                   | No      | No
- 9 | repo-update-non-oss           | openSUSE-13.2-Update-Non-Oss           | No      | No
-10 | zju/repo-debug                | zju/openSUSE-13.2-Debug                | Yes     | Yes
-11 | zju/repo-debug-update         | zju/openSUSE-13.2-Update-Debug         | Yes     | Yes
-12 | zju/repo-debug-update-non-oss | zju/openSUSE-13.2-Update-Debug-Non-Oss | Yes     | Yes
-13 | zju/repo-non-oss              | zju/openSUSE-13.2-Non-Oss              | Yes     | Yes
-14 | zju/repo-oss                  | zju/openSUSE-13.2-Oss                  | Yes     | Yes
-15 | zju/repo-source               | zju/openSUSE-13.2-Source               | Yes     | Yes
-16 | zju/repo-update               | zju/openSUSE-13.2-Update               | Yes     | Yes
-17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | Yes     | Yes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;4] 更新源  &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;$ zypper refresh
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Debug&amp;#39; metadata ............................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Debug&amp;#39; cache .................................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Debug&amp;#39; metadata .....................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Update-Debug&amp;#39; cache ..........................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&amp;#39; metadata .............................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&amp;#39; cache ..................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Non-Oss&amp;#39; metadata ..........................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Non-Oss&amp;#39; cache ...............................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Oss&amp;#39; metadata ..............................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Oss&amp;#39; cache ...................................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Source&amp;#39; metadata ...........................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Source&amp;#39; cache ................................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Update&amp;#39; metadata ...........................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Update&amp;#39; cache ................................................................................................[done]
-Retrieving repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; metadata ...................................................................................[done]
-Building repository &amp;#39;zju/openSUSE-13.2-Update-Non-Oss&amp;#39; cache ........................................................................................[done]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;EOF&gt;&lt;/p&gt;
-</description>
-				<pubDate>Mon, 05 Oct 2015 23:31:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/10/replace-zypper-repo</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/10/replace-zypper-repo</guid>
 			</item>
 		
 	</channel>

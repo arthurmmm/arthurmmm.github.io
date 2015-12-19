@@ -64,6 +64,46 @@ logger.warning('hihi',extra=d)
 
 ```
 
+## 日志分卷归档(log rotation)
+
+```python
+import logging.handlers
+
+'''
+使用RotatingFileHandler按日志大小分卷
+'''
+
+mylogger = logging.getLogger('mylogger')
+mylogger.setLevel(logging.DEBUG)
+FORMAT = '%(asctime)s: %(message)s'
+handler = logging.handlers.RotatingFileHandler(
+    'mylog', 
+    maxBytes=1024*1024, # 1M per log
+    backupCount=10, # 10 logs in total
+)
+# class logging.handlers.RotatingFileHandler(filename, mode='a', maxBytes=0, backupCount=0, encoding=None, delay=0)
+
+formatter = logging.Formatter(fmt=FORMAT)
+# If you want to use GMT t/z
+import time
+formatter.converter = time.gmtime 
+####
+handler.setFormatter(formatter)
+mylogger.addHandler(handler)
+mylogger.info('Log a message here')
+
+'''
+按照时间分卷只需将上面例子中的logging.handlers.RotatingFileHandler替换成logging.handlers.TimedRotatingFileHandler
+'''
+handler = logging.handlers.TimedRotatingFileHandler(
+    'mylog',
+    when = 'W0',
+    utc = True,
+)
+# class logging.handlers.TimedRotatingFileHandler(filename, when='h', interval=1, backupCount=0, encoding=None, delay=False, utc=False)
+
+```
+
 ## logging模块的一些参考表格
 
 ### basicConfig的属性

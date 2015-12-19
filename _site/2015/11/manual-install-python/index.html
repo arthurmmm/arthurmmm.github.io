@@ -84,17 +84,58 @@
 
         </div>
         <div class="col-md-6">
-			<div class="well">
-    <div class="page-header">
-		<h1>About Me</h1>
-	</div>
-	<p>欢迎勾搭，联系方式↓↓↓↓</p>
-    <ul>
-		<li>Weibo：<a href="http://weibo.com/u/2522714682">@ArthurMao一_一</a></li>
-		<li>Email：<a href="mailto:arthur_mao@live.com">arthur_mao@live.com</a></li>
-	</ul>
-</div>			
-		</div>
+          <div class="article">
+            <div class="well">
+				<span class="author" id="page">Nov 14, 2015</span>
+				
+					<span class="label label-default"> Python </span>
+				
+					<span class="label label-default"> Linux </span>
+				
+				<div class="page-header">	
+					<h1>手工安装和配置Python</h1>
+				</div>
+
+				<div class="post-content">
+					<p>Python2/Python3 多版本安装和配置</p>
+
+<h2 id="下载python包">下载python包</h2>
+
+<p>网站：<a href="https://www.python.org/ftp/python/">https://www.python.org/ftp/python/</a>  </p>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz   
+$ wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz  
+</code></pre></div>
+<h2 id="配置和安装">配置和安装</h2>
+<div class="highlight"><pre><code class="language-text" data-lang="text">$ yum install sqlite-devel openssl openssl-devel
+
+$ tar xvzf Python-2.7.9.tgz    
+$ ./configure --with-ensurepip=install
+$ make  
+$ make install
+
+$ tar xvzf Python-3.4.3.tgz    
+$ ./configure --with-ensurepip=install
+$ make  
+$ make altinstall
+</code></pre></div>
+<p>注意对于多个版本的python，主要版本使用<code>make install</code>安装，其他版本使用<code>make altinstall</code>安装！<br>
+在python 2.7或者3.4之后，使用--with-ensurepip=install可以自带pip，非常方便。</p>
+
+				</div>
+				
+				<div class="ds-thread" data-thread-key=/2015/11/manual-install-python data-title=手工安装和配置Python data-url=http://www.arthurmao.me//2015/11/manual-install-python></div>
+				
+			</div>
+          </div>
+          <div class="pagination">
+              
+              <a class="btn btn-default" href="/2015/12/python-logging-argparse" class="next">Newer Post</a>
+              
+              
+                <a class="btn btn-default" href="/2015/10/python-re" class="previous">Older Post</a>
+              
+		  </div>
+        </div>
 		<div class="col-md-3 hidden-xs hidden-sm">
 			
 <div class="sidebar" align="center" style="padding-top: 3em;">
@@ -321,7 +362,7 @@
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
 			height:	200,
-			text:	"http://www.arthurmao.me/about.html"
+			text:	"http://www.arthurmao.me/2015/11/manual-install-python"
 		});
 	</script>
 	
@@ -329,6 +370,21 @@
 		</div>
     </div>
 </div>
+
+
+
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"arthurmmm"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+</script>
+
 
 <div class="container-fluid hidden-xs">
     <div class="row-fluid">
