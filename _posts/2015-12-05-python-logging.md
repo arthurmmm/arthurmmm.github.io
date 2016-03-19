@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  'Python logging模块介绍'
+title:  'Python logging模块'
 date:   2015-12-05 20:22 +0800
 comments: true
 category: python
 tags: [Python]
 ---
 
-Python logging模块介绍
+Python logging模块笔记
 
 ## logging 模块的基本用法
 
