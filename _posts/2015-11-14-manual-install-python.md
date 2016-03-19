@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  '手工安装和配置Python'
+title:  'Python2/Python3 多版本安装和配置'
 date:   2015-11-14 23:00 +0800
 comments: true
 category: python

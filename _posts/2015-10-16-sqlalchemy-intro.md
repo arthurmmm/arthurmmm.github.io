@@ -3,11 +3,11 @@ layout: post
 title:  'NO SQL in your code! SQLAlchemy学习'
 date:   2015-10-16 21:54 +0800
 comments: true
-category: Python
+category: python
 tags: [SQLAlchemy, SQLite, Python]
 ---
 
-SQLAlchemy是很棒的python ORM工具，下面简要介绍一下它的安装使用方法。  
+SQLAlchemy是一种python ORM工具，简单记录一下它的安装使用方法。  
 
 **Links：**  
 [SQLAchemy官网](http://www.sqlalchemy.org/)  
