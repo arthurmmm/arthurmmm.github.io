@@ -3,7 +3,7 @@ layout: post
 title:  '配置安装CentOS'
 date:   2015-10-24 23:00 +0800
 comments: true
-category: os
+category: OS
 tags: [centOS, Linux]
 ---
 

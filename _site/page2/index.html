@@ -50,15 +50,15 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
+        
+          <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
+        
+          <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
+        
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
         
           <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
-        
-          <li><a href="/2016/01/python-argparse">Python argparse模块</a></li>
-        
-          <li><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></li>
-        
-          <li><a href="/2015/12/python-logging">Python logging模块</a></li>
         
     </ul>
 </div>
@@ -71,13 +71,13 @@
         
 			<a href="/categories.html#os"><li>os<span class='badge'>5</span></li></a>
         
-			<a href="/categories.html#web-build"><li>web-build<span class='badge'>1</span></li></a>
+			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#front-end"><li>front-end<span class='badge'>1</span></li></a>
-        
-			<a href="/categories.html#python"><li>python<span class='badge'>7</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
+        
+			<a href="/categories.html#shell"><li>shell<span class='badge'>2</span></li></a>
         
     </ul>
 </div>
@@ -85,6 +85,42 @@
         </div>
         <div class="col-md-6">
 			
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Jan 3, 2016</span>
+        <h1><a href="/2016/01/python-argparse">Python argparse模块</a></h1>
+        <div class="post-content">
+            <p>Python有很多命令行选项相关的模块，比如getopt, optparse等，各种都用过一下后感觉还是argparse最方便最轻量。<br>
+官方详细文档：  <a href="https://docs.python.org/2.7/library/argparse.html">https://docs.python.org/2.7/library/argparse.html</a></p>
+
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Dec 19, 2015</span>
+        <h1><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></h1>
+        <div class="post-content">
+            <p>Linux的可用内存算法如下：<br>
+<code>available = free + cached + buffer</code><br>
+现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   </p>
+
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class="well">
+		<span class="author" id="page">Dec 5, 2015</span>
+        <h1><a href="/2015/12/python-logging">Python logging模块</a></h1>
+        <div class="post-content">
+            <p>Python logging模块笔记</p>
+
+        </div>
+    </div>
+</div>
+
 <div class="article">
     <div class="well">
 		<span class="author" id="page">Nov 14, 2015</span>
@@ -102,41 +138,6 @@
         <h1><a href="/2015/10/python-re">Python正则表达式用法</a></h1>
         <div class="post-content">
             <p>最近做项目遇到了一个匹配引号的问题，记录一下</p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 24, 2015</span>
-        <h1><a href="/2015/10/config-centOS">配置安装CentOS</a></h1>
-        <div class="post-content">
-            <p>配置和安装CentOS的笔记，包括：配置国内源，配置jekyll，打开防火墙端口</p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 16, 2015</span>
-        <h1><a href="/2015/10/sqlalchemy-intro">NO SQL in your code! SQLAlchemy学习</a></h1>
-        <div class="post-content">
-            <p>SQLAlchemy是一种python ORM工具，简单记录一下它的安装使用方法。  </p>
-
-        </div>
-    </div>
-</div>
-
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 11, 2015</span>
-        <h1><a href="/2015/10/bootstrap-responsive-utilities">Bootstrap学习笔记</a></h1>
-        <div class="post-content">
-            <p>这个博客的前端是在<a href="https://github.com/scotte/jekyll-clean">jekyll-clean</a> 模板的基础上进行的二次开发。<br>
-在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。<br>
-Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</a></p>
 
         </div>
     </div>
@@ -199,6 +200,8 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	
 	  
 	
+	  
+	
 	
 	
 	
@@ -222,7 +225,7 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 22.5pt; color: #333;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -233,7 +236,7 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 20pt; color: #555;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  
@@ -299,7 +302,7 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 	  
 		
 	  
-	  <a href="/tags.html#SQLite" style="font-size: 17.5pt; color: #888;">SQLite</a>
+	  <a href="/tags.html#SQLite" style="font-size: 17pt; color: #888;">SQLite</a>
 	
 	  
 	  
@@ -377,6 +380,17 @@ Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</
 		
 	  
 	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
+	
+	  
+	  
+	  
+	  
+		
+	  
+	  
+		
+	  
+	  <a href="/tags.html#shell" style="font-size: 17pt; color: #888;">shell</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>
