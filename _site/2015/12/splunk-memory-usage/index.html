@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -95,59 +95,67 @@
 				</div>
 
 				<div class="post-content">
-					<p>Linux的可用内存算法如下：<br>
-<code>available = free + cached + buffer</code><br>
+					<p>Linux的可用内存算法如下：<br />
+<code>available = free + cached + buffer</code> <br />
 现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   </p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">&lt;timestamp&gt; <span class="nv">hostname</span><span class="o">=</span>&lt;host&gt; <span class="nv">itemKey</span><span class="o">=</span>memory.free <span class="nv">value</span><span class="o">=</span>&lt;value&gt;
-&lt;timestamp&gt; <span class="nv">hostname</span><span class="o">=</span>&lt;host&gt; <span class="nv">itemKey</span><span class="o">=</span>memory.cached <span class="nv">value</span><span class="o">=</span>&lt;value&gt;
-&lt;timestamp&gt; <span class="nv">hostname</span><span class="o">=</span>&lt;host&gt; <span class="nv">itemKey</span><span class="o">=</span>memory.buffers <span class="nv">value</span><span class="o">=</span>&lt;value&gt;
-&lt;timestamp&gt; <span class="nv">hostname</span><span class="o">=</span>&lt;host&gt; <span class="nv">itemKey</span><span class="o">=</span>memory.total <span class="nv">value</span><span class="o">=</span>&lt;value&gt;
-&lt;timestamp&gt; <span class="nv">hostname</span><span class="o">=</span>&lt;host&gt; <span class="nv">itemKey</span><span class="o">=</span>memory.free <span class="nv">value</span><span class="o">=</span>&lt;value&gt;
+
+<p>```bash</p>
+<timestamp> hostname=<host> itemKey=memory.free value=<value>
+<timestamp> hostname=<host> itemKey=memory.cached value=<value>
+<timestamp> hostname=<host> itemKey=memory.buffers value=<value>
+<timestamp> hostname=<host> itemKey=memory.total value=<value>
+<timestamp> hostname=<host> itemKey=memory.free value=<value>
 ...
-</code></pre></div>
-<p>现在需要使用Splunk统计若干个host的内存用量并生成报表<br>
-由于需要做计算的信息分布在不同行上，涉及到了Splunk的分组计算，最后的搜索语句如下：   </p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">index</span><span class="o">=</span>xxx
-<span class="o">{</span>
-    <span class="nv">hostname</span><span class="o">=</span>host1 OR
-    <span class="nv">hostname</span><span class="o">=</span>host2 OR
+
+```
+
+现在需要使用Splunk统计若干个host的内存用量并生成报表  
+由于需要做计算的信息分布在不同行上，涉及到了Splunk的分组计算，最后的搜索语句如下：   
+
+```bash
+index=xxx
+{
+    hostname=host1 OR
+    hostname=host2 OR
     ...
-<span class="o">}</span>
-<span class="nv">itemKey</span><span class="o">=</span>memory.* <span class="p">|</span>
+}
+itemKey=memory.* |
 
-<span class="c"># 第一步使用BUCKET进行强制分片，计算每分钟的平均值，避免timestamp不同步的问题</span>
-<span class="c"># 比如下面这个数据：</span>
-<span class="c">#     11:30 itemKey=memory.cached value = 1</span>
-<span class="c">#     11:30 itemKey=memory.free value = 1</span>
-<span class="c">#     11:31 itemKey=memory.buffers value = 1</span>
-<span class="c">#     11:31 itemKey=memory.total value = 5</span>
-<span class="c"># 如果不进行显式分片的话默认按照时间戳分片，就会把同一组的值分到两组中去，导致结果不正确。</span>
+# 第一步使用BUCKET进行强制分片，计算每分钟的平均值，避免timestamp不同步的问题
+# 比如下面这个数据：
+#     11:30 itemKey=memory.cached value = 1
+#     11:30 itemKey=memory.free value = 1
+#     11:31 itemKey=memory.buffers value = 1
+#     11:31 itemKey=memory.total value = 5
+# 如果不进行显式分片的话默认按照时间戳分片，就会把同一组的值分到两组中去，导致结果不正确。
 
-BUCKET _time <span class="nv">span</span><span class="o">=</span>1m <span class="p">|</span> 
-STATS AVG<span class="o">(</span>value<span class="o">)</span> AS value BY _time hostname itemKey <span class="p">|</span> 
+BUCKET _time span=1m | 
+STATS AVG(value) AS value BY _time hostname itemKey | 
 
-<span class="c"># 由于stats不能做除法，这里需要把memory.total和其他值分开放在不同的field中，做法如下：</span>
-<span class="c"># - 使用IF语句区分value的含义并存到指定的field中，如果不是指定的类型就设为0</span>
-<span class="c"># - 使用STATS语句将相同的field求和，这样就能将不同行的数据处理到同一行中</span>
-<span class="c"># - 最后使用EVAL进行同行数据计算</span>
+# 由于stats不能做除法，这里需要把memory.total和其他值分开放在不同的field中，做法如下：
+# - 使用IF语句区分value的含义并存到指定的field中，如果不是指定的类型就设为0
+# - 使用STATS语句将相同的field求和，这样就能将不同行的数据处理到同一行中
+# - 最后使用EVAL进行同行数据计算
 
-EVAL <span class="nv">memfree</span> <span class="o">=</span> IF<span class="o">(</span>
-    <span class="nv">itemKey</span> <span class="o">==</span> <span class="s2">&quot;memory.cached&quot;</span> OR
-    <span class="nv">itemKey</span> <span class="o">==</span> <span class="s2">&quot;memory.free&quot;</span> OR
-    <span class="nv">itemKey</span> <span class="o">==</span> <span class="s2">&quot;memory.buffers&quot;</span>
+EVAL memfree = IF(
+    itemKey == "memory.cached" OR
+    itemKey == "memory.free" OR
+    itemKey == "memory.buffers"
     , value, 0
-<span class="o">)</span> <span class="p">|</span> 
-EVAL <span class="nv">memtotal</span> <span class="o">=</span> IF<span class="o">(</span>
-    <span class="nv">itemKey</span> <span class="o">==</span> <span class="s2">&quot;memory.total&quot;</span>
+) | 
+EVAL memtotal = IF(
+    itemKey == "memory.total"
     , value, 0
-<span class="o">)</span> <span class="p">|</span> 
+) | 
 STATS
-    SUM<span class="o">(</span>memfree<span class="o">)</span> AS memfree
-    SUM<span class="o">(</span>memtotal<span class="o">)</span> AS memtotal
-BY hostname, _time <span class="p">|</span> 
-EVAL <span class="nv">memuseage</span> <span class="o">=</span> <span class="o">(</span>memtotal - memfree<span class="o">)</span> / memtotal * <span class="m">100</span> <span class="p">|</span> 
-TIMECHART <span class="nv">minspan</span><span class="o">=</span>1m AVG<span class="o">(</span>memuseage<span class="o">)</span> BY hostname
-</code></pre></div>
+    SUM(memfree) AS memfree
+    SUM(memtotal) AS memtotal
+BY hostname, _time | 
+EVAL memuseage = (memtotal - memfree) / memtotal * 100 | 
+TIMECHART minspan=1m AVG(memuseage) BY hostname
+```
+</value></host></timestamp></value></host></timestamp></value></host></timestamp></value></host></timestamp></value></host></timestamp>
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/12/splunk-memory-usage data-title=使用Splunk生成Linux系统内存用量图 data-url=http://www.arthurmao.me//2015/12/splunk-memory-usage></div>
@@ -231,7 +239,7 @@ TIMECHART <span class="nv">minspan</span><span class="o">=</span>1m AVG<span cla
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -242,7 +250,7 @@ TIMECHART <span class="nv">minspan</span><span class="o">=</span>1m AVG<span cla
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

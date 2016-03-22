@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -106,111 +106,120 @@
 <h2 id="sqlite">SQLite</h2>
 
 <p>创建数据库test.db和表employee  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># sqlite3 test.db
+
+<p>```
+# sqlite3 test.db
 SQLite version 3.8.6 2014-08-15 11:46:33
-Enter &quot;.help&quot; for usage hints.
+Enter “.help” for usage hints.</p>
 
-sqlite&gt; .database
+<p>sqlite&gt; .database
 seq  name             file
----  ---------------  ----------------------------------------------------------
-0    main             /mnt/NETSTORAGE/scripts/sqlite_db/test.db
+—  —————  ———————————————————-
+0    main             /mnt/NETSTORAGE/scripts/sqlite_db/test.db</p>
 
-sqlite&gt; CREATE TABLE employee(id INTEGER PRIMARY KEY, name TEXT, age INTEGER);
+<p>sqlite&gt; CREATE TABLE employee(id INTEGER PRIMARY KEY, name TEXT, age INTEGER);</p>
 
-sqlite&gt; .table
-employee
+<p>sqlite&gt; .table
+employee</p>
 
-sqlite&gt; INSERT INTO employee(id, name, age) VALUES(1, &quot;arthur&quot;, 24);
-sqlite&gt; INSERT INTO employee(id, name, age) VALUES(2, &quot;vincent&quot;, 35);
-sqlite&gt; INSERT INTO employee(id,name,age) VALUES(3,&quot;arthur&quot;,22);
+<p>sqlite&gt; INSERT INTO employee(id, name, age) VALUES(1, “arthur”, 24);
+sqlite&gt; INSERT INTO employee(id, name, age) VALUES(2, “vincent”, 35);
+sqlite&gt; INSERT INTO employee(id,name,age) VALUES(3,”arthur”,22);</p>
 
-sqlite&gt; .mode column
+<p>sqlite&gt; .mode column
 sqlite&gt; .header on
 sqlite&gt; SELECT * FROM employee;
 id          name        age
-----------  ----------  ----------
+———-  ———-  ———-
 1           arthur      24
 2           vincent     35
 3           arthur      22
-</code></pre></div>
-<h2 id="index-html">Index.html</h2>
-<div class="highlight"><pre><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD HTML 4.01 Transitional//EN&quot;&gt;</span>
+```</p>
 
-<span class="nt">&lt;html</span> <span class="na">lang=</span><span class="s">&quot;zh-cn&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;head&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Content-Type&quot;</span> <span class="na">content=</span><span class="s">&quot;text/html; charset=UTF-8&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Page-Enter&quot;</span> <span class="na">content=</span><span class="s">&quot;blendTrans(Duration=0.5)&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;meta</span> <span class="na">http-equiv=</span><span class="s">&quot;Page-Exit&quot;</span> <span class="na">content=</span><span class="s">&quot;blendTrans(Duration=0.5)&quot;</span><span class="nt">&gt;</span>
-<span class="nt">&lt;title&gt;</span>404 NOT FOUND!<span class="nt">&lt;/title&gt;</span>
+<h2 id="indexhtml">Index.html</h2>
 
-<span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;http://code.jquery.com/jquery-1.4.1.min.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+<p>```html
+&lt;!DOCTYPE html PUBLIC “-//W3C//DTD HTML 4.01 Transitional//EN”&gt;</p>
 
-<span class="nt">&lt;script&gt;</span>
-    <span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;调试信息&#39;</span><span class="p">);</span>
-        <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#btn&quot;</span><span class="p">).</span><span class="nx">click</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
-            <span class="nx">$</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/cgi-bin/test.py&quot;</span><span class="p">,{</span><span class="nx">name</span><span class="o">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#emp_name&quot;</span><span class="p">).</span><span class="nx">val</span><span class="p">()},</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">){</span>
-                <span class="k">if</span> <span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;查无此人！&quot;</span><span class="p">);</span>
-                <span class="p">}</span>
-                <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="nx">alert</span><span class="p">(</span><span class="s2">&quot;员工ID：&quot;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot;\n员工姓名：&quot;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;\n员工年龄：&quot;</span> <span class="o">+</span> <span class="nx">data</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">age</span><span class="p">);</span>
-                <span class="p">}</span>           
-            <span class="p">},</span> <span class="s2">&quot;json&quot;</span><span class="p">);</span>
-        <span class="p">});</span>
-    <span class="p">});</span>
-<span class="nt">&lt;/script&gt;</span>
+<html lang="zh-cn">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="Page-Enter" content="blendTrans(Duration=0.5)" />
+<meta http-equiv="Page-Exit" content="blendTrans(Duration=0.5)" />
+<title>404 NOT FOUND!</title>
 
-<span class="nt">&lt;/head&gt;</span>
-<span class="nt">&lt;body&gt;</span>
-<span class="nt">&lt;div&gt;</span>
-<span class="nt">&lt;p&gt;</span>一个简单的查询程序：<span class="nt">&lt;/p&gt;</span>
-<span class="nt">&lt;p&gt;</span>输入员工姓名，查询数据库中该员工的详细信息（ID、姓名、年龄）<span class="nt">&lt;/p&gt;</span>
-<span class="nt">&lt;p&gt;</span>数据库中共有三名员工：<span class="nt">&lt;/p&gt;</span>
-<span class="nt">&lt;code&gt;</span>
-    <span class="nt">&lt;p&gt;</span>id|name|age<span class="nt">&lt;/p&gt;</span>
-    <span class="nt">&lt;p&gt;</span>1|arthur|24<span class="nt">&lt;/p&gt;</span>
-    <span class="nt">&lt;p&gt;</span>2|vincent|35<span class="nt">&lt;/p&gt;</span>
-    <span class="nt">&lt;p&gt;</span>3|arthur|22<span class="nt">&lt;/p&gt;</span>
-<span class="nt">&lt;/code&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div&gt;</span>
-    请输入员工姓名：
-    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;emp_name&quot;</span> <span class="nt">/&gt;&lt;button</span> <span class="na">id=</span><span class="s">&quot;btn&quot;</span><span class="nt">&gt;</span>OK<span class="nt">&lt;/button&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;/body&gt;&lt;/html&gt;</span>
-</code></pre></div>
-<h2 id="test-py">test.py</h2>
+<script src="http://code.jquery.com/jquery-1.4.1.min.js"></script>
+
+<script>
+    $(function()
+    {
+		console.log('调试信息');
+		$("#btn").click(function(){
+			$.get("/cgi-bin/test.py",{name: $("#emp_name").val()},function(data){
+				if (data.length == 0) {
+					alert("查无此人！");
+				}
+				for (var i = 0; i < data.length; i++) {
+					alert("员工ID：" + data[i].id + "\n员工姓名：" + data[i].name + "\n员工年龄：" + data[i].age);
+				}			
+			}, "json");
+		});
+    });
+</script>
+
+</head>
+<body>
+<div>
+<p>一个简单的查询程序：</p>
+<p>输入员工姓名，查询数据库中该员工的详细信息（ID、姓名、年龄）</p>
+<p>数据库中共有三名员工：</p>
+<code>
+	<p>id|name|age</p>
+	<p>1|arthur|24</p>
+	<p>2|vincent|35</p>
+	<p>3|arthur|22</p>
+</code>
+</div>
+<div>
+	请输入员工姓名：
+	<input id="emp_name" /><button id="btn">OK</button>
+</div>
+</body></html>
+<p>```</p>
+
+<h2 id="testpy">test.py</h2>
 
 <p>创建python CGI，放入<code>cgi-bin</code>目录下并且设置权限<code>chmod +x test.py</code>  </p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c">#!/usr/bin/python</span>
 
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">cgi</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">sqlite3</span>
+<p>```python
+#!/usr/bin/python</p>
 
-<span class="c"># Header</span>
-<span class="k">print</span> <span class="s">&quot;&quot;</span>
+<p>import os, sys, cgi, json, sqlite3</p>
 
-<span class="c"># Get values from HTTP request</span>
-<span class="n">form</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">FieldStorage</span><span class="p">()</span>
-<span class="n">name</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(</span><span class="s">&#39;name&#39;</span><span class="p">)</span>
+<h1 id="header">Header</h1>
+<p>print “”</p>
 
-<span class="c"># Connect SQLite</span>
-<span class="n">db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s">&#39;/mnt/NETSTORAGE/scripts/sqlite_db/test.db&#39;</span><span class="p">)</span>
-<span class="n">dbcu</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<h1 id="get-values-from-http-request">Get values from HTTP request</h1>
+<p>form = cgi.FieldStorage()
+name = form.getvalue(‘name’)</p>
 
-<span class="c"># Query thru name</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s">&#39;SELECT * FROM employee WHERE name=&quot;</span><span class="si">%s</span><span class="s">&quot;&#39;</span> <span class="o">%</span> <span class="n">name</span>
-<span class="c"># return </span>
-<span class="n">employee</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">dbcu</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
-    <span class="n">employee</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>\
-        <span class="s">&quot;id&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>\
-        <span class="s">&quot;name&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>\
-        <span class="s">&quot;age&quot;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">2</span><span class="p">]})</span>
-<span class="k">print</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">employee</span><span class="p">)</span>
-</code></pre></div>
+<h1 id="connect-sqlite">Connect SQLite</h1>
+<p>db = sqlite3.connect(‘/mnt/NETSTORAGE/scripts/sqlite_db/test.db’)
+dbcu = db.cursor()</p>
+
+<h1 id="query-thru-name">Query thru name</h1>
+<p>query = ‘SELECT * FROM employee WHERE name=”%s”’ % name
+# return 
+employee = []
+results = dbcu.execute(query).fetchall()
+for res in results:
+	employee.append({\
+		“id”: res[0],\
+		“name”: res[1],\
+		“age”: res[2]})
+print json.dumps(employee)
+```</p>
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/10/jquery-python-sqlite-sample data-title=创建JQuery PythonCGI SQLite示例 data-url=http://www.arthurmao.me//2015/10/jquery-python-sqlite-sample></div>
@@ -294,7 +303,7 @@ id          name        age
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -305,7 +314,7 @@ id          name        age
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

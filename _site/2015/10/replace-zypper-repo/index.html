@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -100,11 +100,16 @@
 					<p>OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
 本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。</p>
 
-<h2 id="查看zypper帮助文档：">查看zypper帮助文档：</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -h | less
-</code></pre></div>
-<h2 id="列出所有安装源：">列出所有安装源：</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper -lr
+<h2 id="zypper">查看zypper帮助文档：</h2>
+
+<p><code>
+$ zypper -h | less
+</code></p>
+
+<h2 id="section">列出所有安装源：</h2>
+
+<p><code>
+$ zypper -lr
  | Alias                     | Name                               | Enabled | Refresh | Type
 --+---------------------------+------------------------------------+---------+---------+------
 1 | openSUSE-13.2-0           | openSUSE-13.2-0                    | Yes     | No      | yast2
@@ -116,14 +121,20 @@
 7 | repo-source               | openSUSE-13.2-Source               | No      | Yes     | NONE
 8 | repo-update               | openSUSE-13.2-Update               | Yes     | Yes     | NONE
 9 | repo-update-non-oss       | openSUSE-13.2-Update-Non-Oss       | Yes     | Yes     | NONE
-</code></pre></div>
-<h2 id="禁用并停止更新自带源：">禁用并停止更新自带源：</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper mr -d -R --all
-</code></pre></div>
-<h2 id="配置浙大源：">配置浙大源：</h2>
+</code></p>
+
+<h2 id="section-1">禁用并停止更新自带源：</h2>
+
+<p><code>
+$ zypper mr -d -R --all
+</code></p>
+
+<h2 id="section-2">配置浙大源：</h2>
 
 <p>1] 进入<code>/etc/zypp/repos.d</code>文件夹  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ ll
+
+<p><code>
+$ ll
 total 36
 -rw-r--r-- 1 root root 191 Oct  5 23:22 openSUSE-13.2-0.repo
 -rw-r--r-- 1 root root 188 Oct  5 23:25 repo-debug-update-non-oss.repo
@@ -134,13 +145,16 @@ total 36
 -rw-r--r-- 1 root root 168 Oct  5 23:25 repo-source.repo
 -rw-r--r-- 1 root root 170 Oct  5 23:25 repo-update-non-oss.repo
 -rw-r--r-- 1 root root 146 Oct  5 23:25 repo-update.repo
-</code></pre></div>
-<p>2] 执行以下指令批量创建ZJU源(<a href="http://mirrors.zju.edu.cn/opensuse">http://mirrors.zju.edu.cn/opensuse</a>)  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ find . -name &quot;repo*&quot; | sed &#39;s/.\///g&#39; | xargs -i sh -c &quot;cat {} | sed &#39;s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g&#39; | sed &#39;s/repo-/zju\/repo-/g&#39; | sed &#39;s/openSUSE-13.2/zju\/openSUSE-13.2/g&#39; &gt; zju-{}&quot;
+</code>  </p>
 
-$ zypper lr
+<p>2] 执行以下指令批量创建ZJU源(http://mirrors.zju.edu.cn/opensuse)  </p>
+
+<p>```
+$ find . -name “repo*” | sed ‘s/.\///g’ | xargs -i sh -c “cat {} | sed ‘s/download.opensuse.org/mirrors.zju.edu.cn\/opensuse/g’ | sed ‘s/repo-/zju\/repo-/g’ | sed ‘s/openSUSE-13.2/zju\/openSUSE-13.2/g’ &gt; zju-{}”</p>
+
+<p>$ zypper lr
 #  | Alias                         | Name                                   | Enabled | Refresh
----+-------------------------------+----------------------------------------+---------+--------
+—+——————————-+—————————————-+———+——–
  1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
  2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
  3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
@@ -158,29 +172,32 @@ $ zypper lr
 15 | zju/repo-source               | zju/openSUSE-13.2-Source               | No      | No
 16 | zju/repo-update               | zju/openSUSE-13.2-Update               | No      | No
 17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | No      | No
-</code></pre></div>
-<p>3] 执行以下指令启用zju源并打开自动更新   </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper lr | grep zju | awk &#39;{print $3}&#39; | xargs -i zypper mr -e -r {}
-Repository &#39;zju/repo-debug&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-debug&#39;.
-Repository &#39;zju/repo-debug-update&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-debug-update&#39;.
-Repository &#39;zju/repo-debug-update-non-oss&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-debug-update-non-oss&#39;.
-Repository &#39;zju/repo-non-oss&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-non-oss&#39;.
-Repository &#39;zju/repo-oss&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-oss&#39;.
-Repository &#39;zju/repo-source&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-source&#39;.
-Repository &#39;zju/repo-update&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-update&#39;.
-Repository &#39;zju/repo-update-non-oss&#39; has been successfully enabled.
-Autorefresh has been enabled for repository &#39;zju/repo-update-non-oss&#39;.
+```  </p>
 
-$ zypper lr
+<p>3] 执行以下指令启用zju源并打开自动更新   </p>
+
+<p>```
+$ zypper lr | grep zju | awk ‘{print $3}’ | xargs -i zypper mr -e -r {}
+Repository ‘zju/repo-debug’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-debug’.
+Repository ‘zju/repo-debug-update’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-debug-update’.
+Repository ‘zju/repo-debug-update-non-oss’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-debug-update-non-oss’.
+Repository ‘zju/repo-non-oss’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-non-oss’.
+Repository ‘zju/repo-oss’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-oss’.
+Repository ‘zju/repo-source’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-source’.
+Repository ‘zju/repo-update’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-update’.
+Repository ‘zju/repo-update-non-oss’ has been successfully enabled.
+Autorefresh has been enabled for repository ‘zju/repo-update-non-oss’.</p>
+
+<p>$ zypper lr
 #  | Alias                         | Name                                   | Enabled | Refresh
----+-------------------------------+----------------------------------------+---------+--------
+—+——————————-+—————————————-+———+——–
  1 | openSUSE-13.2-0               | openSUSE-13.2-0                        | No      | No
  2 | repo-debug                    | openSUSE-13.2-Debug                    | No      | No
  3 | repo-debug-update             | openSUSE-13.2-Update-Debug             | No      | No
@@ -198,27 +215,32 @@ $ zypper lr
 15 | zju/repo-source               | zju/openSUSE-13.2-Source               | Yes     | Yes
 16 | zju/repo-update               | zju/openSUSE-13.2-Update               | Yes     | Yes
 17 | zju/repo-update-non-oss       | zju/openSUSE-13.2-Update-Non-Oss       | Yes     | Yes
-</code></pre></div>
+```</p>
+
 <p>4] 更新源  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper refresh
-Retrieving repository &#39;zju/openSUSE-13.2-Debug&#39; metadata ............................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Debug&#39; cache .................................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug&#39; metadata .....................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Update-Debug&#39; cache ..........................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; metadata .............................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Update-Debug-Non-Oss&#39; cache ..................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Non-Oss&#39; metadata ..........................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Non-Oss&#39; cache ...............................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Oss&#39; metadata ..............................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Oss&#39; cache ...................................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Source&#39; metadata ...........................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Source&#39; cache ................................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Update&#39; metadata ...........................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Update&#39; cache ................................................................................................[done]
-Retrieving repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; metadata ...................................................................................[done]
-Building repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; cache ........................................................................................[done]
-</code></pre></div>
-<p><EOF></p>
+
+<p><code>
+$ zypper refresh
+Retrieving repository 'zju/openSUSE-13.2-Debug' metadata ............................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Debug' cache .................................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Update-Debug' metadata .....................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Update-Debug' cache ..........................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Update-Debug-Non-Oss' metadata .............................................................................[done]
+Building repository 'zju/openSUSE-13.2-Update-Debug-Non-Oss' cache ..................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Non-Oss' metadata ..........................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Non-Oss' cache ...............................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Oss' metadata ..............................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Oss' cache ...................................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Source' metadata ...........................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Source' cache ................................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Update' metadata ...........................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Update' cache ................................................................................................[done]
+Retrieving repository 'zju/openSUSE-13.2-Update-Non-Oss' metadata ...................................................................................[done]
+Building repository 'zju/openSUSE-13.2-Update-Non-Oss' cache ........................................................................................[done]
+</code></p>
+
+<eof>
+</eof>
 
 				</div>
 				
@@ -303,7 +325,7 @@ Building repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; cache ...........
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -314,7 +336,7 @@ Building repository &#39;zju/openSUSE-13.2-Update-Non-Oss&#39; cache ...........
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

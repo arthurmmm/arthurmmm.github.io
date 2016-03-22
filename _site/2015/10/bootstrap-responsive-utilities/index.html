@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -97,63 +97,72 @@
 				</div>
 
 				<div class="post-content">
-					<p>这个博客的前端是在<a href="https://github.com/scotte/jekyll-clean">jekyll-clean</a> 模板的基础上进行的二次开发。<br>
-在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。<br>
+					<p>这个博客的前端是在<a href="https://github.com/scotte/jekyll-clean">jekyll-clean</a> 模板的基础上进行的二次开发。<br />
+在二次开发过程中为了调教页面布局，自己也学习了一些Bootstrap的基础知识，简单的做一些记录。<br />
 Bootstrap详细的帮助文档<a href="http://getbootstrap.com/css/">在这里</a></p>
 
-<h2 id="xs-lt-sm-lt-md-lt-lg">xs &lt; sm &lt; md &lt; lg</h2>
+<h2 id="xs--sm--md--lg">xs &lt; sm &lt; md &lt; lg</h2>
 
 <p>这个是bootstrap对屏幕大小的划分，直观的讲：  </p>
 
 <ul>
-<li><code>xs</code> -&gt; 手机<br></li>
-<li><code>sm</code> -&gt; ipad竖屏/ipad-mini</li>
-<li><code>md</code> -&gt; ipad横屏</li>
-<li><code>lg</code> -&gt; 电脑</li>
+  <li><code>xs</code> -&gt; 手机  </li>
+  <li><code>sm</code> -&gt; ipad竖屏/ipad-mini</li>
+  <li><code>md</code> -&gt; ipad横屏</li>
+  <li><code>lg</code> -&gt; 电脑</li>
 </ul>
 
-<h2 id="col-xs-sm-md-lg-number">col-(xs/sm/md/lg)-(number)</h2>
+<h2 id="col-xssmmdlg-number">col-(xs/sm/md/lg)-(number)</h2>
 
-<p>bootstrap的宽度控制。<br>
-bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表示在对应的屏幕上占用几格。<br>
+<p>bootstrap的宽度控制。<br />
+bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表示在对应的屏幕上占用几格。<br />
 如果设置了<code>col-sm</code>，那么该设置会对所有大于等于<code>sm</code>的屏幕(即<code>sm、md、lg</code>)生效。  </p>
-<div class="highlight"><pre><code class="language-html" data-lang="html">Example:
 
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-sm-9&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</code></pre></div>
-<h2 id="hidden-xs-sm-md-lg">hidden-(xs/sm/md/lg)</h2>
+<p>```html
+Example:</p>
 
-<p>仅在对应的屏幕尺寸隐藏该组件。<br>
+<div class="col-sm-9"></div>
+<p>```</p>
+
+<h2 id="hidden-xssmmdlg">hidden-(xs/sm/md/lg)</h2>
+
+<p>仅在对应的屏幕尺寸隐藏该组件。<br />
 如果需要在<code>xs</code>和<code>sm</code>同时隐藏，需要设置两次。  </p>
-<div class="highlight"><pre><code class="language-html" data-lang="html">Example:
 
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;col-md-9 hidden-xs hidden-sm&quot;</span><span class="nt">&gt;&lt;/div&gt;</span>
-</code></pre></div>
-<h2 id="响应式导航栏">响应式导航栏</h2>
+<p>```html
+Example:</p>
+
+<div class="col-md-9 hidden-xs hidden-sm"></div>
+<p>```</p>
+
+<h2 id="section">响应式导航栏</h2>
 
 <p>响应式导航栏会在<code>xs</code>屏幕上会折叠成一个按钮  </p>
-<div class="highlight"><pre><code class="language-html" data-lang="html">Example:
 
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;navbar-header&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;button</span> <span class="na">type=</span><span class="s">&quot;button&quot;</span> <span class="na">class=</span><span class="s">&quot;navbar-toggle&quot;</span> <span class="na">data-toggle=</span><span class="s">&quot;collapse&quot;</span> <span class="na">data-target=</span><span class="s">&quot;#bs-example-navbar-collapse-1&quot;</span><span class="nt">&gt;</span>
-    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;sr-only&quot;</span><span class="nt">&gt;</span>Toggle navigation<span class="nt">&lt;/span&gt;</span>
-    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;icon-bar&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
-    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;icon-bar&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
-    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;icon-bar&quot;</span><span class="nt">&gt;&lt;/span&gt;</span>
-  <span class="nt">&lt;/button&gt;</span>
-  <span class="nt">&lt;a</span> <span class="na">class=</span><span class="s">&quot;navbar-brand&quot;</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span><span class="nt">&gt;</span>ArthurMao&#39;s Blog<span class="nt">&lt;/a&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;collapse navbar-collapse&quot;</span> <span class="na">id=</span><span class="s">&quot;bs-example-navbar-collapse-1&quot;</span><span class="nt">&gt;</span>
-  <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;nav navbar-nav&quot;</span><span class="nt">&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/&quot;</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active visible-xs-block visible-sm-block&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/categories.html&quot;</span><span class="nt">&gt;</span>Categories<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active visible-xs-block visible-sm-block&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/tags.html&quot;</span><span class="nt">&gt;</span>Tags<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/archive.html&quot;</span><span class="nt">&gt;</span>Archive<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/feed.xml&quot;</span><span class="nt">&gt;</span>RSS<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-      <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;active&quot;</span><span class="nt">&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;/about.html&quot;</span><span class="nt">&gt;</span>About Me<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
-  <span class="nt">&lt;/ul&gt;</span>
-<span class="nt">&lt;/div&gt;</span>
-</code></pre></div>
+<p>```html
+Example:</p>
+
+<div class="navbar-header">
+  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+    <span class="sr-only">Toggle navigation</span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+    <span class="icon-bar"></span>
+  </button>
+  <a class="navbar-brand" href="/">ArthurMao's Blog</a>
+</div>
+<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  <ul class="nav navbar-nav">
+	  <li class="active"><a href="/">Home</a></li>
+	  <li class="active visible-xs-block visible-sm-block"><a href="/categories.html">Categories</a></li>
+	  <li class="active visible-xs-block visible-sm-block"><a href="/tags.html">Tags</a></li>
+	  <li class="active"><a href="/archive.html">Archive</a></li>
+	  <li class="active"><a href="/feed.xml">RSS</a></li>
+	  <li class="active"><a href="/about.html">About Me</a></li>
+  </ul>
+</div>
+<p>```  </p>
+
 <p>分两部分：  </p>
 
 <h3 id="navbar-header">navbar-header</h3>
@@ -163,16 +172,16 @@ bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表
 <p>按钮：  </p>
 
 <ul>
-<li>设定<code>class</code>为<code>navbar-toggle</code></li>
-<li><code>data-toggle</code>设置为<code>collapse</code></li>
-<li><code>data-target</code>指向<code>narbar-collapse</code>的<code>id</code></li>
-<li>内容一般为三组<code>&lt;span class=&quot;icon-bar&quot;&gt;</code>，即按钮显示成三条横线</li>
+  <li>设定<code>class</code>为<code>navbar-toggle</code></li>
+  <li><code>data-toggle</code>设置为<code>collapse</code></li>
+  <li><code>data-target</code>指向<code>narbar-collapse</code>的<code>id</code></li>
+  <li>内容一般为三组<code>&lt;span class="icon-bar"&gt;</code>，即按钮显示成三条横线</li>
 </ul>
 
 <p>LOGO：</p>
 
 <ul>
-<li>设定<code>class</code>为<code>navbar-brand</code>的超链接<br></li>
+  <li>设定<code>class</code>为<code>navbar-brand</code>的超链接  </li>
 </ul>
 
 <h3 id="collapse-navbar-collapse">collapse navbar-collapse</h3>
@@ -180,8 +189,8 @@ bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表
 <p>展开时的设置，一组无序列表。  </p>
 
 <ul>
-<li>设置的<code>id</code>需要与<code>data-target</code>对应<br></li>
-<li>列表<code>ul</code>的<code>class</code>设置为<code>nav navbar-nav</code><br></li>
+  <li>设置的<code>id</code>需要与<code>data-target</code>对应  </li>
+  <li>列表<code>ul</code>的<code>class</code>设置为<code>nav navbar-nav</code>  </li>
 </ul>
 
 				</div>
@@ -267,7 +276,7 @@ bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -278,7 +287,7 @@ bootstrap把屏幕划分成12格，后面的数字<code>&lt;number&gt;</code>表
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

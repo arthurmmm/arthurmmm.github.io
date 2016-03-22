@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -101,55 +101,76 @@
 				<div class="post-content">
 					<p>Open SUSE环境下搭建本地jekyll服务器的步骤</p>
 
-<h2 id="安装ruby">安装Ruby</h2>
+<h2 id="ruby">安装Ruby</h2>
 
 <p>OpenSUSE 13.2自带了ruby2.1，无需额外安装  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># ruby --version
+
+<p><code>
+# ruby --version
 ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-linux-gnu]
-</code></pre></div>
-<h2 id="安装bundler">安装bundler</h2>
+</code></p>
+
+<h2 id="bundler">安装bundler</h2>
 
 <p>1] 将gem源替换成国内的taobao镜像源</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># gem source -r https://rubygems.org
+
+<p>```
+# gem source -r https://rubygems.org
 https://ruby.taobao.org removed from sources
 # gem sources -a https://ruby.taobao.org
 https://ruby.taobao.org added to sources
 # gem sources
-*** CURRENT SOURCES ***
+<em>** CURRENT SOURCES **</em></p>
 
-https://ruby.taobao.org
-</code></pre></div>
+<p>https://ruby.taobao.org
+```</p>
+
 <p>2] 安装bundle  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># gem install bundler
+
+<p><code>
+# gem install bundler
 Fetching: bundler-1.10.6.gem (100%)
 Successfully installed bundler-1.10.6
 Parsing documentation for bundler-1.10.6
 Installing ri documentation for bundler-1.10.6
 Done installing documentation for bundler after 6 seconds
 1 gem installed
-</code></pre></div>
-<h2 id="使用bundler安装github-pages">使用bundler安装github-pages</h2>
+</code></p>
+
+<h2 id="bundlergithub-pages">使用bundler安装github-pages</h2>
 
 <p>1] 在根目录下创建<code>Gemfile</code>文件，并写入以下内容  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">source &#39;https://ruby.taobao.org&#39;
-gem &#39;github-pages&#39;
-</code></pre></div>
+
+<p><code>
+source 'https://ruby.taobao.org'
+gem 'github-pages'
+</code></p>
+
 <p>2] 对于全新的OpenSUSE 13.2需要额外安装以下依赖包  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># zypper install ruby-devel make zlib-devel patch gcc nodejs
-</code></pre></div>
+
+<p><code>
+# zypper install ruby-devel make zlib-devel patch gcc nodejs
+</code></p>
+
 <p>3] 启动bundler安装github-pages，如果报错请检查一下必要的依赖包是否都装了  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># bundle.ruby2.1 install
-</code></pre></div>
+
+<p><code>
+# bundle.ruby2.1 install
+</code></p>
+
 <p>4] 在gitpage根目录下执行<code>bundle.ruby2.1 exec jekyll serve</code>即可启动服务器  </p>
 
-<h3 id="小贴士">小贴士</h3>
+<h3 id="section">小贴士</h3>
 
 <p>1] 由于指令比较长，建议使用alias替换，比如：  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">alias jekyll=&#39;bundle.ruby2.1 exec jekyll serve&#39;
-</code></pre></div>
+
+<p><code>
+alias jekyll='bundle.ruby2.1 exec jekyll serve'
+</code></p>
+
 <p>2] OpenSUSE默认的防火墙会屏蔽掉4000端口，如需外部访问请配置防火墙打开4000端口！  </p>
 
-<p><a href="/images/2015-10-06/01.JPG"><img src="/images/2015-10-06/01.JPG" alt=""></a>  </p>
+<p><a href="/images/2015-10-06/01.JPG"><img src="/images/2015-10-06/01.JPG" alt="" /></a>  </p>
 
 				</div>
 				
@@ -234,7 +255,7 @@ gem &#39;github-pages&#39;
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -245,7 +266,7 @@ gem &#39;github-pages&#39;
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

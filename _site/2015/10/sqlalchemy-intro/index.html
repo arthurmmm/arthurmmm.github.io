@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -101,144 +101,160 @@
 				<div class="post-content">
 					<p>SQLAlchemy是一种python ORM工具，简单记录一下它的安装使用方法。  </p>
 
-<p><strong>Links：</strong><br>
-<a href="http://www.sqlalchemy.org/">SQLAchemy官网</a><br>
+<p><strong>Links：</strong><br />
+<a href="http://www.sqlalchemy.org/">SQLAchemy官网</a><br />
 <a href="http://docs.sqlalchemy.org/en/rel_1_0/index.html">SQLAchemy1.0帮助文档</a></p>
 
-<h2 id="安装sqlalchemy">安装SQLAlchemy</h2>
+<h2 id="sqlalchemy">安装SQLAlchemy</h2>
 
 <p>推荐使用pip安装：   </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">确认pip版本
+
+<p>```
+确认pip版本
 # pip -V
 pip 1.5.6 from /usr/lib/python3.4/site-packages (python 3.4)
-这里发现系统自带的pip是for python3的，我们需要的是2.7的版本
+这里发现系统自带的pip是for python3的，我们需要的是2.7的版本</p>
 
-安装pip for python 2.x
+<p>安装pip for python 2.x
 # zypper install python-pip
-Loading repository data...
-Reading installed packages...
-Resolving package dependencies...
+Loading repository data…
+Reading installed packages…
+Resolving package dependencies…</p>
 
-The following NEW package is going to be installed:
-  python-pip
+<p>The following NEW package is going to be installed:
+  python-pip</p>
 
-1 new package to install.
+<p>1 new package to install.
 Overall download size: 1.0 MiB. Already cached: 0 B  After the operation, additional 4.7 MiB will be used.
 Continue? [y/n/? shows all options] (y):
 Retrieving package python-pip-1.5-2.1.4.noarch                                                                                          (1/1),   1.0 MiB (  4.7 MiB unpacked)
-Retrieving: python-pip-1.5-2.1.4.noarch.rpm .............................................................................................................[done (266.5 KiB/s)]
-Checking for file conflicts: ..........................................................................................................................................[done]
-(1/1) Installing: python-pip-1.5-2.1.4 ................................................................................................................................[done]
+Retrieving: python-pip-1.5-2.1.4.noarch.rpm ……………………………………………………………………………………………….[done (266.5 KiB/s)]
+Checking for file conflicts: …………………………………………………………………………………………………………………………[done]
+(1/1) Installing: python-pip-1.5-2.1.4 ………………………………………………………………………………………………………………..[done]</p>
 
-使用python2.x调用pip，确认版本
+<p>使用python2.x调用pip，确认版本
 # python -m pip -V
-pip 1.5 from /usr/lib/python2.7/site-packages (python 2.7)
+pip 1.5 from /usr/lib/python2.7/site-packages (python 2.7)</p>
 
-安装SQLAlchemy
+<p>安装SQLAlchemy
 # python -m pip install SQLAlchemy
-</code></pre></div>
-<h2 id="连接数据库">连接数据库</h2>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.ext.declarative</span> <span class="kn">import</span> <span class="n">declarative_base</span>
-<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="o">*</span>
+```</p>
 
-<span class="n">DB</span> <span class="o">=</span> <span class="s">&#39;/mnt/NETSTORAGE/scripts/Test/VSC.db&#39;</span>
-<span class="n">ENGINE</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s">&#39;sqlite:///</span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">DB</span><span class="p">,</span> <span class="n">echo</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-<span class="n">BASE</span> <span class="o">=</span> <span class="n">declarative_base</span><span class="p">()</span>
-<span class="n">SESSION</span> <span class="o">=</span> <span class="n">sessionmaker</span><span class="p">(</span><span class="n">bind</span><span class="o">=</span><span class="n">ENGINE</span><span class="p">)()</span>
-</code></pre></div>
-<p>DB定义了数据库的位置，ENGINE用来连接数据库，这里<code>echo = True</code>用来显示调试信息<br>
-BASE是一个ORM基本类，之后的ORM表类需要继承这个类<br>
+<h2 id="section">连接数据库</h2>
+
+<p>```python
+from sqlalchemy import *
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import *</p>
+
+<p>DB = ‘/mnt/NETSTORAGE/scripts/Test/VSC.db’
+ENGINE = create_engine(‘sqlite:///%s’ % DB, echo = True)
+BASE = declarative_base()
+SESSION = sessionmaker(bind=ENGINE)()
+```</p>
+
+<p>DB定义了数据库的位置，ENGINE用来连接数据库，这里<code>echo = True</code>用来显示调试信息<br />
+BASE是一个ORM基本类，之后的ORM表类需要继承这个类<br />
 SESSION是用来进行查询的指针，类似Sqlite3包中的cursor  </p>
 
-<h2 id="建立表映射">建立表映射</h2>
+<h2 id="section-1">建立表映射</h2>
 
-<p>对于一个并不复杂的数据库，它所包含的表的映射关系完全可以通过类的结构表达清楚。<br>
+<p>对于一个并不复杂的数据库，它所包含的表的映射关系完全可以通过类的结构表达清楚。<br />
 以下是一个简单的例子：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="c"># ORM CLASSES</span>
-<span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Person&#39;</span>
 
-    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+<p>```python
+# ORM CLASSES
+class Person(BASE):
+    <strong>tablename</strong> = ‘Person’</p>
 
-    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">,</span> <span class="n">viewonly</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<pre><code>pid = Column('id', Integer, primary_key = True)
+name = Column(String)
 
-<span class="k">class</span> <span class="nc">Account</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Account&#39;</span>
+login = relationship('Login', viewonly = True)
+</code></pre>
 
-    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="n">account</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
-    <span class="n">atype</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;type&#39;</span><span class="p">,</span> <span class="n">String</span><span class="p">)</span>
+<p>class Account(BASE):
+    <strong>tablename</strong> = ‘Account’</p>
 
-    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">,</span> <span class="n">viewonly</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<pre><code>aid = Column('id', Integer, primary_key = True)
+account = Column(String)
+atype = Column('type', String)
 
-<span class="k">class</span> <span class="nc">PersonAccount</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;PersonAccount&#39;</span>
+login = relationship('Login', viewonly = True)
+</code></pre>
 
-    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<p>class PersonAccount(BASE):
+    <strong>tablename</strong> = ‘PersonAccount’</p>
 
-    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">],</span> <span class="p">[</span><span class="n">Person</span><span class="o">.</span><span class="n">pid</span><span class="p">])</span>
-    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">Account</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
+<pre><code>pid = Column(Integer, primary_key = True)
+aid = Column(Integer, primary_key = True)
 
-    <span class="n">account</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Account&#39;</span><span class="p">)</span>
-    <span class="n">person</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Person&#39;</span><span class="p">)</span>
-    <span class="n">login</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;Login&#39;</span><span class="p">)</span>
+ForeignKeyConstraint([pid], [Person.pid])
+ForeignKeyConstraint([aid], [Account.aid])
 
+account = relationship('Account')
+person = relationship('Person')
+login = relationship('Login')
+</code></pre>
 
-<span class="k">class</span> <span class="nc">Login</span><span class="p">(</span><span class="n">BASE</span><span class="p">):</span>
-    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&#39;Login&#39;</span>
+<p>class Login(BASE):
+    <strong>tablename</strong> = ‘Login’</p>
 
-    <span class="n">pid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;persionId&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="n">aid</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="s">&#39;accountId&#39;</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-    <span class="n">date</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Date</span><span class="p">,</span> <span class="n">primary_key</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<pre><code>pid = Column('persionId', Integer, primary_key = True)
+aid = Column('accountId', Integer, primary_key = True)
+date = Column(Date, primary_key = True)
 
-    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">],</span> <span class="p">[</span><span class="n">Person</span><span class="o">.</span><span class="n">pid</span><span class="p">])</span>
-    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">Account</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
-    <span class="n">ForeignKeyConstraint</span><span class="p">([</span><span class="n">pid</span><span class="p">,</span> <span class="n">aid</span><span class="p">],</span> <span class="p">[</span><span class="n">PersonAccount</span><span class="o">.</span><span class="n">pid</span><span class="p">,</span> <span class="n">PersonAccount</span><span class="o">.</span><span class="n">aid</span><span class="p">])</span>
+ForeignKeyConstraint([pid], [Person.pid])
+ForeignKeyConstraint([aid], [Account.aid])
+ForeignKeyConstraint([pid, aid], [PersonAccount.pid, PersonAccount.aid])
 
-    <span class="n">pa_map</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span><span class="s">&#39;PersonAccount&#39;</span><span class="p">)</span>
-</code></pre></div>
+pa_map = relationship('PersonAccount')
+</code></pre>
+
+<p>```  </p>
+
 <ul>
-<li>属性<code>__tablename__</code>映射数据库中的表名。</li>
-<li>凡是映射到<code>Column(Integer, primary_key = True)</code>的类成员，都对应数据库中的一列。</li>
-<li><code>ForeignKeyConstraint</code>定义了外键关系，这是之后建立表之间<code>relationship</code>的关键。</li>
-<li><code>relationship</code>定义了表之间的关系，很多人会用<code>backref</code>的参数提供反向查找，但我更倾向于在两个类上都使用<code>relationship</code>，这样表逻辑更清楚。</li>
+  <li>属性<code>__tablename__</code>映射数据库中的表名。</li>
+  <li>凡是映射到<code>Column(Integer, primary_key = True)</code>的类成员，都对应数据库中的一列。</li>
+  <li><code>ForeignKeyConstraint</code>定义了外键关系，这是之后建立表之间<code>relationship</code>的关键。</li>
+  <li><code>relationship</code>定义了表之间的关系，很多人会用<code>backref</code>的参数提供反向查找，但我更倾向于在两个类上都使用<code>relationship</code>，这样表逻辑更清楚。</li>
 </ul>
 
-<p>如果不做插入的话，类的属性不用覆盖所有表的列，<code>primary_key</code>之类的设置也不用和数据库一致。<br>
+<p>如果不做插入的话，类的属性不用覆盖所有表的列，<code>primary_key</code>之类的设置也不用和数据库一致。<br />
 对于多对多映射，创建relationship太麻烦，建议还是用到的时候用<code>join</code>查询吧。  </p>
 
-<h2 id="查询">查询</h2>
+<h2 id="section-2">查询</h2>
 
 <p>一些查询实例：</p>
-<div class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">print</span> <span class="s">&quot;Print Arthur&#39;s name&quot;</span>
-<span class="n">arthur</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
-<span class="k">print</span> <span class="n">arthur</span><span class="o">.</span><span class="n">name</span>
 
-<span class="k">print</span> <span class="s">&quot;Print Arthur&#39;s login history&quot;</span>
-<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">arthur</span><span class="o">.</span><span class="n">login</span><span class="p">:</span>
-    <span class="k">print</span> <span class="n">l</span><span class="o">.</span><span class="n">date</span>
-    <span class="k">print</span> <span class="s">&quot;&gt; 2015-10-14:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span> <span class="n">l</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>
+<p>```python
+print “Print Arthur’s name”
+arthur = SESSION.query(Person).filter(Person.name == ‘Arthur’).one()
+print arthur.name</p>
 
-<span class="k">print</span> <span class="s">&quot;Arthur&#39;s account&quot;</span>
-<span class="n">record</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Account</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PersonAccount</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="k">print</span> <span class="n">record</span>
+<p>print “Print Arthur’s login history”
+for l in arthur.login:
+    print l.date
+    print “&gt; 2015-10-14:%s” % ( l.date &gt; datetime.date(2015,10,14))</p>
 
-<span class="k">print</span> <span class="s">&quot;&gt; 2015-10-14 Login History for arthur&quot;</span>
-<span class="n">record</span> <span class="o">=</span> <span class="n">SESSION</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Login</span><span class="o">.</span><span class="n">date</span><span class="p">,</span> <span class="n">Person</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">Account</span><span class="o">.</span><span class="n">account</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Person</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">Account</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Login</span><span class="o">.</span><span class="n">date</span> <span class="o">&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">14</span><span class="p">))</span>\
-        <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Person</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s">&#39;Arthur&#39;</span><span class="p">)</span>\
-        <span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<p>print “Arthur’s account”
+record = SESSION.query(Account.account)\
+        .join(PersonAccount).join(Person)\
+        .filter(Person.name == ‘Arthur’)\
+        .all()
+print record</p>
 
-<span class="k">for</span> <span class="n">d</span><span class="p">,</span><span class="n">n</span><span class="p">,</span><span class="n">a</span> <span class="ow">in</span> <span class="n">record</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s"> use </span><span class="si">%s</span><span class="s"> login when </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
-</code></pre></div>
+<p>print “&gt; 2015-10-14 Login History for arthur”
+record = SESSION.query(Login.date, Person.name, Account.account)\
+        .join(Person).join(Account)\
+        .filter(Login.date &gt; datetime.date(2015,10,14))\
+        .filter(Person.name == ‘Arthur’)\
+        .all()</p>
+
+<p>for d,n,a in record:
+    print “%s use %s login when %s” % (n,a,d)
+```</p>
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/10/sqlalchemy-intro data-title=NO SQL in your code! SQLAlchemy学习 data-url=http://www.arthurmao.me//2015/10/sqlalchemy-intro></div>
@@ -322,7 +338,7 @@ SESSION是用来进行查询的指针，类似Sqlite3包中的cursor  </p>
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -333,7 +349,7 @@ SESSION是用来进行查询的指针，类似Sqlite3包中的cursor  </p>
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

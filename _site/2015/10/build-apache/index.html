@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -101,65 +101,85 @@
 				<div class="post-content">
 					<p>OpenSUSE上搭建apache服务器的步骤</p>
 
-<h2 id="安装apache">安装apache</h2>
+<h2 id="apache">安装apache</h2>
 
 <p>1] 下载apache包  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># zypper install apache2
-</code></pre></div>
+
+<p><code>
+# zypper install apache2
+</code></p>
+
 <p>2] 打开apache服务  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># systemctl enable apache2.service
+
+<p><code>
+# systemctl enable apache2.service
 # systemctl start apache2.service
-</code></pre></div>
+</code>  </p>
+
 <p>或者  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># rcapache2 start
-</code></pre></div>
+
+<p><code>
+# rcapache2 start
+</code></p>
+
 <p>3] 在浏览器中打开<code>http://localhost/</code>测试，出现403 ERROR就说明apache已经成功启动  </p>
 
-<h2 id="更改站点目录">更改站点目录</h2>
+<h2 id="section">更改站点目录</h2>
 
 <p>默认的站点目录在LINUX文件系统中，为了方便使用WINDOWS编辑文件，这里需要将它移到SAMBA共享目录上。  </p>
 
-<h3 id="默认目录：">默认目录：</h3>
-
+<h3 id="section-1">默认目录：</h3>
 <ul>
-<li>站点位置<code>/srv/www/htdocs/</code><br></li>
-<li>配置文件：<code>/etc/apache2/</code><br></li>
+  <li>站点位置<code>/srv/www/htdocs/</code>  </li>
+  <li>配置文件：<code>/etc/apache2/</code>  </li>
 </ul>
 
 <p>1] 将原先的站点文件复制到新位置  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># cp -a /srv/www /mnt/NETSTORAGE/scripts/ApacheSite/
-</code></pre></div>
+
+<p><code>
+# cp -a /srv/www /mnt/NETSTORAGE/scripts/ApacheSite/
+</code></p>
+
 <p>2] 创建<code>changedir.sh</code>脚本用于批量修改  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># vim changedir.sh
-</code></pre></div>
+
+<p><code>
+# vim changedir.sh
+</code></p>
+
 <p>3] 脚本如下，复制到<code>changedir.sh</code>中，保存并更改为可执行权限<code>chmod +x changedir.sh</code>  </p>
-<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
 
-usage<span class="o">(){</span>
-    <span class="nb">echo</span> <span class="s2">&quot;Usage: changedir [source] [target]&quot;</span>
-<span class="o">}</span>
+<p>```bash
+#!/bin/bash</p>
 
-<span class="nv">SOURCE</span><span class="o">=</span><span class="nv">$1</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="nv">$2</span>
+<p>usage(){
+    echo “Usage: changedir [source] [target]”
+}</p>
 
-<span class="nv">SOURCE</span><span class="o">=</span><span class="k">${</span><span class="nv">SOURCE</span><span class="p">//\//\\\/</span><span class="k">}</span>
-<span class="nv">TARGET</span><span class="o">=</span><span class="k">${</span><span class="nv">TARGET</span><span class="p">//\//\\\/</span><span class="k">}</span>
+<p>SOURCE=$1
+TARGET=$2</p>
 
-<span class="nb">echo</span> <span class="nv">$SOURCE</span>
-<span class="nb">echo</span> <span class="nv">$TARGET</span>
+<p>SOURCE=${SOURCE//\//\\/}
+TARGET=${TARGET//\//\\/}</p>
 
-<span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span>-le <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+<p>echo $SOURCE
+echo $TARGET</p>
+
+<p>if [ $# -le 1 ]; then
     usage
-    <span class="nb">exit </span>1
-<span class="k">fi</span>
+    exit 1
+fi</p>
 
-grep -r /srv * <span class="p">|</span> awk -F <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> uniq <span class="p">|</span> egrep -v <span class="s2">&quot;changedir|.new|.bak&quot;</span> <span class="p">|</span> xargs -i cp <span class="o">{}</span> <span class="o">{}</span>.bak
-grep -r /srv * <span class="p">|</span> awk -F <span class="s1">&#39;:&#39;</span> <span class="s1">&#39;{print $1}&#39;</span> <span class="p">|</span> uniq <span class="p">|</span> egrep -v <span class="s2">&quot;changedir|.new|.bak&quot;</span> <span class="p">|</span>  xargs -i sh -c <span class="s2">&quot;sed &#39;s/$SOURCE/$TARGET/g&#39; {} &gt; {}.new&quot;</span>
-find . -name <span class="s2">&quot;*.new&quot;</span> <span class="p">|</span> sed <span class="s2">&quot;s/.new//g&quot;</span> <span class="p">|</span> xargs -i mv <span class="o">{}</span>.new <span class="o">{}</span>
-</code></pre></div>
+<p>grep -r /srv * | awk -F ‘:’ ‘{print $1}’ | uniq | egrep -v “changedir|.new|.bak” | xargs -i cp {} {}.bak
+grep -r /srv * | awk -F ‘:’ ‘{print $1}’ | uniq | egrep -v “changedir|.new|.bak” |  xargs -i sh -c “sed ‘s/$SOURCE/$TARGET/g’ {} &gt; {}.new”
+find . -name “*.new” | sed “s/.new//g” | xargs -i mv {}.new {}
+```  </p>
+
 <p>4] 执行脚本  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># ./changedir.sh /srv/www /mnt/NETSTORAGE/scripts/ApacheSite
-</code></pre></div>
+
+<p><code>
+# ./changedir.sh /srv/www /mnt/NETSTORAGE/scripts/ApacheSite
+</code></p>
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/10/build-apache data-title=OpenSUSE搭建apache环境 data-url=http://www.arthurmao.me//2015/10/build-apache></div>
@@ -243,7 +263,7 @@ find . -name <span class="s2">&quot;*.new&quot;</span> <span class="p">|</span> 
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -254,7 +274,7 @@ find . -name <span class="s2">&quot;*.new&quot;</span> <span class="p">|</span> 
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -99,43 +99,49 @@
 				<div class="post-content">
 					<p>配置和安装CentOS的笔记，包括：配置国内源，配置jekyll，打开防火墙端口</p>
 
-<h2 id="安装过程">安装过程</h2>
+<h2 id="section">安装过程</h2>
 
 <ul>
-<li>配置IP信息</li>
-<li>选择webserver安装并勾选python/perl/java等常用开发包</li>
+  <li>配置IP信息</li>
+  <li>选择webserver安装并勾选python/perl/java等常用开发包</li>
 </ul>
 
-<h2 id="配置国内源">配置国内源</h2>
+<h2 id="section-1">配置国内源</h2>
 
-<p>推荐使用中科大源：<a href="https://lug.ustc.edu.cn/wiki/mirrors/help">https://lug.ustc.edu.cn/wiki/mirrors/help</a></p>
+<p>推荐使用中科大源：https://lug.ustc.edu.cn/wiki/mirrors/help</p>
 
 <ul>
-<li>配置完成后可以<code>yum makecache</code>和<code>yum update</code>更新一下系统包</li>
+  <li>配置完成后可以<code>yum makecache</code>和<code>yum update</code>更新一下系统包</li>
 </ul>
 
-<h2 id="安装jekyll">安装jekyll</h2>
+<h2 id="jekyll">安装jekyll</h2>
 
-<p>基本与OpenSUSE类似，参考：<a href="http://www.arthurmao.me/2015/10/establish-jekyll-on-suse/">OpenSUSE搭建jekyll服务器</a><br>
+<p>基本与OpenSUSE类似，参考：<a href="http://www.arthurmao.me/2015/10/establish-jekyll-on-suse/">OpenSUSE搭建jekyll服务器</a> <br />
 要注意的是yum没有自带nodejs，需要安装EPEL库后再安装nodejs：</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text"># yum install epel-release
+
+<p><code>
+# yum install epel-release
 # yum install nodejs
-</code></pre></div>
-<h2 id="打开防火墙端口">打开防火墙端口</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">//暂时打开
-# firewall-cmd --add-port=4000/tcp
+</code></p>
 
-//永久打开
-# firewall-cmd --permanent --add-port=4000/tcp
+<h2 id="section-2">打开防火墙端口</h2>
 
-//测试端口状态
-# firewall-cmd --permanent --query-port=4000/tcp
-yes
+<p>```
+//暂时打开
+# firewall-cmd –add-port=4000/tcp</p>
 
-//关闭端口
-# firewall-cmd --permanent --remove-port=4000/tcp
+<p>//永久打开
+# firewall-cmd –permanent –add-port=4000/tcp</p>
+
+<p>//测试端口状态
+# firewall-cmd –permanent –query-port=4000/tcp
+yes</p>
+
+<p>//关闭端口
+# firewall-cmd –permanent –remove-port=4000/tcp
 success
-</code></pre></div>
+```</p>
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/10/config-centOS data-title=配置安装CentOS data-url=http://www.arthurmao.me//2015/10/config-centOS></div>
@@ -219,7 +225,7 @@ success
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -230,7 +236,7 @@ success
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

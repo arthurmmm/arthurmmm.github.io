@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -103,107 +103,115 @@
 				<div class="post-content">
 					<p>让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！</p>
 
-<h2 id="准备工作">准备工作</h2>
+<h2 id="section">准备工作</h2>
 
 <p><strong>硬件：</strong>  </p>
 
 <ul>
-<li>CPU: Intel i5 520 M</li>
-<li>内存：4GB</li>
-<li>网卡: Realtek 8118/8168</li>
+  <li>CPU: Intel i5 520 M</li>
+  <li>内存：4GB</li>
+  <li>网卡: Realtek 8118/8168</li>
 </ul>
 
 <p><strong>安装介质：</strong>  </p>
 
 <ul>
-<li>4GB U盘一枚<br></li>
+  <li>4GB U盘一枚  </li>
 </ul>
 
 <p><strong>ESXi版本：</strong>  </p>
 
 <ul>
-<li>ESXi 5.1 ISO 镜像（VMware Hypervisor）</li>
+  <li>ESXi 5.1 ISO 镜像（VMware Hypervisor）</li>
 </ul>
 
-<h2 id="为什么不安装更新的esxi-5-5或者6-0">为什么不安装更新的ESXi 5.5或者6.0?</h2>
+<h2 id="esxi-5560">为什么不安装更新的ESXi 5.5或者6.0?</h2>
 
-<p>其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题...  </p>
+<p>其实一开始是打算安装6.0的，然而在安装过程中碰到了许多问题…  </p>
 
 <p><strong>【安装时报错<code>No compatible network adapter found</code>】</strong></p>
 
 <p>解决方案参考<a href="http://bbs.51cto.com/thread-1165256-1-1.html">这篇文章</a> ，简单来讲：  </p>
 
 <ul>
-<li>从<a href="https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers">这个网站</a> 下载对应的网卡驱动</li>
-<li>下载并使用<a href="http://pan.baidu.com/s/1eQ2f822">ESXi-Customizer-v2.7.2</a> 将网卡驱动写入ISO镜像<br></li>
+  <li>从<a href="https://app.yinxiang.com/OutboundRedirect.action?dest=https%3A%2F%2Fvibsdepot.v-front.de%2Fwiki%2Findex.php%2FList_of_currently_available_ESXi_packages%23NIC_drivers">这个网站</a> 下载对应的网卡驱动</li>
+  <li>下载并使用<a href="http://pan.baidu.com/s/1eQ2f822">ESXi-Customizer-v2.7.2</a> 将网卡驱动写入ISO镜像  </li>
 </ul>
 
 <p><strong>【安装时提示内存不足4GB】</strong></p>
 
-<p>坑爹啊....
-虽然说这台笔记本号称是有&#39;4G内存&#39;，然而却被集显吃掉了部分内存，实际只有3.8G。<br>
+<p>坑爹啊….
+虽然说这台笔记本号称是有’4G内存’，然而却被集显吃掉了部分内存，实际只有3.8G。<br />
 <strong>安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！</strong>  </p>
 
-<p>这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃...</p>
+<p>这个是硬伤..有尝试过更换一条8G内存，然而并不兼容..安装过程中花屏了过不去只能放弃…</p>
 
-<h2 id="下载esx-5-1">下载ESX 5.1</h2>
+<h2 id="esx-51">下载ESX 5.1</h2>
 
-<p>首先登录到<a href="http://www.vmware.com/cn">VMware官网</a> ，点击<code>下载</code>-&gt;<code>所有下载、驱动程序和工具</code> 进入到搜索页面<br>
-或者直接点击<a href="https://my.vmware.com/cn/web/vmware/downloads">这个链接</a><br>
-在该页面搜索&#39;hypervisor 5.1&#39;就可以找到对应的ISO镜像啦！<br>
-　<br>
-　<em>PS:<br>
-　你需要注册一个VMWARE帐号来获得免费使用的licence<br>
+<p>首先登录到<a href="http://www.vmware.com/cn">VMware官网</a> ，点击<code>下载</code>-&gt;<code>所有下载、驱动程序和工具</code> 进入到搜索页面<br />
+或者直接点击<a href="https://my.vmware.com/cn/web/vmware/downloads">这个链接</a><br />
+在该页面搜索’hypervisor 5.1’就可以找到对应的ISO镜像啦！<br />
+　<br />
+　<em>PS:<br />
+　你需要注册一个VMWARE帐号来获得免费使用的licence<br />
 　由于现在的最新版本是ESXi 6.x，直接点<code>下载</code>-&gt;<code>vSphere Hypervisor</code>是找不到5.x的版本的！</em>  </p>
 
-<h2 id="使用ultraiso制作安装u盘">使用UltraISO制作安装U盘</h2>
+<h2 id="ultraisou">使用UltraISO制作安装U盘</h2>
 
-<p>UltraISO可以直接<a href="https://www.baidu.com/s?wd=ultraiso">百度下载</a><br>
+<p>UltraISO可以直接<a href="https://www.baidu.com/s?wd=ultraiso">百度下载</a><br />
 <strong>注意：ESX 5.1自带了很多网卡驱动（比如常见的Realtek 8118/8168），你不需要再自制ISO了，如果按照6.0的方式自制ISO反而会报<code>No compatible network adapter found</code>的错误！</strong>  </p>
 
 <p>在UltraISO中选择<code>文件</code>-&gt;<code>打开</code>来载入ISO镜像，随后选择<code>启动</code>-&gt;<code>写入硬盘镜像</code>来制作安装U盘。<em>记得要把<code>硬盘驱动器</code>改为你的U盘哦！</em>  </p>
 
-<h2 id="安装esxi系统">安装ESXi系统</h2>
+<h2 id="esxi">安装ESXi系统</h2>
 
-<p>将做好的U盘插入笔记本，开机时长按<F12>进入boot menu，选择U盘引导进入安装向导<br>
-向导部分还是很简单的，一路根据提示选择，可以参考<a href="http://www.osyunwei.com/archives/6586.html">这篇文章</a><br>
-安装完成后又遇到了一个问题：  </p>
+<p>将做好的U盘插入笔记本，开机时长按<f12>进入boot menu，选择U盘引导进入安装向导  
+向导部分还是很简单的，一路根据提示选择，可以参考[这篇文章](http://www.osyunwei.com/archives/6586.html)  
+安装完成后又遇到了一个问题：  </f12></p>
 
 <p><strong>【系统无法正常引导，仅提示boot up failed！】</strong> </p>
 
-<p>一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。<br>
-在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置...<br>
+<p>一开始怀疑是主板不兼容，然而如果真是不兼容的话应该在安装过程中就失败了。<br />
+在查阅各路论坛后发现是ESXi引导的问题，ESXi默认采用GPT分区，必须在BIOS中使用UEFI模式才能引导，这台老爷机可没有这配置…<br />
 最后的解决方案如下：</p>
 
 <ul>
-<li>在一开始那个<code>Loading ESXi installer</code>的界面键入Shift+O<br></li>
-<li>下方会出现一个输入框，并且已经自动键入了<code>runweasel</code>指令<br></li>
-<li>在<code>runweasel</code>后添加<code>formatwithmbr</code>，即最后输入框中的指令变成<code>runweasel formatwithmbr</code>，回车继续安装<br></li>
+  <li>在一开始那个<code>Loading ESXi installer</code>的界面键入Shift+O  </li>
+  <li>下方会出现一个输入框，并且已经自动键入了<code>runweasel</code>指令  </li>
+  <li>在<code>runweasel</code>后添加<code>formatwithmbr</code>，即最后输入框中的指令变成<code>runweasel formatwithmbr</code>，回车继续安装  </li>
 </ul>
 
-<p>这次安装完成后就可以进入ESXi系统啦！ (^o^)/<br>
-　<br>
+<p>这次安装完成后就可以进入ESXi系统啦！ (^o^)/<br />
+　<br />
 　<em>PS:顺手查了一下<a href="http://fyzx.ankang.gov.cn/Article/Class26/201408/1484.html">GPT和MBR的区别</a></em></p>
 
-<h2 id="安装opensuse-13-2">安装OpenSUSE 13.2</h2>
+<h2 id="opensuse-132">安装OpenSUSE 13.2</h2>
 
 <p>装完Hypervisor开始部署VM~
-首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。<br>
-随后把VM开机，载入client端上的ISO，再用<code>CTRL+ALT+INSERT</code>重启虚机即可进入安装界面，一路NEXT...<br>
-如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项<br>
-<a href="/images/2015-10-05/00.JPG"><img src="/images/2015-10-05/00.JPG" alt=""></a></p>
+首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。<br />
+随后把VM开机，载入client端上的ISO，再用<code>CTRL+ALT+INSERT</code>重启虚机即可进入安装界面，一路NEXT…<br />
+如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项<br />
+<a href="/images/2015-10-05/00.JPG"><img src="/images/2015-10-05/00.JPG" alt="" /></a></p>
 
-<h2 id="配置和安装git">配置和安装GIT</h2>
+<h2 id="git">配置和安装GIT</h2>
 
 <p>1] 使用zypper安装GIT程序包：  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ zypper install git
-</code></pre></div>
+
+<p><code>
+$ zypper install git
+</code></p>
+
 <p>2] 配置GIT用户名和邮箱：  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ git config --global user.name &quot;arthurmmm&quot;
-$ git config --global user.email &quot;arthur_mao@live.com&quot;
-</code></pre></div>
+
+<p><code>
+$ git config --global user.name "arthurmmm"
+$ git config --global user.email "arthur_mao@live.com"
+</code>   </p>
+
 <p>3] 生成ssh密钥：   </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ ssh-keygen -t rsa -C &quot;arthur_mao@live.com&quot;
+
+<p><code>
+$ ssh-keygen -t rsa -C "arthur_mao@live.com"
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa):
 Enter passphrase (empty for no passphrase):
@@ -211,19 +219,24 @@ Enter same passphrase again:
 Your identification has been saved in /root/.ssh/id_rsa.
 Your public key has been saved in /root/.ssh/id_rsa.pub.
 //不用更改目录和密码，敲3次回车即可
-</code></pre></div>
-<p>4] 登陆<code>github</code>，展开右上角箭头找到并进入<code>setting</code>页面<br>
-<img src="/images/2015-10-05/01.JPG" alt="">  </p>
+</code>  </p>
+
+<p>4] 登陆<code>github</code>，展开右上角箭头找到并进入<code>setting</code>页面<br />
+<img src="/images/2015-10-05/01.JPG" alt="" />  </p>
 
 <p>5] 进入右侧<code>SSH Keys</code>页面，点击<code>Add SSH key</code>，把<code>/root/.ssh/id_rsa.pub</code>中的内容复制到<code>Key</code>中再点击<code>Add key</code>   </p>
 
 <p>6] 测试  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ ssh git@github.com
-Warning: Permanently added the RSA host key for IP address &#39;192.30.252.128&#39; to the list of known hosts.
+
+<p><code>
+$ ssh git@github.com
+Warning: Permanently added the RSA host key for IP address '192.30.252.128' to the list of known hosts.
 PTY allocation request failed on channel 0
-Hi arthurmmm! You&#39;ve successfully authenticated, but GitHub does not provide shell access.
+Hi arthurmmm! You've successfully authenticated, but GitHub does not provide shell access.
 Connection to github.com closed.
-</code></pre></div>
+</code></p>
+
+
 				</div>
 				
 				<div class="ds-thread" data-thread-key=/2015/10/establish-esxi data-title=笔记本搭建ESXi服务器 data-url=http://www.arthurmao.me//2015/10/establish-esxi></div>
@@ -307,7 +320,7 @@ Connection to github.com closed.
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -318,7 +331,7 @@ Connection to github.com closed.
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  

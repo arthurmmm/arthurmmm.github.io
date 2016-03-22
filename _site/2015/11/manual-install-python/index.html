@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
+        
           <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
           <li><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></li>
         
           <li><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></li>
-        
-          <li><a href="/2016/01/python-subprocess">Python subprocess模块</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>2</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>8</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>9</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -99,27 +99,33 @@
 				<div class="post-content">
 					<p>Python2/Python3 多版本安装和配置</p>
 
-<h2 id="下载python包">下载python包</h2>
+<h2 id="python">下载python包</h2>
 
-<p>网站：<a href="https://www.python.org/ftp/python/">https://www.python.org/ftp/python/</a>  </p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz   
+<p>网站：https://www.python.org/ftp/python/  </p>
+
+<p><code>
+$ wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz   
 $ wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz  
-</code></pre></div>
-<h2 id="配置和安装">配置和安装</h2>
-<div class="highlight"><pre><code class="language-text" data-lang="text">$ yum install sqlite-devel openssl openssl-devel
+</code></p>
 
-$ tar xvzf Python-2.7.9.tgz    
-$ ./configure --with-ensurepip=install
-$ make  
-$ make install
+<h2 id="section">配置和安装</h2>
 
-$ tar xvzf Python-3.4.3.tgz    
-$ ./configure --with-ensurepip=install
-$ make  
+<p>```
+$ yum install sqlite-devel openssl openssl-devel</p>
+
+<p>$ tar xvzf Python-2.7.9.tgz  <br />
+$ ./configure –with-ensurepip=install
+$ make<br />
+$ make install</p>
+
+<p>$ tar xvzf Python-3.4.3.tgz  <br />
+$ ./configure –with-ensurepip=install
+$ make<br />
 $ make altinstall
-</code></pre></div>
-<p>注意对于多个版本的python，主要版本使用<code>make install</code>安装，其他版本使用<code>make altinstall</code>安装！<br>
-在python 2.7或者3.4之后，使用--with-ensurepip=install可以自带pip，非常方便。</p>
+```</p>
+
+<p>注意对于多个版本的python，主要版本使用<code>make install</code>安装，其他版本使用<code>make altinstall</code>安装！<br />
+在python 2.7或者3.4之后，使用–with-ensurepip=install可以自带pip，非常方便。</p>
 
 				</div>
 				
@@ -204,7 +210,7 @@ $ make altinstall
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 21pt; color: #444;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 20.5pt; color: #444;">Linux</a>
 	
 	  
 	  
@@ -215,7 +221,7 @@ $ make altinstall
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 19pt; color: #666;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #666;">OpenSUSE</a>
 	
 	  
 	  
