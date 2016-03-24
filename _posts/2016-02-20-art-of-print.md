@@ -21,7 +21,7 @@ SHELL本身可以通过ANSI控制码来控制输出字体的格式，具体格�
 基于这个原理我写了一个简单的python函数，在需要彩色输出的时候给出对应的参数就可以了：   
 
 ```python
-def _print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
+def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
     fcolor_map = {
         'black': 30,
         'red': 31,
