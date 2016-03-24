@@ -7,7 +7,7 @@ category: python
 tags: [Python]
 ---
 
-Python的多线程与多进程笔记
+Python的多线程与多进程整理
 
 ## 多线程与多进程的区别和适用场景
 

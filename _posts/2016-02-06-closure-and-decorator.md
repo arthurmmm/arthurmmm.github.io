@@ -7,7 +7,7 @@ category: python
 tags: [Python]
 ---
 
-Python的闭包和装饰器笔记
+Python的闭包和装饰器整理
 
 ## 什么是闭包/装饰器？
 

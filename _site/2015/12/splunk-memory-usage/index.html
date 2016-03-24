@@ -67,7 +67,7 @@
     <h1>Categories</h1>
     <ul>
         
-			<a href="/categories.html#news"><li>news<span class='badge'>1</span></li></a>
+			<a href="/categories.html#other"><li>other<span class='badge'>1</span></li></a>
         
 			<a href="/categories.html#os"><li>os<span class='badge'>5</span></li></a>
         
@@ -95,7 +95,11 @@
 				</div>
 
 				<div class="post-content">
-					<p>Linux的可用内存算法如下：<br />
+					<p>做项目遇到一个问题，Splunk上的内存信息数据源分别记录了free、cached、buffer，用户需要整体的用量，那么怎么用Splunk来动态计算实际内存用量并显示成图表呢？</p>
+
+<h2 id="section">以下是解决方法</h2>
+
+<p>Linux的可用内存算法如下：<br />
 <code>available = free + cached + buffer</code> <br />
 现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   </p>
 

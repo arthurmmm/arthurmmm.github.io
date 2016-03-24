@@ -7,7 +7,7 @@ category: python
 tags: [Python]
 ---
 
-Python subprocess通常用来调用并获得shell指令的输出，这里记录一下用法.
+Python subprocess通常用来调用并获得shell指令的输出，这里整理一下用法.
 官方文档：https://docs.python.org/2.7/library/subprocess.html
 
 ## subprocess 模块的基本用法

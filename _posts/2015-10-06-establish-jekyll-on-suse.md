@@ -8,7 +8,7 @@ category: OS
 tags: [Linux, OpenSUSE, jekyll]
 ---
 
-Open SUSE环境下搭建本地jekyll服务器的步骤
+Open SUSE环境下搭建本地jekyll服务器来给这个博客做测试
 
 ## 安装Ruby
 

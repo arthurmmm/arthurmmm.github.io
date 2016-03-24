@@ -7,7 +7,7 @@ category: web-build
 tags: [JQuery, Python, SQLite, CGI]
 ---
 
-学习过程中制作的一个简单的JQuery+PythonCGI+SQLite站点
+一个hello world程度的示例
 
 ##SQLite
 

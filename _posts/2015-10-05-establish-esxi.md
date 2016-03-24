@@ -8,7 +8,7 @@ category: OS
 tags: [ESXi, Linux, OpenSUSE, Git]
 ---
 
-让闲置的笔记本发挥余热，搭建ESXi Server成为家庭服务器吧！
+给闲置的笔记本装上ESXi Server系统
 
 ## 准备工作
 
@@ -39,7 +39,7 @@ tags: [ESXi, Linux, OpenSUSE, Git]
 
 **【安装时提示内存不足4GB】**
 
-坑爹啊....
+坑爹....
 虽然说这台笔记本号称是有'4G内存'，然而却被集显吃掉了部分内存，实际只有3.8G。  
 **安装ESXi 5.5及以上版本是严格要求有4G以上可用内存的！！**  
 
@@ -84,7 +84,7 @@ UltraISO可以直接[百度下载](https://www.baidu.com/s?wd=ultraiso)
 
 ## 安装OpenSUSE 13.2  
 
-装完Hypervisor开始部署VM~
+装完Hypervisor开始部署VM
 首先使用vShpere client连接到ESXi服务器，创建VM，分配CPU、内存等信息。  
 随后把VM开机，载入client端上的ISO，再用`CTRL+ALT+INSERT`重启虚机即可进入安装界面，一路NEXT...  
 如果需要使用SSH连接虚机，可以在安装时直接打开SSH选项  

@@ -7,6 +7,10 @@ category: splunk
 tags: [Splunk]
 ---
 
+做项目遇到一个问题，Splunk上的内存信息数据源分别记录了free、cached、buffer，用户需要整体的用量，那么怎么用Splunk来动态计算实际内存用量并显示成图表呢？
+
+## 以下是解决方法
+
 Linux的可用内存算法如下：  
 `available = free + cached + buffer`   
 现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   

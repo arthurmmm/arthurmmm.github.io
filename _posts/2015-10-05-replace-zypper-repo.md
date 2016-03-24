@@ -8,7 +8,7 @@ tags: [Linux, OpenSUSE]
 ---
 
 OpenSUSE的zypper官方源速度奇慢，替换国内镜像源是装机必不可少的过程。
-本文介绍如何利用sed/awk快速将zypper源替换成国内镜像。
+记录一下如何利用sed/awk快速将zypper源替换成国内镜像。
 
 ## 查看zypper帮助文档：
 
@@ -40,7 +40,7 @@ $ zypper mr -d -R --all
 ```
 
 
-## 配置浙大源：
+## 配置源（这里用了浙大源）：
 
 
 1] 进入`/etc/zypp/repos.d`文件夹  

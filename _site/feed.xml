@@ -55,7 +55,7 @@ p =&amp;gt; 后跟变量，打印变量值&lt;/p&gt;
 		
 			<item>
 				<title>Linux下实现彩色/动态的命令行输出</title>
-				<description>&lt;p&gt;如何在命令行脚本中打印彩色字体或者实现一个类似进度条的动态效果呢？&lt;/p&gt;
+				<description>&lt;p&gt;做项目有命令行彩色输出的需求，记录一下实现方法&lt;/p&gt;
 
 &lt;h2 id=&quot;section&quot;&gt;彩色输出&lt;/h2&gt;
 
@@ -131,7 +131,7 @@ def _print(msg, fcolor=&#39;white&#39;, bcolor=&#39;black&#39;, mode=&#39;normal
 		
 			<item>
 				<title>实用的Linux/Shell命令之：awk sed</title>
-				<description>&lt;p&gt;awk和sed是Linux下非常实用的文本处理工具，简单记录一下常见用法&lt;/p&gt;
+				<description>&lt;p&gt;awk和sed是Linux下非常实用的文本处理工具，整理一下常见用法&lt;/p&gt;
 
 &lt;h2 id=&quot;awksed&quot;&gt;awk和sed的区别&lt;/h2&gt;
 
@@ -240,7 +240,7 @@ $ find . -name &quot;repo*&quot; | sed &#39;s/.\///g&#39; | xargs -i sh -c &quot
 		
 			<item>
 				<title>Python的闭包和装饰器</title>
-				<description>&lt;p&gt;Python的闭包和装饰器笔记&lt;/p&gt;
+				<description>&lt;p&gt;Python的闭包和装饰器整理&lt;/p&gt;
 
 &lt;h2 id=&quot;section&quot;&gt;什么是闭包/装饰器？&lt;/h2&gt;
 
@@ -304,7 +304,7 @@ testfunc2(5)
 		
 			<item>
 				<title>Python的多线程与多进程</title>
-				<description>&lt;p&gt;Python的多线程与多进程笔记&lt;/p&gt;
+				<description>&lt;p&gt;Python的多线程与多进程整理&lt;/p&gt;
 
 &lt;h2 id=&quot;section&quot;&gt;多线程与多进程的区别和适用场景&lt;/h2&gt;
 
@@ -531,7 +531,7 @@ threading.Condition/multiprocess.Condition
 		
 			<item>
 				<title>Python subprocess模块</title>
-				<description>&lt;p&gt;Python subprocess通常用来调用并获得shell指令的输出，这里记录一下用法.
+				<description>&lt;p&gt;Python subprocess通常用来调用并获得shell指令的输出，这里整理一下用法.
 官方文档：https://docs.python.org/2.7/library/subprocess.html&lt;/p&gt;
 
 &lt;h2 id=&quot;subprocess-&quot;&gt;subprocess 模块的基本用法&lt;/h2&gt;
@@ -688,7 +688,11 @@ myflag = args.myflag
 		
 			<item>
 				<title>使用Splunk生成Linux系统内存用量图</title>
-				<description>&lt;p&gt;Linux的可用内存算法如下：&lt;br /&gt;
+				<description>&lt;p&gt;做项目遇到一个问题，Splunk上的内存信息数据源分别记录了free、cached、buffer，用户需要整体的用量，那么怎么用Splunk来动态计算实际内存用量并显示成图表呢？&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;以下是解决方法&lt;/h2&gt;
+
+&lt;p&gt;Linux的可用内存算法如下：&lt;br /&gt;
 &lt;code&gt;available = free + cached + buffer&lt;/code&gt; &lt;br /&gt;
 现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   &lt;/p&gt;
 

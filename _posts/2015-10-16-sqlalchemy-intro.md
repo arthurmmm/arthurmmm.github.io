@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  'NO SQL in your code! SQLAlchemy学习'
+title:  'SQLAlchemy学习'
 date:   2015-10-16 21:54 +0800
 comments: true
 category: python
