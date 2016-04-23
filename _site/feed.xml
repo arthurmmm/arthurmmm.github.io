@@ -7,6 +7,93 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>CentOS安装Redis数据库</title>
+				<description>&lt;p&gt;Redis安装笔记&lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;安装依赖包&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+yum install gcc
+yum install tcl
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;下载安装包&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+wget http://download.redis.io/releases/redis-stable.tar.gz
+cd redis-stable
+make MALLOC=libc
+make test
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-2&quot;&gt;复制命令行和配置文件&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+ln -s ~/redis-stable/src/redis-server /usr/local/bin/redis-server
+ln -s ~/redis-stable/src/redis-cli /usr/local/bin/redis-cli
+mkdir /etc/redis
+cp ~/redis-stable/redis.conf /etc/redis/redis.conf
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-3&quot;&gt;操作&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+## 启动
+redis-server &amp;amp;
+## 连接
+redis-cli
+## 关闭
+redis-cli
+shutdown
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;python-&quot;&gt;python 包&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;bash
+## 安装
+python -m pip install redis
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;import redis&lt;/p&gt;
+
+&lt;p&gt;r = redis.Redis(host=’192.168.111.211’, port=6379, db=1)
+print(r.info())&lt;/p&gt;
+
+&lt;h2 id=&quot;string&quot;&gt;string&lt;/h2&gt;
+&lt;p&gt;r[‘name’] = ‘Arthur’
+print(r[‘name’])&lt;/p&gt;
+
+&lt;h2 id=&quot;list&quot;&gt;list&lt;/h2&gt;
+&lt;p&gt;r.lpush(‘listtest’, ‘aaa’)
+r.lpush(‘listtest’, ‘bbb’)
+r.lrange(‘listtest’, start=0, end=-1)
+r.lindex(‘listtest’, 0)&lt;/p&gt;
+
+&lt;h2 id=&quot;set&quot;&gt;set&lt;/h2&gt;
+&lt;p&gt;r.sadd(‘settest’, ‘aa’)
+r.sadd(‘settest’, ‘aa’)
+r.sadd(‘settest’, ‘bb’)
+r.sadd(‘settest1’, ‘bb’)
+r.smembers(‘settest’)
+r.sinter(‘settest’,’settest1’) ## 交集
+r.sunion(‘s1’,’s2’) ## 并集
+r.sdiff(‘settest’,’settest1’) ## 不同&lt;/p&gt;
+
+&lt;h2 id=&quot;hash&quot;&gt;hash&lt;/h2&gt;
+&lt;p&gt;r.hset(‘hashtest’, ‘name’, ‘Arthur’)
+r.hset(‘hashtest’, ‘age’, ‘25’)
+r.hgetall(‘hashtest’)
+r.hget(‘hashtest’, ‘name’)
+```&lt;/p&gt;
+</description>
+				<pubDate>Sat, 23 Apr 2016 15:24:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2016/04/install-redis-centos</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2016/04/install-redis-centos</guid>
+			</item>
+		
+			<item>
 				<title>使用pdb来debug python程序</title>
 				<description>&lt;p&gt;Python的命令行debug程序pdb笔记&lt;/p&gt;
 
@@ -55,7 +142,7 @@ p =&amp;gt; 后跟变量，打印变量值&lt;/p&gt;
 		
 			<item>
 				<title>Linux下实现彩色/动态的命令行输出</title>
-				<description>&lt;p&gt;做项目有命令行彩色输出的需求，记录一下实现方法&lt;/p&gt;
+				<description>&lt;p&gt;做项目有实时、动态显示结果的需求，并且要用红色高亮错误，记录一下实现方法&lt;/p&gt;
 
 &lt;h2 id=&quot;section&quot;&gt;彩色输出&lt;/h2&gt;
 
@@ -69,7 +156,7 @@ p =&amp;gt; 后跟变量，打印变量值&lt;/p&gt;
 基于这个原理我写了一个简单的python函数，在需要彩色输出的时候给出对应的参数就可以了：   &lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;python
-def _print(msg, fcolor=&#39;white&#39;, bcolor=&#39;black&#39;, mode=&#39;normal&#39;, end=None):
+def color_print(msg, fcolor=&#39;white&#39;, bcolor=&#39;black&#39;, mode=&#39;normal&#39;, end=None):
     fcolor_map = {
         &#39;black&#39;: 30,
         &#39;red&#39;: 31,
@@ -1013,43 +1100,6 @@ handler = logging.handlers.TimedRotatingFileHandler(
 				<pubDate>Sat, 05 Dec 2015 20:22:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/12/python-logging</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/python-logging</guid>
-			</item>
-		
-			<item>
-				<title>Python2/Python3 多版本安装和配置</title>
-				<description>&lt;p&gt;Python2/Python3 多版本安装和配置&lt;/p&gt;
-
-&lt;h2 id=&quot;python&quot;&gt;下载python包&lt;/h2&gt;
-
-&lt;p&gt;网站：https://www.python.org/ftp/python/  &lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;
-$ wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz   
-$ wget https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz  
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;配置和安装&lt;/h2&gt;
-
-&lt;p&gt;```
-$ yum install sqlite-devel openssl openssl-devel&lt;/p&gt;
-
-&lt;p&gt;$ tar xvzf Python-2.7.9.tgz  &lt;br /&gt;
-$ ./configure –with-ensurepip=install
-$ make&lt;br /&gt;
-$ make install&lt;/p&gt;
-
-&lt;p&gt;$ tar xvzf Python-3.4.3.tgz  &lt;br /&gt;
-$ ./configure –with-ensurepip=install
-$ make&lt;br /&gt;
-$ make altinstall
-```&lt;/p&gt;
-
-&lt;p&gt;注意对于多个版本的python，主要版本使用&lt;code&gt;make install&lt;/code&gt;安装，其他版本使用&lt;code&gt;make altinstall&lt;/code&gt;安装！&lt;br /&gt;
-在python 2.7或者3.4之后，使用–with-ensurepip=install可以自带pip，非常方便。&lt;/p&gt;
-</description>
-				<pubDate>Sat, 14 Nov 2015 23:00:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/11/manual-install-python</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/11/manual-install-python</guid>
 			</item>
 		
 	</channel>
