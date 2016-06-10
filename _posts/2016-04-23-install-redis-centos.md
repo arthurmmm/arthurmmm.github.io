@@ -4,7 +4,7 @@ title:  'CentOS安装Redis数据库'
 date:   2016-04-23 15:24 +0800
 comments: true
 category: OS
-tags: [OS]
+tags: [OS, Database, Redis]
 ---
 
 Redis安装笔记

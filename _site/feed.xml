@@ -7,6 +7,125 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Python 反射机制</title>
+				<description>&lt;p&gt;Python 反射机制简单介绍和适用场景。&lt;/p&gt;
+
+&lt;h2 id=&quot;python&quot;&gt;Python的反射机制&lt;/h2&gt;
+
+&lt;p&gt;在获取一个类或模块的某个属性时，通常需要在代码中直接指定属性名，如：   &lt;/p&gt;
+
+&lt;p&gt;```python
+class MyClass(object):
+    int a
+    float b
+    string c&lt;/p&gt;
+
+&lt;p&gt;c = MyClass()&lt;/p&gt;
+
+&lt;h2 id=&quot;a&quot;&gt;获得属性a&lt;/h2&gt;
+&lt;p&gt;c.a
+```&lt;/p&gt;
+
+&lt;p&gt;但如果我们不知道属性名呢？比如属性名是在代码中动态生成并存在某个变量中。在这种情况下就需要借助python的反射机制了。&lt;/p&gt;
+
+&lt;h2 id=&quot;hasattr-getattr-setattr&quot;&gt;hasattr, getattr, setattr&lt;/h2&gt;
+
+&lt;p&gt;python代码可以通过三个内置函数来实现反射：hasattr, getattr, setattr&lt;/p&gt;
+
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;class MyClass(object):
+    a = 0
+    b = 1&lt;/p&gt;
+
+&lt;p&gt;c = MyClass()&lt;/p&gt;
+
+&lt;p&gt;myattr = ‘a’
+new_value = 123&lt;/p&gt;
+
+&lt;p&gt;if hasattr(c, myattr):
+    val = getattr(c, myattr)
+    print ‘Old attribute: %s’ % val&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;setattr(c, myattr, new_value)
+val = getattr(c, myattr)
+print &#39;New attribute: %s&#39; % val
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h2 id=&quot;evalgetattr&quot;&gt;使用eval实现getattr&lt;/h2&gt;
+
+&lt;p&gt;内置函数eval可以将一段字符串当做python表达式处理，灵活使用eval函数也可以部分实现反射的功能：&lt;/p&gt;
+
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;class MyClass(object):
+    a = 0
+    b = 1&lt;/p&gt;
+
+&lt;p&gt;c = MyClass()&lt;/p&gt;
+
+&lt;p&gt;myattr = ‘a’
+new_value = 123&lt;/p&gt;
+
+&lt;p&gt;val = eval(‘c.%s’ % myattr)
+print val&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h2 id=&quot;callable-dir&quot;&gt;使用callable, dir获得额外信息&lt;/h2&gt;
+
+&lt;p&gt;内置函数callable可以帮助判断一个属性是否是个函数&lt;/p&gt;
+
+&lt;p&gt;```
+class MyClass(object):
+    a = 0
+    b = 1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def myfunc(self):
+    pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;c = MyClass()&lt;/p&gt;
+
+&lt;p&gt;myattr = ‘myfunc’&lt;/p&gt;
+
+&lt;p&gt;if hasattr(c, myattr):
+    myfunc = getattr(c, myattr)
+    if callable(myfunc):
+        myfunc()&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;内置函数dir可以帮助列出一个类的所有属性&lt;/p&gt;
+
+&lt;p&gt;```
+class MyClass(object):
+    a = 0
+    b = 1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def myfunc(self):
+    pass
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;blockquote&gt;
+  &lt;blockquote&gt;
+    &lt;blockquote&gt;
+      &lt;p&gt;c = MyClass()
+dir(c)
+[‘&lt;strong&gt;class&lt;/strong&gt;’, ‘&lt;strong&gt;delattr&lt;/strong&gt;’, ‘&lt;strong&gt;dict&lt;/strong&gt;’, ‘&lt;strong&gt;doc&lt;/strong&gt;’, ‘&lt;strong&gt;format&lt;/strong&gt;’, ‘&lt;strong&gt;getattribute&lt;/strong&gt;’, ‘&lt;strong&gt;hash&lt;/strong&gt;’, ‘&lt;strong&gt;init&lt;/strong&gt;’, ‘&lt;strong&gt;module&lt;/strong&gt;’, ‘&lt;strong&gt;new&lt;/strong&gt;’, ‘&lt;strong&gt;reduce&lt;/strong&gt;’, ‘&lt;strong&gt;reduce_ex&lt;/strong&gt;’, ‘&lt;strong&gt;repr&lt;/strong&gt;’, ‘&lt;strong&gt;setattr&lt;/strong&gt;’, ‘&lt;strong&gt;sizeof&lt;/strong&gt;’, ‘&lt;strong&gt;str&lt;/strong&gt;’, ‘&lt;strong&gt;subclasshook&lt;/strong&gt;’, ‘&lt;strong&gt;weakref&lt;/strong&gt;’, ‘a’, ‘b’]
+```&lt;/p&gt;
+    &lt;/blockquote&gt;
+  &lt;/blockquote&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 02 May 2016 12:18:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2016/05/python-getattr-modules</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2016/05/python-getattr-modules</guid>
+			</item>
+		
+			<item>
 				<title>CentOS安装Redis数据库</title>
 				<description>&lt;p&gt;Redis安装笔记&lt;/p&gt;
 
@@ -843,263 +962,6 @@ TIMECHART minspan=1m AVG(memuseage) BY hostname
 				<pubDate>Sat, 19 Dec 2015 15:20:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2015/12/splunk-memory-usage</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/splunk-memory-usage</guid>
-			</item>
-		
-			<item>
-				<title>Python logging模块</title>
-				<description>&lt;p&gt;Python logging模块笔记&lt;/p&gt;
-
-&lt;h2 id=&quot;logging-&quot;&gt;logging 模块的基本用法&lt;/h2&gt;
-
-&lt;p&gt;```python
-import logging&lt;/p&gt;
-
-&lt;p&gt;’’’
-level设定显示log的级别
-datefmt是时间的显示方式
-FORMAT是一个自定义的字符串，用于定义日志的格式。
-‘’’
-logging.basicConfig(level=logging.DEBUG,
-    format = FORMAT,
-    datefmt = ‘%Y-%m-%d %H:%M:%S’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-默认情况下日志输出到屏幕，
-需要写文件时得加上filename属性
-‘’’
-logging.basicConfig(format=FORMAT,
-        filename=’test.log’
-)&lt;/p&gt;
-
-&lt;p&gt;’’’
-需要打印信息的时候这样做
-‘’’
-logging.debug(‘a debug message’)
-logging.info(‘a debug message’)
-logging.warning(‘a debug message’)
-logging.error(‘a debug message’)
-logging.critical(‘a debug message’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-也可以打印异常堆栈
-‘’’
-logging.exception(‘a debug message’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-推荐的基本格式，显示时间、事件级别和日志信息
-‘’’
-FORMAT = ‘%(asctime)s %(levelname)s: %(message)s’&lt;/p&gt;
-
-&lt;p&gt;’’’
-额外显示了线程号，模块名和代码行号，调试的时候非常有用
-‘’’
-FORMAT = ‘%(thread)d %(asctime)s %(levelname)s %(module)s/%(lineno)d: %(message)s’&lt;/p&gt;
-
-&lt;p&gt;’’’
-还可以自定义一些额外的字段，例如下面的username，在打印时需要用extra指定一个dict用于解释自定义字段
-‘’’
-FORMAT=’%(thread)d %(asctime)s %(levelname)s %(module)s/%(lineno)d [%(username)s]: %(message)s’
-d = {‘username’:’arthur’}
-logger.warning(‘hihi’,extra=d)&lt;/p&gt;
-
-&lt;p&gt;```&lt;/p&gt;
-
-&lt;h2 id=&quot;log-rotation&quot;&gt;日志分卷归档(log rotation)&lt;/h2&gt;
-
-&lt;p&gt;```python
-import logging.handlers&lt;/p&gt;
-
-&lt;p&gt;’’’
-使用RotatingFileHandler按日志大小分卷
-‘’’&lt;/p&gt;
-
-&lt;p&gt;mylogger = logging.getLogger(‘mylogger’)
-mylogger.setLevel(logging.DEBUG)
-FORMAT = ‘%(asctime)s: %(message)s’
-handler = logging.handlers.RotatingFileHandler(
-    ‘mylog’, 
-    maxBytes=1024*1024, # 1M per log
-    backupCount=10, # 10 logs in total
-)
-# class logging.handlers.RotatingFileHandler(filename, mode=’a’, maxBytes=0, backupCount=0, encoding=None, delay=0)&lt;/p&gt;
-
-&lt;p&gt;formatter = logging.Formatter(fmt=FORMAT)
-# If you want to use GMT t/z
-import time
-formatter.converter = time.gmtime 
-####
-handler.setFormatter(formatter)
-mylogger.addHandler(handler)
-mylogger.info(‘Log a message here’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-按照时间分卷只需将上面例子中的logging.handlers.RotatingFileHandler替换成logging.handlers.TimedRotatingFileHandler
-‘’’
-handler = logging.handlers.TimedRotatingFileHandler(
-    ‘mylog’,
-    when = ‘W0’,
-    utc = True,
-)
-# class logging.handlers.TimedRotatingFileHandler(filename, when=’h’, interval=1, backupCount=0, encoding=None, delay=False, utc=False)&lt;/p&gt;
-
-&lt;p&gt;```&lt;/p&gt;
-
-&lt;h2 id=&quot;logging&quot;&gt;logging模块的一些参考表格&lt;/h2&gt;
-
-&lt;h3 id=&quot;basicconfig&quot;&gt;basicConfig的属性&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Format&lt;/th&gt;
-      &lt;th&gt;Description&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;filename&lt;/td&gt;
-      &lt;td&gt;Specifies that a FileHandler be created, using the specified filename, rather than a StreamHandler.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;filemode&lt;/td&gt;
-      &lt;td&gt;Specifies the mode to open the file, if filename is specified (if filemode is unspecified, it defaults to ‘a’).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;format&lt;/td&gt;
-      &lt;td&gt;Use the specified format string for the handler.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;datefmt&lt;/td&gt;
-      &lt;td&gt;Use the specified date/time format.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;level&lt;/td&gt;
-      &lt;td&gt;Set the root logger level to the specified level.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;stream&lt;/td&gt;
-      &lt;td&gt;Use the specified stream to initialize the StreamHandler. Note that this argument is incompatible with ‘filename’ - if both are present, ‘stream’ is ignored.&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;format&quot;&gt;FORMAT中可以使用的参数&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;Attribute&lt;/th&gt;
-      &lt;th&gt;Format&lt;/th&gt;
-      &lt;th&gt;Description&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;args&lt;/td&gt;
-      &lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
-      &lt;td&gt;The tuple of arguments merged into msg to produce message, or a dict whose values are used for the merge (when there is only one argument, and it is a dictionary).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;asctime&lt;/td&gt;
-      &lt;td&gt;%(asctime)s&lt;/td&gt;
-      &lt;td&gt;Human-readable time when the LogRecord was created. By default this is of the form ‘2003-07-08 16:49:45,896’ (the numbers after the comma are millisecond portion of the time).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;created&lt;/td&gt;
-      &lt;td&gt;%(created)f&lt;/td&gt;
-      &lt;td&gt;Time when the LogRecord was created (as returned by time.time()).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;exc_info&lt;/td&gt;
-      &lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
-      &lt;td&gt;Exception tuple (à la sys.exc_info) or, if no exception has occurred, None.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;filename&lt;/td&gt;
-      &lt;td&gt;%(filename)s&lt;/td&gt;
-      &lt;td&gt;Filename portion of pathname.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;funcName&lt;/td&gt;
-      &lt;td&gt;%(funcName)s&lt;/td&gt;
-      &lt;td&gt;Name of function containing the logging call.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;levelname&lt;/td&gt;
-      &lt;td&gt;%(levelname)s&lt;/td&gt;
-      &lt;td&gt;Text logging level for the message (‘DEBUG’, ‘INFO’, ‘WARNING’, ‘ERROR’, ‘CRITICAL’).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;levelno&lt;/td&gt;
-      &lt;td&gt;%(levelno)s&lt;/td&gt;
-      &lt;td&gt;Numeric logging level for the message (DEBUG, INFO, WARNING, ERROR, CRITICAL).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;lineno&lt;/td&gt;
-      &lt;td&gt;%(lineno)d&lt;/td&gt;
-      &lt;td&gt;Source line number where the logging call was issued (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;module&lt;/td&gt;
-      &lt;td&gt;%(module)s&lt;/td&gt;
-      &lt;td&gt;Module (name portion of filename).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;msecs&lt;/td&gt;
-      &lt;td&gt;%(msecs)d&lt;/td&gt;
-      &lt;td&gt;Millisecond portion of the time when the LogRecord was created.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;message&lt;/td&gt;
-      &lt;td&gt;%(message)s&lt;/td&gt;
-      &lt;td&gt;The logged message, computed as msg % args. This is set when Formatter.format() is invoked.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;msg&lt;/td&gt;
-      &lt;td&gt;You shouldn’t need to format this yourself.&lt;/td&gt;
-      &lt;td&gt;The format string passed in the original logging call. Merged with args to produce message, or an arbitrary object (see Using arbitrary objects as messages).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;name&lt;/td&gt;
-      &lt;td&gt;%(name)s&lt;/td&gt;
-      &lt;td&gt;Name of the logger used to log the call.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;pathname&lt;/td&gt;
-      &lt;td&gt;%(pathname)s&lt;/td&gt;
-      &lt;td&gt;Full pathname of the source file where the logging call was issued (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;process&lt;/td&gt;
-      &lt;td&gt;%(process)d&lt;/td&gt;
-      &lt;td&gt;Process ID (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;processName&lt;/td&gt;
-      &lt;td&gt;%(processName)s&lt;/td&gt;
-      &lt;td&gt;Process name (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;relativeCreated&lt;/td&gt;
-      &lt;td&gt;%(relativeCreated)d&lt;/td&gt;
-      &lt;td&gt;Time in milliseconds when the LogRecord was created, relative to the time the logging module was loaded.&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;thread&lt;/td&gt;
-      &lt;td&gt;%(thread)d&lt;/td&gt;
-      &lt;td&gt;Thread ID (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;threadName&lt;/td&gt;
-      &lt;td&gt;%(threadName)s&lt;/td&gt;
-      &lt;td&gt;Thread name (if available).&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-</description>
-				<pubDate>Sat, 05 Dec 2015 20:22:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/12/python-logging</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/python-logging</guid>
 			</item>
 		
 	</channel>
