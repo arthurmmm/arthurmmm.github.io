@@ -224,6 +224,6 @@ urlpatterns = [
 ```
 
 有了这个view我们的思路就很清楚了：   
-1. 创建一个model：使用GET获取一个空表单(is_new='true') => 使用POST提交表单
-2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new='false') => 使用PUT提交表单
+1. 创建一个model：使用GET获取一个空表单(is_new='true') => 使用POST提交表单   
+2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new='false') => 使用PUT提交表单   
 
