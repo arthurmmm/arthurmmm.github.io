@@ -110,28 +110,28 @@ class MyForm(ModelForm):
 ```html
 <form class="form-horizontal">
     <!-- Load general error -->
-    {% if form.errors %}
-        {% for error in form.non_field_errors %}
-            <div class="alert alert-danger"> {{ error|escape }}</div>
-        {% endfor %}
-    {% endif %}
+    &#123;% if form.errors %&#124;
+        &#123;% for error in form.non_field_errors %&#124;
+            <div class="alert alert-danger"> &#123;&#123; error|escape &#124;&#124;</div>
+        &#123;% endfor %&#124;
+    &#123;% endif %&#124;
 
-    {% for field in form %}
-        {% if field.errors %}
+    &#123;% for field in form %&#124;
+        &#123;% if field.errors %&#124;
             <!-- Load fields error -->
             <div class="form-group has-error">
-                <label class="col-xs-3 control-label" for="{{ field.name }}">{{ field.label }}</label>
-                <div class="col-xs-9">{{ field }}</div>
-                <span class="help-block col-xs-12">{{ field.errors.as_text }}</span>
+                <label class="col-xs-3 control-label" for="&#123;&#123; field.name &#124;&#124;">&#123;&#123; field.label &#124;&#124;</label>
+                <div class="col-xs-9">&#123;&#123; field &#124;&#124;</div>
+                <span class="help-block col-xs-12">&#123;&#123; field.errors.as_text &#124;&#124;</span>
             </div>
-        {% else %}
+        &#123;% else %&#124;
             <!-- Load fields only -->
             <div class="form-group">
-                <label class="col-xs-3 control-label" for="{{ field.name }}">{{ field.label }}</label>
-                <div class="col-xs-9">{{ field }}</div>
+                <label class="col-xs-3 control-label" for="&#123;&#123; field.name &#124;&#124;">&#123;&#123; field.label &#124;&#124;</label>
+                <div class="col-xs-9">&#123;&#123; field &#124;&#124;</div>
             </div>
-        {% endif %}
-    {% endfor %}
+        &#123;% endif %&#124;
+    &#123;% endfor %&#124;
     <div class="form-group">
         <div class="col-xs-offset-9 col-xs-3">
             <input type="submit" class="btn btn-primary col-xs-12" value="Submit">

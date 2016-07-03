@@ -7,6 +7,214 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Django框架下表单的开发模型</title>
+				<description>&lt;p&gt;介绍使用Django Form + Bootstrap实现表单管理的思路和方式&lt;/p&gt;
+
+&lt;h2 id=&quot;djangomodelform&quot;&gt;创建Django的ModelForm模块&lt;/h2&gt;
+
+&lt;p&gt;Django的Form类可以在后台生成和管理表单，而其中的ModelForm类更是可以方便的将数据库模型映射成一个表单，实现快速开发。 &lt;br /&gt;
+文档：https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/   &lt;/p&gt;
+
+&lt;p&gt;简单来讲流程如下   &lt;/p&gt;
+
+&lt;p&gt;```python
+## 1. Define a ModelForm class
+class MyForm(ModelForm):
+    ## 2. Add a subclass “Meta”
+    class Meta:
+        model = MyModel ## 3. Define the Model you use
+        fields = ‘&lt;strong&gt;all&lt;/strong&gt;’ ## 4. The fields you want to show&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h3 id=&quot;djangobootstrap&quot;&gt;让Django生成Bootstrap风格的表单&lt;/h3&gt;
+
+&lt;p&gt;Django自动生成的表单并不能很好的契合前端Bootstrap的风格，因为Bootstrap的表单需要将每个域囊括在’form-control’的DIV中。 &lt;br /&gt;
+解决方法如下：   &lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;python
+class MyForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MyForm, self).__init__(*args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                &#39;class&#39;: &#39;form-control&#39;,
+            })
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;widget&quot;&gt;重定义/初始化表单Widget&lt;/h3&gt;
+
+&lt;p&gt;默认情况下Django会根据Model的属性自动生成Widget，不过有时候我们也会需要自定义部分Widget，比如添加提示或者设置成只读。 &lt;br /&gt;
+我们可以在Meta中定义labels/widgets来实现这个功能：   &lt;/p&gt;
+
+&lt;p&gt;```python
+class MyForm(ModelForm):
+    def &lt;strong&gt;init&lt;/strong&gt;(self, &lt;em&gt;args, **kwargs):
+        super(MyForm, self).&lt;strong&gt;init&lt;/strong&gt;(&lt;/em&gt;args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                ‘class’: ‘form-control’,
+            })&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Meta:
+    model = MyModel
+    fields = &#39;__all__&#39;
+    labels = {
+        &#39;user_id&#39;: _(&#39;User&#39;), ## Rename user_id to User
+    }
+    widgets = {
+        &#39;user_id&#39;: TextInput(attrs={&#39;readonly&#39;: True}), ## Set user_id as readonly
+    } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section&quot;&gt;表单检查&lt;/h3&gt;
+
+&lt;p&gt;Django的ModelForm默认会根据Model本身的限制进行检查（例如主键唯一，类型检查等） &lt;br /&gt;
+我们也可以提供一些自定义检查规则：   &lt;/p&gt;
+
+&lt;p&gt;```python
+class MyForm(ModelForm):
+    def &lt;strong&gt;init&lt;/strong&gt;(self, &lt;em&gt;args, **kwargs):
+        super(MyForm, self).&lt;strong&gt;init&lt;/strong&gt;(&lt;/em&gt;args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                ‘class’: ‘form-control’,
+            })&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    ## Use Bootstrap alert to show error message
+    self.error_css_class = &#39;alert alert-danger&#39;
+    self.required_css_class = &#39;alert alert-danger&#39;
+
+def clean_name(self):
+    v = self.cleaned_data[&#39;name&#39;]
+    RegexValidattor(
+        regex = &#39;^[a-z0-9_]+$&#39;, ## Only allow lower case chars, ints and underline
+        message = _(&#39;Only allow lower case chars, ints and underline&#39;),
+    )(v)
+    return v
+    
+class Meta:
+    model = MyModel
+    fields = &#39;__all__&#39;
+    labels = {
+        &#39;user_id&#39;: _(&#39;User&#39;), ## Rename user_id to User
+    }
+    widgets = {
+        &#39;user_id&#39;: TextInput(attrs={&#39;readonly&#39;: True}),
+    } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;template&quot;&gt;创建前端Template&lt;/h2&gt;
+
+&lt;p&gt;后台类编写完毕后开始为前端页面创建模板，这里使用了Bootstrap的’form-horizontal’模板&lt;/p&gt;
+
+&lt;p&gt;```html
+&amp;lt;form class=&quot;form-horizontal&quot;&amp;gt;
+    &lt;!-- Load general error --&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&quot;form-group&quot;&amp;gt;
+    &amp;lt;div class=&quot;col-xs-offset-9 col-xs-3&quot;&amp;gt;
+        &amp;lt;input type=&quot;submit&quot; class=&quot;btn btn-primary col-xs-12&quot; value=&quot;Submit&quot;&amp;gt;
+    &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&amp;lt;/form&amp;gt;
+```&lt;/p&gt;
+
+&lt;h2 id=&quot;views&quot;&gt;为表单创建views&lt;/h2&gt;
+
+&lt;p&gt;有了ModelForm类和HTML模板，下面的步骤就是创建一个接口view用于将数据加载至模板中。 &lt;br /&gt;
+在这里我们可以创建一个通用view class用于加载所有的ModelForm   &lt;/p&gt;
+
+&lt;p&gt;```python
+class FormView(View):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## Exclude csrf check for POST
+@method_decorator(csrf_exempt)
+def dispatch(self, request, *args, **kwargs):
+    return super(FormView, self).dispatch(request, *args, **kwargs)
+
+## Get a form for new object, or get a form to edit existing object
+## Using &#39;is_new&#39; param to identify if we want a new form.
+def get(self, request, form_class, template):
+    template_file  = &#39;myapp/form/%s.html&#39; % template ## a template file for form
+    request_dict = request.GET.dict()
+    is_new = request_dict.pop(&#39;is_new&#39;)
+    if is_new == &#39;true&#39;:
+        ## Generating a new form
+        form = eval(form_class)(initial=request.GET.dict())
+        id = &#39;&#39;
+    else:
+        ## Getting a model object, then load it to form for editing
+        model = eval(form_class)._meta.model
+        inst = model.object.get(**request_dict)
+        form = eval(form_class)(instance=inst)
+        id = inst.id
+    context = {
+        &#39;form&#39;: form,
+        &#39;id&#39;: id,
+        &#39;form_class&#39;: form_class,
+        &#39;template&#39;: template,
+    }
+    return render(request, template_file, context)
+
+## Edit existing form, steps:
+## Get info submitted by form =&amp;gt; get model by info =&amp;gt; load model into form =&amp;gt; save form
+def put(self, request, form_class, template):
+    template_file = &#39;myapp/form/%s.html&#39; % template
+    request_querydict = QueryDict(request.body, mutable=True)
+    id = request_querydict.pop(&#39;id&#39;)[0]
+    model = eval(form_class)._meta.model
+    inst = model.objects.get(id=id)
+    form = eval(form_class)(request_querydict, instance=inst)
+    if form.is_valid():
+        form.save()
+        return HttpResponse(status=200)
+    else:
+        context = {
+            &#39;form&#39;: form,
+            &#39;id&#39;: id,
+            &#39;form_class&#39;: form_class,
+            &#39;template&#39;: template,
+        }
+        return render(request, template_file, context, status=400)
+
+## Create a new model instance by submitted form 
+def post(self, request, form_class, template):
+    template_file = &#39;myapp/form/%s.html&#39; % template
+    form = eval(form_class)(request.POST)
+    if form.is_valid():
+        form.save()
+        return HttpResponse(status=200)
+    else:
+        context = {
+            &#39;form&#39;: form,
+            &#39;id&#39;: &#39;&#39;,
+            &#39;form_class&#39;: form_class,
+            &#39;template&#39;: template,
+        }
+        return render(request, template_file, context, status=400) ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;配置urls.py：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;python
+urlpatterns = [
+    url(r&#39;_form/(?P&amp;lt;form_class&amp;gt;.+)/(?P&amp;lt;template&amp;gt;.+)/$&#39;),
+]
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;有了这个view我们的思路就很清楚了： &lt;br /&gt;
+1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&amp;gt; 使用POST提交表单
+2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&amp;gt; 使用PUT提交表单&lt;/p&gt;
+
+</description>
+				<pubDate>Sun, 08 May 2016 16:27:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2016/05/django-ajax-form-model</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2016/05/django-ajax-form-model</guid>
+			</item>
+		
+			<item>
 				<title>Python 反射机制</title>
 				<description>&lt;p&gt;Python 反射机制简单介绍和适用场景。&lt;/p&gt;
 
@@ -22,9 +230,9 @@ class MyClass(object):
 
 &lt;p&gt;c = MyClass()&lt;/p&gt;
 
-&lt;h2 id=&quot;a&quot;&gt;获得属性a&lt;/h2&gt;
-&lt;p&gt;c.a
-```&lt;/p&gt;
+&lt;p&gt;print c.a&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
 
 &lt;p&gt;但如果我们不知道属性名呢？比如属性名是在代码中动态生成并存在某个变量中。在这种情况下就需要借助python的反射机制了。&lt;/p&gt;
 
@@ -78,8 +286,9 @@ print val&lt;/p&gt;
 
 &lt;p&gt;内置函数callable可以帮助判断一个属性是否是个函数&lt;/p&gt;
 
-&lt;p&gt;```
-class MyClass(object):
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;class MyClass(object):
     a = 0
     b = 1&lt;/p&gt;
 
@@ -100,8 +309,9 @@ class MyClass(object):
 
 &lt;p&gt;内置函数dir可以帮助列出一个类的所有属性&lt;/p&gt;
 
-&lt;p&gt;```
-class MyClass(object):
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;class MyClass(object):
     a = 0
     b = 1&lt;/p&gt;
 
@@ -114,11 +324,12 @@ class MyClass(object):
     &lt;blockquote&gt;
       &lt;p&gt;c = MyClass()
 dir(c)
-[‘&lt;strong&gt;class&lt;/strong&gt;’, ‘&lt;strong&gt;delattr&lt;/strong&gt;’, ‘&lt;strong&gt;dict&lt;/strong&gt;’, ‘&lt;strong&gt;doc&lt;/strong&gt;’, ‘&lt;strong&gt;format&lt;/strong&gt;’, ‘&lt;strong&gt;getattribute&lt;/strong&gt;’, ‘&lt;strong&gt;hash&lt;/strong&gt;’, ‘&lt;strong&gt;init&lt;/strong&gt;’, ‘&lt;strong&gt;module&lt;/strong&gt;’, ‘&lt;strong&gt;new&lt;/strong&gt;’, ‘&lt;strong&gt;reduce&lt;/strong&gt;’, ‘&lt;strong&gt;reduce_ex&lt;/strong&gt;’, ‘&lt;strong&gt;repr&lt;/strong&gt;’, ‘&lt;strong&gt;setattr&lt;/strong&gt;’, ‘&lt;strong&gt;sizeof&lt;/strong&gt;’, ‘&lt;strong&gt;str&lt;/strong&gt;’, ‘&lt;strong&gt;subclasshook&lt;/strong&gt;’, ‘&lt;strong&gt;weakref&lt;/strong&gt;’, ‘a’, ‘b’]
-```&lt;/p&gt;
+[‘&lt;strong&gt;class&lt;/strong&gt;’, ‘&lt;strong&gt;delattr&lt;/strong&gt;’, ‘&lt;strong&gt;dict&lt;/strong&gt;’, ‘&lt;strong&gt;doc&lt;/strong&gt;’, ‘&lt;strong&gt;format&lt;/strong&gt;’, ‘&lt;strong&gt;getattribute&lt;/strong&gt;’, ‘&lt;strong&gt;hash&lt;/strong&gt;’, ‘&lt;strong&gt;init&lt;/strong&gt;’, ‘&lt;strong&gt;module&lt;/strong&gt;’, ‘&lt;strong&gt;new&lt;/strong&gt;’, ‘&lt;strong&gt;reduce&lt;/strong&gt;’, ‘&lt;strong&gt;reduce_ex&lt;/strong&gt;’, ‘&lt;strong&gt;repr&lt;/strong&gt;’, ‘&lt;strong&gt;setattr&lt;/strong&gt;’, ‘&lt;strong&gt;sizeof&lt;/strong&gt;’, ‘&lt;strong&gt;str&lt;/strong&gt;’, ‘&lt;strong&gt;subclasshook&lt;/strong&gt;’, ‘&lt;strong&gt;weakref&lt;/strong&gt;’, ‘a’, ‘b’]&lt;/p&gt;
     &lt;/blockquote&gt;
   &lt;/blockquote&gt;
 &lt;/blockquote&gt;
+
+&lt;p&gt;```&lt;/p&gt;
 </description>
 				<pubDate>Mon, 02 May 2016 12:18:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2016/05/python-getattr-modules</link>
@@ -890,78 +1101,6 @@ myflag = args.myflag
 				<pubDate>Sun, 03 Jan 2016 11:09:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2016/01/python-argparse</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2016/01/python-argparse</guid>
-			</item>
-		
-			<item>
-				<title>使用Splunk生成Linux系统内存用量图</title>
-				<description>&lt;p&gt;做项目遇到一个问题，Splunk上的内存信息数据源分别记录了free、cached、buffer，用户需要整体的用量，那么怎么用Splunk来动态计算实际内存用量并显示成图表呢？&lt;/p&gt;
-
-&lt;h2 id=&quot;section&quot;&gt;以下是解决方法&lt;/h2&gt;
-
-&lt;p&gt;Linux的可用内存算法如下：&lt;br /&gt;
-&lt;code&gt;available = free + cached + buffer&lt;/code&gt; &lt;br /&gt;
-现在系统日志中分别记录了free, cached, buffer的数值和内存总量，日志格式大致如下：   &lt;/p&gt;
-
-&lt;p&gt;```bash&lt;/p&gt;
-&lt;timestamp&gt; hostname=&lt;host&gt; itemKey=memory.free value=&lt;value&gt;
-&lt;timestamp&gt; hostname=&lt;host&gt; itemKey=memory.cached value=&lt;value&gt;
-&lt;timestamp&gt; hostname=&lt;host&gt; itemKey=memory.buffers value=&lt;value&gt;
-&lt;timestamp&gt; hostname=&lt;host&gt; itemKey=memory.total value=&lt;value&gt;
-&lt;timestamp&gt; hostname=&lt;host&gt; itemKey=memory.free value=&lt;value&gt;
-...
-
-```
-
-现在需要使用Splunk统计若干个host的内存用量并生成报表  
-由于需要做计算的信息分布在不同行上，涉及到了Splunk的分组计算，最后的搜索语句如下：   
-
-```bash
-index=xxx
-{
-    hostname=host1 OR
-    hostname=host2 OR
-    ...
-}
-itemKey=memory.* |
-
-# 第一步使用BUCKET进行强制分片，计算每分钟的平均值，避免timestamp不同步的问题
-# 比如下面这个数据：
-#     11:30 itemKey=memory.cached value = 1
-#     11:30 itemKey=memory.free value = 1
-#     11:31 itemKey=memory.buffers value = 1
-#     11:31 itemKey=memory.total value = 5
-# 如果不进行显式分片的话默认按照时间戳分片，就会把同一组的值分到两组中去，导致结果不正确。
-
-BUCKET _time span=1m | 
-STATS AVG(value) AS value BY _time hostname itemKey | 
-
-# 由于stats不能做除法，这里需要把memory.total和其他值分开放在不同的field中，做法如下：
-# - 使用IF语句区分value的含义并存到指定的field中，如果不是指定的类型就设为0
-# - 使用STATS语句将相同的field求和，这样就能将不同行的数据处理到同一行中
-# - 最后使用EVAL进行同行数据计算
-
-EVAL memfree = IF(
-    itemKey == &quot;memory.cached&quot; OR
-    itemKey == &quot;memory.free&quot; OR
-    itemKey == &quot;memory.buffers&quot;
-    , value, 0
-) | 
-EVAL memtotal = IF(
-    itemKey == &quot;memory.total&quot;
-    , value, 0
-) | 
-STATS
-    SUM(memfree) AS memfree
-    SUM(memtotal) AS memtotal
-BY hostname, _time | 
-EVAL memuseage = (memtotal - memfree) / memtotal * 100 | 
-TIMECHART minspan=1m AVG(memuseage) BY hostname
-```
-&lt;/value&gt;&lt;/host&gt;&lt;/timestamp&gt;&lt;/value&gt;&lt;/host&gt;&lt;/timestamp&gt;&lt;/value&gt;&lt;/host&gt;&lt;/timestamp&gt;&lt;/value&gt;&lt;/host&gt;&lt;/timestamp&gt;&lt;/value&gt;&lt;/host&gt;&lt;/timestamp&gt;
-</description>
-				<pubDate>Sat, 19 Dec 2015 15:20:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2015/12/splunk-memory-usage</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2015/12/splunk-memory-usage</guid>
 			</item>
 		
 	</channel>
