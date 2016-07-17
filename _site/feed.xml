@@ -7,6 +7,100 @@
 		<atom:link href="http://www.arthurmao.me/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Django下将命令行程序异步图形化</title>
+				<description>&lt;p&gt;项目上需要将一个命令行程序图形化成Django网页应用。 &lt;br /&gt;
+起初尝试按照一般设计思路，设计一个表单提交参数，然后等待服务器回应，结果发现在程序执行时间过长时会导致网页超时，因此需要重新设计，将整个流程异步化。   &lt;/p&gt;
+
+&lt;h2 id=&quot;section&quot;&gt;设计思路&lt;/h2&gt;
+
+&lt;h3 id=&quot;stage-1-&quot;&gt;Stage 1: 用户输入&lt;/h3&gt;
+
+&lt;p&gt;首先当用户访问APP时，会被url.py定位到index view，并提供一个表单给用户输入参数。 &lt;br /&gt;
+用户提交表单后，数据会被提交给submit view   &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/2016-06-10/stage_1.png&quot;&gt;&lt;img src=&quot;/images/2016-06-10/stage_1.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;stage-2&quot;&gt;Stage 2：执行过程&lt;/h3&gt;
+
+&lt;p&gt;由于程序执行时间过长，我们并不会在submit view中直接处理业务逻辑，而是创建一个线程Batch Thread。 &lt;br /&gt;
+然后对于每一个线程，我们都会指定一个唯一的ID用于标识，submit view在拿到Batch ID后会根据Batch ID渲染template Track.html，并立即返回给用户。 &lt;br /&gt;
+Track.html是一个用户追踪任务进程的page，用于显示任务进度给用户。在该页面上会有JS代码通过Ajax Call的方式，根据Batch ID查询进度。   &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/2016-06-10/stage_2.png&quot;&gt;&lt;img src=&quot;/images/2016-06-10/stage_2.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;stage-3-&quot;&gt;Stage 3: 结果显示&lt;/h3&gt;
+
+&lt;p&gt;在所有任务完毕后，track page会重定向到Result View，然后从Batch Thread中获取程序执行的结果，渲染成Result.html并返回给用户，整个程序就算执行完毕了。   &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/2016-06-10/stage_3.png&quot;&gt;&lt;img src=&quot;/images/2016-06-10/stage_3.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;技术细节&lt;/h2&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;表单实现&lt;/h3&gt;
+
+&lt;p&gt;采用了Django的表单设计模式和Twitter Bootstrap网页框架。 &lt;br /&gt;
+另外还使用了bootstrap-select插件实现了一个可多选的下拉框。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/images/2016-06-10/form.png&quot;&gt;&lt;img src=&quot;/images/2016-06-10/form.png&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;section-3&quot;&gt;任务线程实现&lt;/h3&gt;
+
+&lt;p&gt;在线程模型中利用getattr方式实现了一个简单的工厂模型：   &lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一次执行被分隔成多个Task&lt;/li&gt;
+  &lt;li&gt;建立两个映射用于控制不同Task之间的依赖关系，以及不同Task对应的数据内容&lt;/li&gt;
+  &lt;li&gt;对于没有依赖关系的多个Task，用户可以自行选择是否执行。&lt;/li&gt;
+  &lt;li&gt;用户的选择之间通过getattr(BatchThread, taskname)映射到对于函数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以下这个函数可以给用户表单提供所有可用Task的列表，供用户选择：   &lt;/p&gt;
+
+&lt;p&gt;```python&lt;/p&gt;
+
+&lt;p&gt;def allBatches(cls):
+    res = []
+    all_attr = dir(cls)
+    for attr in all_attr:
+        regex = re.match(‘^batch_(.+)’, attr)  ## All task method would be named as batch_xxxx
+        if callable(getattr(cls, attr)) and regex:
+            res.append(regex.group(1))
+    return res&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;h3 id=&quot;section-4&quot;&gt;网页模拟控制台实时输出&lt;/h3&gt;
+
+&lt;p&gt;在track.html页面中我们使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。&lt;/p&gt;
+
+&lt;p&gt;```javascript&lt;/p&gt;
+
+&lt;p&gt;function checkStatus(mon) {
+    $.ajax({
+        …
+        complete: function(xhr) {
+            ….
+            window.localtion.replace(…); // Using ‘replace’ rather than ‘href’ to redirect page.
+            clearInterval(mon); // Able to stop interval inside ajax call.
+        }
+    });
+}&lt;/p&gt;
+
+&lt;p&gt;var mon = setInterval(function(){
+    checkStatus(mon); // Ajax call function.
+    $(“html, body”).animate({
+        scrollTop: $(“#end”).offset().top
+    }, 1000) //Scroll to the bottom of page. #end is defined at the end.
+}, 1000); //Call inline function every second&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+</description>
+				<pubDate>Fri, 10 Jun 2016 19:22:00 +0800</pubDate>
+				<link>http://www.arthurmao.me/2016/06/django-async-script</link>
+				<guid isPermaLink="true">http://www.arthurmao.me/2016/06/django-async-script</guid>
+			</item>
+		
+			<item>
 				<title>Django框架下表单的开发模型</title>
 				<description>&lt;p&gt;介绍使用Django Form + Bootstrap实现表单管理的思路和方式&lt;/p&gt;
 
@@ -226,8 +320,8 @@ urlpatterns = [
 &lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;有了这个view我们的思路就很清楚了： &lt;br /&gt;
-1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&amp;gt; 使用POST提交表单
-2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&amp;gt; 使用PUT提交表单&lt;/p&gt;
+1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&amp;gt; 使用POST提交表单 &lt;br /&gt;
+2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&amp;gt; 使用PUT提交表单   &lt;/p&gt;
 
 </description>
 				<pubDate>Sun, 08 May 2016 16:27:00 +0800</pubDate>
@@ -1062,66 +1156,6 @@ with subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess
 				<pubDate>Sat, 16 Jan 2016 21:02:00 +0800</pubDate>
 				<link>http://www.arthurmao.me/2016/01/python-subprocess</link>
 				<guid isPermaLink="true">http://www.arthurmao.me/2016/01/python-subprocess</guid>
-			</item>
-		
-			<item>
-				<title>Python argparse模块</title>
-				<description>&lt;p&gt;Python有很多命令行选项相关的模块，比如getopt, optparse等，各种都用过一下后感觉还是argparse最方便最轻量。  &lt;br /&gt;
-官方详细文档：  https://docs.python.org/2.7/library/argparse.html&lt;/p&gt;
-
-&lt;h2 id=&quot;argparse-&quot;&gt;argparse 模块的基本用法&lt;/h2&gt;
-
-&lt;p&gt;```python
-import logging&lt;/p&gt;
-
-&lt;p&gt;’’’
-第一步：创建parser实例
-‘’’
-parser = argparse.ArgumentParser(description=’Write overall help message here’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-第二步：创建参数和选项
-‘’’
-parser.add_argument(‘myargs’, nargs=’+’, 
-    help=’My arguments’)
-parser.add_argument(‘-o’, ‘–myopts’, default=’hello’
-    help=’My options’)
-parser.add_argument(‘-f’, ‘–myflag’, action=’store_true’
-    help=’My flag’)&lt;/p&gt;
-
-&lt;p&gt;’’’
-第三步：获取参数
-‘’’
-args = parser.parse_args()
-myargs = args.myargs
-myopts = args.myopts
-myflag = args.myflag
-```&lt;/p&gt;
-
-&lt;h2 id=&quot;argparse--1&quot;&gt;argparse 实用选项&lt;/h2&gt;
-
-&lt;p&gt;以下是一些常见的参数，通常已经能满足一般命令行工具的需求了。&lt;/p&gt;
-
-&lt;p&gt;```&lt;/p&gt;
-
-&lt;p&gt;default：参数默认值。&lt;/p&gt;
-
-&lt;p&gt;nargs: 参数个数，若有多个参数则用空格分隔
-注意如果有配置nargs（哪怕nargs=1），那么拿到的参数是一个list，否则就是一个值&lt;/p&gt;
-
-&lt;p&gt;action：执行操作，通常设置为store_true用于无需接受参数的选项比如–debug这种。&lt;/p&gt;
-
-&lt;p&gt;type：输入值的类型，其实就是帮你做了一个显示类型转换，不指定的话默认是string&lt;/p&gt;
-
-&lt;p&gt;choice：限制输入值的种类，例如choice=[‘choiceA’, ‘choiceB’]&lt;/p&gt;
-
-&lt;p&gt;help：简单说明&lt;/p&gt;
-
-&lt;p&gt;```&lt;/p&gt;
-</description>
-				<pubDate>Sun, 03 Jan 2016 11:09:00 +0800</pubDate>
-				<link>http://www.arthurmao.me/2016/01/python-argparse</link>
-				<guid isPermaLink="true">http://www.arthurmao.me/2016/01/python-argparse</guid>
 			</item>
 		
 	</channel>

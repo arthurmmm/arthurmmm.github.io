@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
+        
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
         
           <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
         
           <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
-        
-          <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>10</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,58 +87,325 @@
 			
 <div class="article">
     <div class="well">
+		<span class="author" id="page">Jun 10, 2016</span>
+        <h1><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></h1>
+        <div class="post-content">
+            <p>项目上需要将一个命令行程序图形化成Django网页应用。 <br />
+起初尝试按照一般设计思路，设计一个表单提交参数，然后等待服务器回应，结果发现在程序执行时间过长时会导致网页超时，因此需要重新设计，将整个流程异步化。   </p>
+
+<h2 id="section">设计思路</h2>
+
+<h3 id="stage-1-">Stage 1: 用户输入</h3>
+
+<p>首先当用户访问APP时，会被url.py定位到index view，并提供一个表单给用户输入参数。 <br />
+用户提交表单后，数据会被提交给submit view   </p>
+
+<p><a href="/images/2016-06-10/stage_1.png"><img src="/images/2016-06-10/stage_1.png" alt="" /></a></p>
+
+<h3 id="stage-2">Stage 2：执行过程</h3>
+
+<p>由于程序执行时间过长，我们并不会在submit view中直接处理业务逻辑，而是创建一个线程Batch Thread。 <br />
+然后对于每一个线程，我们都会指定一个唯一的ID用于标识，submit view在拿到Batch ID后会根据Batch ID渲染template Track.html，并立即返回给用户。 <br />
+Track.html是一个用户追踪任务进程的page，用于显示任务进度给用户。在该页面上会有JS代码通过Ajax Call的方式，根据Batch ID查询进度。   </p>
+
+<p><a href="/images/2016-06-10/stage_2.png"><img src="/images/2016-06-10/stage_2.png" alt="" /></a></p>
+
+<h3 id="stage-3-">Stage 3: 结果显示</h3>
+
+<p>在所有任务完毕后，track page会重定向到Result View，然后从Batch Thread中获取程序执行的结果，渲染成Result.html并返回给用户，整个程序就算执行完毕了。   </p>
+
+<p><a href="/images/2016-06-10/stage_3.png"><img src="/images/2016-06-10/stage_3.png" alt="" /></a></p>
+
+<h2 id="section-1">技术细节</h2>
+
+<h3 id="section-2">表单实现</h3>
+
+<p>采用了Django的表单设计模式和Twitter Bootstrap网页框架。 <br />
+另外还使用了bootstrap-select插件实现了一个可多选的下拉框。</p>
+
+<p><a href="/images/2016-06-10/form.png"><img src="/images/2016-06-10/form.png" alt="" /></a></p>
+
+<h3 id="section-3">任务线程实现</h3>
+
+<p>在线程模型中利用getattr方式实现了一个简单的工厂模型：   </p>
+
+<ul>
+  <li>一次执行被分隔成多个Task</li>
+  <li>建立两个映射用于控制不同Task之间的依赖关系，以及不同Task对应的数据内容</li>
+  <li>对于没有依赖关系的多个Task，用户可以自行选择是否执行。</li>
+  <li>用户的选择之间通过getattr(BatchThread, taskname)映射到对于函数</li>
+</ul>
+
+<p>以下这个函数可以给用户表单提供所有可用Task的列表，供用户选择：   </p>
+
+<p>```python</p>
+
+<p>def allBatches(cls):
+    res = []
+    all_attr = dir(cls)
+    for attr in all_attr:
+        regex = re.match(‘^batch_(.+)’, attr)  ## All task method would be named as batch_xxxx
+        if callable(getattr(cls, attr)) and regex:
+            res.append(regex.group(1))
+    return res</p>
+
+<p>```</p>
+
+<h3 id="section-4">网页模拟控制台实时输出</h3>
+
+<p>在track.html页面中我们使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。</p>
+
+<p>```javascript</p>
+
+<p>function checkStatus(mon) {
+    $.ajax({
+        …
+        complete: function(xhr) {
+            ….
+            window.localtion.replace(…); // Using ‘replace’ rather than ‘href’ to redirect page.
+            clearInterval(mon); // Able to stop interval inside ajax call.
+        }
+    });
+}</p>
+
+<p>var mon = setInterval(function(){
+    checkStatus(mon); // Ajax call function.
+    $(“html, body”).animate({
+        scrollTop: $(“#end”).offset().top
+    }, 1000) //Scroll to the bottom of page. #end is defined at the end.
+}, 1000); //Call inline function every second</p>
+
+<p>```</p>
+
+        </div>
+    </div>
+</div>
+
+<div class="article">
+    <div class="well">
 		<span class="author" id="page">May 8, 2016</span>
         <h1><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></h1>
         <div class="post-content">
             <p>介绍使用Django Form + Bootstrap实现表单管理的思路和方式</p>
 
+<h2 id="djangomodelform">创建Django的ModelForm模块</h2>
 
-        </div>
-    </div>
-</div>
+<p>Django的Form类可以在后台生成和管理表单，而其中的ModelForm类更是可以方便的将数据库模型映射成一个表单，实现快速开发。 <br />
+文档：https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/   </p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">May 2, 2016</span>
-        <h1><a href="/2016/05/python-getattr-modules">Python 反射机制</a></h1>
-        <div class="post-content">
-            <p>Python 反射机制简单介绍和适用场景。</p>
+<p>简单来讲流程如下   </p>
 
+<p>```python
+## 1. Define a ModelForm class
+class MyForm(ModelForm):
+    ## 2. Add a subclass “Meta”
+    class Meta:
+        model = MyModel ## 3. Define the Model you use
+        fields = ‘<strong>all</strong>’ ## 4. The fields you want to show</p>
 
-        </div>
-    </div>
-</div>
+<p>```</p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Apr 23, 2016</span>
-        <h1><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></h1>
-        <div class="post-content">
-            <p>Redis安装笔记</p>
+<h3 id="djangobootstrap">让Django生成Bootstrap风格的表单</h3>
 
+<p>Django自动生成的表单并不能很好的契合前端Bootstrap的风格，因为Bootstrap的表单需要将每个域囊括在’form-control’的DIV中。 <br />
+解决方法如下：   </p>
 
-        </div>
-    </div>
-</div>
+<p><code>python
+class MyForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(MyForm, self).__init__(*args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+            })
+</code></p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Mar 5, 2016</span>
-        <h1><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></h1>
-        <div class="post-content">
-            <p>Python的命令行debug程序pdb笔记</p>
+<h3 id="widget">重定义/初始化表单Widget</h3>
 
+<p>默认情况下Django会根据Model的属性自动生成Widget，不过有时候我们也会需要自定义部分Widget，比如添加提示或者设置成只读。 <br />
+我们可以在Meta中定义labels/widgets来实现这个功能：   </p>
 
-        </div>
-    </div>
-</div>
+<p>```python
+class MyForm(ModelForm):
+    def <strong>init</strong>(self, <em>args, **kwargs):
+        super(MyForm, self).<strong>init</strong>(</em>args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                ‘class’: ‘form-control’,
+            })</p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Feb 20, 2016</span>
-        <h1><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></h1>
-        <div class="post-content">
-            <p>做项目有实时、动态显示结果的需求，并且要用红色高亮错误，记录一下实现方法</p>
+<pre><code>class Meta:
+    model = MyModel
+    fields = '__all__'
+    labels = {
+        'user_id': _('User'), ## Rename user_id to User
+    }
+    widgets = {
+        'user_id': TextInput(attrs={'readonly': True}), ## Set user_id as readonly
+    } ```
+</code></pre>
+
+<h3 id="section">表单检查</h3>
+
+<p>Django的ModelForm默认会根据Model本身的限制进行检查（例如主键唯一，类型检查等） <br />
+我们也可以提供一些自定义检查规则：   </p>
+
+<p>```python
+class MyForm(ModelForm):
+    def <strong>init</strong>(self, <em>args, **kwargs):
+        super(MyForm, self).<strong>init</strong>(</em>args, **kwargs)
+        for field in iter(self.field):
+            self.fields[field].widget.attrs.update({
+                ‘class’: ‘form-control’,
+            })</p>
+
+<pre><code>    ## Use Bootstrap alert to show error message
+    self.error_css_class = 'alert alert-danger'
+    self.required_css_class = 'alert alert-danger'
+
+def clean_name(self):
+    v = self.cleaned_data['name']
+    RegexValidattor(
+        regex = '^[a-z0-9_]+$', ## Only allow lower case chars, ints and underline
+        message = _('Only allow lower case chars, ints and underline'),
+    )(v)
+    return v
+    
+class Meta:
+    model = MyModel
+    fields = '__all__'
+    labels = {
+        'user_id': _('User'), ## Rename user_id to User
+    }
+    widgets = {
+        'user_id': TextInput(attrs={'readonly': True}),
+    } ```
+</code></pre>
+
+<h2 id="template">创建前端Template</h2>
+
+<p>后台类编写完毕后开始为前端页面创建模板，这里使用了Bootstrap的’form-horizontal’模板</p>
+
+<p>```html
+&lt;form class="form-horizontal"&gt;
+    <!-- Load general error -->
+    { % if form.errors % }
+        { % for error in form.non_field_errors % }
+            &lt;div class="alert alert-danger"&gt; { { error|escape } }&lt;/div&gt;
+        { % endfor % }
+    { % endif % }</p>
+
+<pre><code>{ % for field in form % }
+    { % if field.errors % }
+        &lt;!-- Load fields error --&gt;
+        &lt;div class="form-group has-error"&gt;
+            &lt;label class="col-xs-3 control-label" for="{ { field.name } }"&gt;{ { field.label } }&lt;/label&gt;
+            &lt;div class="col-xs-9"&gt;{ { field } }&lt;/div&gt;
+            &lt;span class="help-block col-xs-12"&gt;{ { field.errors.as_text } }&lt;/span&gt;
+        &lt;/div&gt;
+    { % else % }
+        &lt;!-- Load fields only --&gt;
+        &lt;div class="form-group"&gt;
+            &lt;label class="col-xs-3 control-label" for="{ { field.name } }"&gt;{ { field.label } }&lt;/label&gt;
+            &lt;div class="col-xs-9"&gt;{ { field } }&lt;/div&gt;
+        &lt;/div&gt;
+    { % endif % }
+{ % endfor % }
+&lt;div class="form-group"&gt;
+    &lt;div class="col-xs-offset-9 col-xs-3"&gt;
+        &lt;input type="submit" class="btn btn-primary col-xs-12" value="Submit"&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+<p>&lt;/form&gt;
+```</p>
+
+<h2 id="views">为表单创建views</h2>
+
+<p>有了ModelForm类和HTML模板，下面的步骤就是创建一个接口view用于将数据加载至模板中。 <br />
+在这里我们可以创建一个通用view class用于加载所有的ModelForm   </p>
+
+<p>```python
+class FormView(View):</p>
+
+<pre><code>## Exclude csrf check for POST
+@method_decorator(csrf_exempt)
+def dispatch(self, request, *args, **kwargs):
+    return super(FormView, self).dispatch(request, *args, **kwargs)
+
+## Get a form for new object, or get a form to edit existing object
+## Using 'is_new' param to identify if we want a new form.
+def get(self, request, form_class, template):
+    template_file  = 'myapp/form/%s.html' % template ## a template file for form
+    request_dict = request.GET.dict()
+    is_new = request_dict.pop('is_new')
+    if is_new == 'true':
+        ## Generating a new form
+        form = eval(form_class)(initial=request.GET.dict())
+        id = ''
+    else:
+        ## Getting a model object, then load it to form for editing
+        model = eval(form_class)._meta.model
+        inst = model.object.get(**request_dict)
+        form = eval(form_class)(instance=inst)
+        id = inst.id
+    context = {
+        'form': form,
+        'id': id,
+        'form_class': form_class,
+        'template': template,
+    }
+    return render(request, template_file, context)
+
+## Edit existing form, steps:
+## Get info submitted by form =&gt; get model by info =&gt; load model into form =&gt; save form
+def put(self, request, form_class, template):
+    template_file = 'myapp/form/%s.html' % template
+    request_querydict = QueryDict(request.body, mutable=True)
+    id = request_querydict.pop('id')[0]
+    model = eval(form_class)._meta.model
+    inst = model.objects.get(id=id)
+    form = eval(form_class)(request_querydict, instance=inst)
+    if form.is_valid():
+        form.save()
+        return HttpResponse(status=200)
+    else:
+        context = {
+            'form': form,
+            'id': id,
+            'form_class': form_class,
+            'template': template,
+        }
+        return render(request, template_file, context, status=400)
+
+## Create a new model instance by submitted form 
+def post(self, request, form_class, template):
+    template_file = 'myapp/form/%s.html' % template
+    form = eval(form_class)(request.POST)
+    if form.is_valid():
+        form.save()
+        return HttpResponse(status=200)
+    else:
+        context = {
+            'form': form,
+            'id': '',
+            'form_class': form_class,
+            'template': template,
+        }
+        return render(request, template_file, context, status=400) ```
+</code></pre>
+
+<p>配置urls.py：</p>
+
+<p><code>python
+urlpatterns = [
+    url(r'_form/(?P&lt;form_class&gt;.+)/(?P&lt;template&gt;.+)/$'),
+]
+</code></p>
+
+<p>有了这个view我们的思路就很清楚了： <br />
+1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&gt; 使用POST提交表单 <br />
+2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&gt; 使用PUT提交表单   </p>
 
 
         </div>
@@ -148,7 +415,7 @@
 
 <div class="pagination">
   
-  <span class="page_number ">Page: 1 of 5</span>
+  <span class="page_number ">Page: 1 of 12</span>
   
     <a class="btn btn-default" href="/page2" class="next">Older</a>
   
@@ -231,7 +498,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 20pt; color: #555;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
 	
 	  
 	  
@@ -242,7 +509,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
@@ -308,7 +575,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#SQLite" style="font-size: 17pt; color: #888;">SQLite</a>
+	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
 	  
 	  
@@ -330,7 +597,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Bootstrap" style="font-size: 17pt; color: #888;">Bootstrap</a>
+	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
 	  
 	  
@@ -396,7 +663,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#shell" style="font-size: 17pt; color: #888;">shell</a>
+	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
 	  
 	  
@@ -440,7 +707,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Django" style="font-size: 16pt; color: #999;">Django</a>
+	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>

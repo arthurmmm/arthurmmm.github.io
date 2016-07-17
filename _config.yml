@@ -22,7 +22,7 @@ ds: 'arthurmmm'
 comments: true
 
 permalink: /:year/:month/:title
-paginate: 5
+paginate: 2
 
 highlighter: rouge
 markdown: kramdown

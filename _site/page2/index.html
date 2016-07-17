@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
+        
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
         
           <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
         
           <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
-        
-          <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>10</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,11 +87,123 @@
 			
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Feb 13, 2016</span>
-        <h1><a href="/2016/02/awk-sed">实用的Linux/Shell命令之：awk sed</a></h1>
+		<span class="author" id="page">May 2, 2016</span>
+        <h1><a href="/2016/05/python-getattr-modules">Python 反射机制</a></h1>
         <div class="post-content">
-            <p>awk和sed是Linux下非常实用的文本处理工具，整理一下常见用法</p>
+            <p>Python 反射机制简单介绍和适用场景。</p>
 
+<h2 id="python">Python的反射机制</h2>
+
+<p>在获取一个类或模块的某个属性时，通常需要在代码中直接指定属性名，如：   </p>
+
+<p>```python
+class MyClass(object):
+    int a
+    float b
+    string c</p>
+
+<p>c = MyClass()</p>
+
+<p>print c.a</p>
+
+<p>```</p>
+
+<p>但如果我们不知道属性名呢？比如属性名是在代码中动态生成并存在某个变量中。在这种情况下就需要借助python的反射机制了。</p>
+
+<h2 id="hasattr-getattr-setattr">hasattr, getattr, setattr</h2>
+
+<p>python代码可以通过三个内置函数来实现反射：hasattr, getattr, setattr</p>
+
+<p>```python</p>
+
+<p>class MyClass(object):
+    a = 0
+    b = 1</p>
+
+<p>c = MyClass()</p>
+
+<p>myattr = ‘a’
+new_value = 123</p>
+
+<p>if hasattr(c, myattr):
+    val = getattr(c, myattr)
+    print ‘Old attribute: %s’ % val</p>
+
+<pre><code>setattr(c, myattr, new_value)
+val = getattr(c, myattr)
+print 'New attribute: %s' % val
+</code></pre>
+
+<p>```</p>
+
+<h2 id="evalgetattr">使用eval实现getattr</h2>
+
+<p>内置函数eval可以将一段字符串当做python表达式处理，灵活使用eval函数也可以部分实现反射的功能：</p>
+
+<p>```python</p>
+
+<p>class MyClass(object):
+    a = 0
+    b = 1</p>
+
+<p>c = MyClass()</p>
+
+<p>myattr = ‘a’
+new_value = 123</p>
+
+<p>val = eval(‘c.%s’ % myattr)
+print val</p>
+
+<p>```</p>
+
+<h2 id="callable-dir">使用callable, dir获得额外信息</h2>
+
+<p>内置函数callable可以帮助判断一个属性是否是个函数</p>
+
+<p>```python</p>
+
+<p>class MyClass(object):
+    a = 0
+    b = 1</p>
+
+<pre><code>def myfunc(self):
+    pass
+</code></pre>
+
+<p>c = MyClass()</p>
+
+<p>myattr = ‘myfunc’</p>
+
+<p>if hasattr(c, myattr):
+    myfunc = getattr(c, myattr)
+    if callable(myfunc):
+        myfunc()</p>
+
+<p>```</p>
+
+<p>内置函数dir可以帮助列出一个类的所有属性</p>
+
+<p>```python</p>
+
+<p>class MyClass(object):
+    a = 0
+    b = 1</p>
+
+<pre><code>def myfunc(self):
+    pass
+</code></pre>
+
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>c = MyClass()
+dir(c)
+[‘<strong>class</strong>’, ‘<strong>delattr</strong>’, ‘<strong>dict</strong>’, ‘<strong>doc</strong>’, ‘<strong>format</strong>’, ‘<strong>getattribute</strong>’, ‘<strong>hash</strong>’, ‘<strong>init</strong>’, ‘<strong>module</strong>’, ‘<strong>new</strong>’, ‘<strong>reduce</strong>’, ‘<strong>reduce_ex</strong>’, ‘<strong>repr</strong>’, ‘<strong>setattr</strong>’, ‘<strong>sizeof</strong>’, ‘<strong>str</strong>’, ‘<strong>subclasshook</strong>’, ‘<strong>weakref</strong>’, ‘a’, ‘b’]</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>```</p>
 
         </div>
     </div>
@@ -99,49 +211,88 @@
 
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Feb 6, 2016</span>
-        <h1><a href="/2016/02/closure-and-decorator">Python的闭包和装饰器</a></h1>
+		<span class="author" id="page">Apr 23, 2016</span>
+        <h1><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></h1>
         <div class="post-content">
-            <p>Python的闭包和装饰器整理</p>
+            <p>Redis安装笔记</p>
 
+<h2 id="section">安装依赖包</h2>
 
-        </div>
-    </div>
-</div>
+<p><code>bash
+yum install gcc
+yum install tcl
+</code></p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Jan 23, 2016</span>
-        <h1><a href="/2016/01/multithread-and-multiprocess">Python的多线程与多进程</a></h1>
-        <div class="post-content">
-            <p>Python的多线程与多进程整理</p>
+<h2 id="section-1">下载安装包</h2>
 
+<p><code>bash
+wget http://download.redis.io/releases/redis-stable.tar.gz
+cd redis-stable
+make MALLOC=libc
+make test
+</code></p>
 
-        </div>
-    </div>
-</div>
+<h2 id="section-2">复制命令行和配置文件</h2>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Jan 16, 2016</span>
-        <h1><a href="/2016/01/python-subprocess">Python subprocess模块</a></h1>
-        <div class="post-content">
-            <p>Python subprocess通常用来调用并获得shell指令的输出，这里整理一下用法.
-官方文档：https://docs.python.org/2.7/library/subprocess.html</p>
+<p><code>bash
+ln -s ~/redis-stable/src/redis-server /usr/local/bin/redis-server
+ln -s ~/redis-stable/src/redis-cli /usr/local/bin/redis-cli
+mkdir /etc/redis
+cp ~/redis-stable/redis.conf /etc/redis/redis.conf
+</code></p>
 
+<h2 id="section-3">操作</h2>
 
-        </div>
-    </div>
-</div>
+<p><code>bash
+## 启动
+redis-server &amp;
+## 连接
+redis-cli
+## 关闭
+redis-cli
+shutdown
+</code></p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Jan 3, 2016</span>
-        <h1><a href="/2016/01/python-argparse">Python argparse模块</a></h1>
-        <div class="post-content">
-            <p>Python有很多命令行选项相关的模块，比如getopt, optparse等，各种都用过一下后感觉还是argparse最方便最轻量。  <br />
-官方详细文档：  https://docs.python.org/2.7/library/argparse.html</p>
+<h2 id="python-">python 包</h2>
 
+<p><code>bash
+## 安装
+python -m pip install redis
+</code></p>
+
+<p>```python</p>
+
+<p>import redis</p>
+
+<p>r = redis.Redis(host=’192.168.111.211’, port=6379, db=1)
+print(r.info())</p>
+
+<h2 id="string">string</h2>
+<p>r[‘name’] = ‘Arthur’
+print(r[‘name’])</p>
+
+<h2 id="list">list</h2>
+<p>r.lpush(‘listtest’, ‘aaa’)
+r.lpush(‘listtest’, ‘bbb’)
+r.lrange(‘listtest’, start=0, end=-1)
+r.lindex(‘listtest’, 0)</p>
+
+<h2 id="set">set</h2>
+<p>r.sadd(‘settest’, ‘aa’)
+r.sadd(‘settest’, ‘aa’)
+r.sadd(‘settest’, ‘bb’)
+r.sadd(‘settest1’, ‘bb’)
+r.smembers(‘settest’)
+r.sinter(‘settest’,’settest1’) ## 交集
+r.sunion(‘s1’,’s2’) ## 并集
+r.sdiff(‘settest’,’settest1’) ## 不同</p>
+
+<h2 id="hash">hash</h2>
+<p>r.hset(‘hashtest’, ‘name’, ‘Arthur’)
+r.hset(‘hashtest’, ‘age’, ‘25’)
+r.hgetall(‘hashtest’)
+r.hget(‘hashtest’, ‘name’)
+```</p>
 
         </div>
     </div>
@@ -154,7 +305,7 @@
         <a class="btn btn-default" href="/index.html" class="previous">Newer</a>
       
   
-  <span class="page_number ">Page: 2 of 5</span>
+  <span class="page_number ">Page: 2 of 12</span>
   
     <a class="btn btn-default" href="/page3" class="next">Older</a>
   
@@ -237,7 +388,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 20pt; color: #555;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
 	
 	  
 	  
@@ -248,7 +399,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
@@ -314,7 +465,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#SQLite" style="font-size: 17pt; color: #888;">SQLite</a>
+	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
 	  
 	  
@@ -336,7 +487,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Bootstrap" style="font-size: 17pt; color: #888;">Bootstrap</a>
+	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
 	  
 	  
@@ -402,7 +553,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#shell" style="font-size: 17pt; color: #888;">shell</a>
+	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
 	  
 	  
@@ -446,7 +597,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Django" style="font-size: 16pt; color: #999;">Django</a>
+	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>

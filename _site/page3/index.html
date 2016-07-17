@@ -50,6 +50,8 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
+        
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
         
           <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
@@ -57,8 +59,6 @@
           <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
         
           <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
-        
-          <li><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></li>
         
     </ul>
 </div>
@@ -73,7 +73,7 @@
         
 			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>10</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,11 +87,48 @@
 			
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Dec 19, 2015</span>
-        <h1><a href="/2015/12/splunk-memory-usage">使用Splunk生成Linux系统内存用量图</a></h1>
+		<span class="author" id="page">Mar 5, 2016</span>
+        <h1><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></h1>
         <div class="post-content">
-            <p>做项目遇到一个问题，Splunk上的内存信息数据源分别记录了free、cached、buffer，用户需要整体的用量，那么怎么用Splunk来动态计算实际内存用量并显示成图表呢？</p>
+            <p>Python的命令行debug程序pdb笔记</p>
 
+<h2 id="pdbpython">使用PDB打开python脚本</h2>
+
+<p>```python
+‘’’
+方法1：使用python -m pdb <your script="">
+相当于在第一行程序之前设置一个断点
+'''
+$ python -m pdb test.py
+&gt; /root/test.py(3)<module>()
+-&gt; import sys,os</module></your></p>
+
+<p>’’’
+方法2：在程序代码中添加pdb断点
+比方法1方便，但是会更改源程序，调试完得全部删除
+‘’’
+import pdb</p>
+
+<p>print(‘hello’)
+pdb.set_trace()
+print(‘world’)
+```</p>
+
+<h2 id="pdb">pdb常用命令</h2>
+
+<p>```
+h =&gt; 显示帮助，h后面可以跟上具体的指令来显示该指令的文档
+l =&gt; 浏览代码，默认是从第一行开始的11行，连续使用可以翻页。可以添加参数l(ist) [first [,last]]，比如l 0能回到行首。
+b =&gt; 设置断点，后面跟行号，会回显断点号
+cl =&gt; 清除断点，后面跟断点号可以清除指定的断点
+disable =&gt; 禁用断点，用法如cl，用enable解禁
+n =&gt; 下一行。不进入函数体
+s =&gt; 下一行，进入函数体
+c =&gt; 执行程序直到断点
+p =&gt; 后跟变量，打印变量值</p>
+
+<p>TIPS：在pdb中直接回车一般会执行上一条指令，可以更方便的用n/s跟踪程序或者用l翻页查看
+```</p>
 
         </div>
     </div>
@@ -99,47 +136,77 @@
 
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Dec 5, 2015</span>
-        <h1><a href="/2015/12/python-logging">Python logging模块</a></h1>
+		<span class="author" id="page">Feb 20, 2016</span>
+        <h1><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></h1>
         <div class="post-content">
-            <p>Python logging模块笔记</p>
+            <p>做项目有实时、动态显示结果的需求，并且要用红色高亮错误，记录一下实现方法</p>
 
+<h2 id="section">彩色输出</h2>
 
-        </div>
-    </div>
-</div>
+<p>SHELL本身可以通过ANSI控制码来控制输出字体的格式，具体格式如下：    </p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Nov 14, 2015</span>
-        <h1><a href="/2015/11/manual-install-python">Python2/Python3 多版本安装和配置</a></h1>
-        <div class="post-content">
-            <p>Python2/Python3 多版本安装和配置</p>
+<p><code>bash
+\033[&lt;字体格式&gt;;&lt;前景色&gt;;&lt;背景色&gt;m&lt;输出&gt;\033[0m
+</code></p>
 
+<p>在shell脚本中直接echo或者在python中按照上述格式print，就能显示对应的效果。 <br />
+基于这个原理我写了一个简单的python函数，在需要彩色输出的时候给出对应的参数就可以了：   </p>
 
-        </div>
-    </div>
-</div>
+<p><code>python
+def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
+    fcolor_map = {
+        'black': 30,
+        'red': 31,
+        'green': 32,
+        'yellow': 33,
+        'blue': 34,
+        'purple': 35,
+        'cyan': 36,
+        'white': 37,
+    }
+    bcolor_map = {
+        'black': 40,
+        'red': 41,
+        'green': 42,
+        'yellow': 43,
+        'blue': 44,
+        'purple': 45,
+        'cyan': 46,
+        'white': 47,
+    }
+    mode_map = {
+        'normal': 0,
+        'bold': 1,
+        'underline': 4,
+        'blink': 5,
+        'invert': 7,
+        'hide': 8,
+    }
+    msg = '\033[%(mode)s;%(fcolor)s;%(bcolor)sm%(msg)s\033[0m' % {
+        'mode': mode,
+        'fcolor': fcolor,
+        'bcolor': bcolor,
+        'msg': msg,
+    }
+    if (not end):
+        print(msg)
+    else:
+        print(msg,end=end)
+</code></p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 24, 2015</span>
-        <h1><a href="/2015/10/python-re">Python正则表达式用法</a></h1>
-        <div class="post-content">
-            <p>最近做项目遇到了一个匹配引号的问题，记录一下</p>
+<h2 id="section-1">动态输出</h2>
 
+<p>在我上面的代码中用到了print函数中的end选项，这个是python3.x中print函数非常实用的一个选项，简单来讲就是替换掉print的结束符–在默认情况下实用print都会在结尾自动跟一个换行符。   </p>
 
-        </div>
-    </div>
-</div>
+<p>所以如果你不希望print换行，就可以<code>print(msg,end='')</code>，而为了实现动态输出，我们需要在print完之后将光标移到行首，对应的转移字符就是<code>\r</code>，因此使用<code>print(msg,end='\r')</code>就可以让光标在每次print完后回到行首了。  <br />
+另外在print完后记得使用<code>sys.stdout.flush()</code>来及时显示信息。      </p>
 
-<div class="article">
-    <div class="well">
-		<span class="author" id="page">Oct 24, 2015</span>
-        <h1><a href="/2015/10/config-centOS">配置安装CentOS</a></h1>
-        <div class="post-content">
-            <p>配置和安装CentOS的笔记，包括：配置国内源，配置jekyll，打开防火墙端口</p>
+<p>一些TIPS：   </p>
 
+<ul>
+  <li>在python2中可以通过<code>from __future__ import print_function</code>来使用python3的print功能。</li>
+  <li>在动态刷新当前行的时候，如果前一行的字符串比较长，多出来的部分不会被清掉，记得在结尾补上空白符来清除。</li>
+</ul>
 
         </div>
     </div>
@@ -152,7 +219,7 @@
         <a class="btn btn-default" href="/page2" class="previous">Newer</a>
       
   
-  <span class="page_number ">Page: 3 of 5</span>
+  <span class="page_number ">Page: 3 of 12</span>
   
     <a class="btn btn-default" href="/page4" class="next">Older</a>
   
@@ -235,7 +302,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Linux" style="font-size: 20pt; color: #555;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
 	
 	  
 	  
@@ -246,7 +313,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18.5pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
@@ -312,7 +379,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#SQLite" style="font-size: 17pt; color: #888;">SQLite</a>
+	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
 	  
 	  
@@ -334,7 +401,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Bootstrap" style="font-size: 17pt; color: #888;">Bootstrap</a>
+	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
 	  
 	  
@@ -400,7 +467,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#shell" style="font-size: 17pt; color: #888;">shell</a>
+	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
 	  
 	  
@@ -444,7 +511,7 @@
 	  
 		
 	  
-	  <a href="/tags.html#Django" style="font-size: 16pt; color: #999;">Django</a>
+	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>
