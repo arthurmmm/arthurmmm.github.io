@@ -4,7 +4,7 @@ title:  'Django下将命令行程序异步图形化'
 date:   2016-06-10 19:22 +0800
 comments: true
 imagedir: /images/2016-06-10/
-category: python
+category: web-build
 tags: [Python, Django]
 ---
 
