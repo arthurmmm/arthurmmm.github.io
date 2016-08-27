@@ -41,8 +41,6 @@ Track.html是一个用户追踪任务进程的page，用于显示任务进度给
 采用了Django的表单设计模式和Twitter Bootstrap网页框架。   
 另外还使用了bootstrap-select插件实现了一个可多选的下拉框。
 
-[![]({{site.baseurl}}{{page.imagedir}}form.png)]({{site.baseurl}}{{page.imagedir}}form.png)
-
 ### 任务线程实现
 
 在线程模型中利用getattr方式实现了一个简单的工厂模型：   
@@ -69,7 +67,7 @@ def allBatches(cls):
 
 ### 网页模拟控制台实时输出
 
-在track.html页面中我们使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。
+在track.html页面中使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。
 
 ```javascript
 
