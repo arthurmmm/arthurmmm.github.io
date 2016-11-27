@@ -50,15 +50,15 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/07/tornado-webbrowserable-api">使用Tornado实现RESTFUL Style API(3) -- 可视化API</a></li>
+        
+          <li><a href="/2016/07/tornado-async-with-threadpool">使用Tornado实现RESTFUL Style API(2) -- 使用threadpool并发处理非异步IO</a></li>
+        
+          <li><a href="/2016/06/tornado-api-design">使用Tornado实现RESTFUL Style API(1) -- 搭建和设计API服务</a></li>
+        
           <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
         
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
-        
-          <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
-        
-          <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
-        
-          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
         
     </ul>
 </div>
@@ -67,13 +67,13 @@
     <h1>Categories</h1>
     <ul>
         
-			<a href="/categories.html#other"><li>other<span class='badge'>1</span></li></a>
+			<a href="/categories.html#Other"><li>Other<span class='badge'>1</span></li></a>
         
-			<a href="/categories.html#os"><li>os<span class='badge'>6</span></li></a>
+			<a href="/categories.html#OS"><li>OS<span class='badge'>6</span></li></a>
         
-			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
+			<a href="/categories.html#web-build"><li>web-build<span class='badge'>4</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>13</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,95 +87,79 @@
 			
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Jun 10, 2016</span>
-        <h1><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></h1>
+		<span class="author" id="page">Jul 30, 2016</span>
+        <h1><a href="/2016/07/tornado-webbrowserable-api">使用Tornado实现RESTFUL Style API(3) -- 可视化API</a></h1>
         <div class="post-content">
-            <p>项目上需要将一个命令行程序图形化成Django网页应用。 <br />
-起初尝试按照一般设计思路，设计一个表单提交参数，然后等待服务器回应，结果发现在程序执行时间过长时会导致网页超时，因此需要重新设计，将整个流程异步化。   </p>
+            <p>给API系统提供一个图形界面，可以在网页上完成基本的操作需求和测试需求。</p>
 
-<h2 id="section">设计思路</h2>
+<h2 id="section">辨别客户端请求</h2>
 
-<h3 id="stage-1-">Stage 1: 用户输入</h3>
-
-<p>首先当用户访问APP时，会被url.py定位到index view，并提供一个表单给用户输入参数。 <br />
-用户提交表单后，数据会被提交给submit view   </p>
-
-<p><a href="/images/2016-06-10/stage_1.png"><img src="/images/2016-06-10/stage_1.png" alt="" /></a></p>
-
-<h3 id="stage-2">Stage 2：执行过程</h3>
-
-<p>由于程序执行时间过长，我们并不会在submit view中直接处理业务逻辑，而是创建一个线程Batch Thread。 <br />
-然后对于每一个线程，我们都会指定一个唯一的ID用于标识，submit view在拿到Batch ID后会根据Batch ID渲染template Track.html，并立即返回给用户。 <br />
-Track.html是一个用户追踪任务进程的page，用于显示任务进度给用户。在该页面上会有JS代码通过Ajax Call的方式，根据Batch ID查询进度。   </p>
-
-<p><a href="/images/2016-06-10/stage_2.png"><img src="/images/2016-06-10/stage_2.png" alt="" /></a></p>
-
-<h3 id="stage-3-">Stage 3: 结果显示</h3>
-
-<p>在所有任务完毕后，track page会重定向到Result View，然后从Batch Thread中获取程序执行的结果，渲染成Result.html并返回给用户，整个程序就算执行完毕了。   </p>
-
-<p><a href="/images/2016-06-10/stage_3.png"><img src="/images/2016-06-10/stage_3.png" alt="" /></a></p>
-
-<h2 id="section-1">技术细节</h2>
-
-<h3 id="section-2">表单实现</h3>
-
-<p>采用了Django的表单设计模式和Twitter Bootstrap网页框架。 <br />
-另外还使用了bootstrap-select插件实现了一个可多选的下拉框。</p>
-
-<p><a href="/images/2016-06-10/form.png"><img src="/images/2016-06-10/form.png" alt="" /></a></p>
-
-<h3 id="section-3">任务线程实现</h3>
-
-<p>在线程模型中利用getattr方式实现了一个简单的工厂模型：   </p>
+<p>我们通过判断HTTP请求HEADER中的’ACCEPT’域，来决定返回的输出格式：</p>
 
 <ul>
-  <li>一次执行被分隔成多个Task</li>
-  <li>建立两个映射用于控制不同Task之间的依赖关系，以及不同Task对应的数据内容</li>
-  <li>对于没有依赖关系的多个Task，用户可以自行选择是否执行。</li>
-  <li>用户的选择之间通过getattr(BatchThread, taskname)映射到对于函数</li>
+  <li>ACCEPT中包含text/html： 返回GUI界面</li>
+  <li>OTHER：返回JSON数据</li>
 </ul>
 
-<p>以下这个函数可以给用户表单提供所有可用Task的列表，供用户选择：   </p>
+<p>严格应该要求客户端设置ACCEPT: Application/JSON的HEADER才会返回JSON数据，不过目前没有其他格式的需求，这里就简单的将其他类型的请求都视作JSON请求了。   </p>
 
-<p>```python</p>
+<p>另外我们还引入了一个特殊参数__format__用来显式指定输出格式，用于处理无法设置HEADER的情况以及方便测试。</p>
 
-<p>def allBatches(cls):
-    res = []
-    all_attr = dir(cls)
-    for attr in all_attr:
-        regex = re.match(‘^batch_(.+)’, attr)  ## All task method would be named as batch_xxxx
-        if callable(getattr(cls, attr)) and regex:
-            res.append(regex.group(1))
-    return res</p>
+<h2 id="html-template">渲染HTML Template</h2>
 
-<p>```</p>
+<p>通常Tornado渲染HTML的方式是用request.render函数来实现。但是在我们的API中，统一使用了request.finish方法来返回结果，因此需要先使用request.render_string函数将HTML模板转化为字符串，再返回给用户。</p>
 
-<h3 id="section-4">网页模拟控制台实时输出</h3>
+<p>这个处理过程放在了__format__的Transform代码中</p>
 
-<p>在track.html页面中我们使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">trainsform__format__</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">format</span><span class="p">):</span>
+   <span class="k">if</span> <span class="n">format</span> <span class="o">==</span> <span class="s">'json'</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">result</span>
+   <span class="k">elif</span> <span class="n">format</span> <span class="o">==</span> <span class="s">'html'</span><span class="p">:</span>
+      <span class="n">html_dump</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">render_string</span><span class="p">(</span><span class="s">'api_gui.html'</span><span class="p">,</span> <span class="n">result</span><span class="o">=</span><span class="n">result</span><span class="p">,</span> <span class="n">json_dumps</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">html_dump</span>
+   <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">result</span>
 
-<p>```javascript</p>
+</code></pre>
+</div>
 
-<p>function checkStatus(mon) {
-    $.ajax({
-        …
-        complete: function(xhr) {
-            ….
-            window.localtion.replace(…); // Using ‘replace’ rather than ‘href’ to redirect page.
-            clearInterval(mon); // Able to stop interval inside ajax call.
-        }
-    });
-}</p>
+<p>注意代码中 <code class="highlighter-rouge">json_dumps=json.dumps</code> ，这句话表明我们将函数json.dumps作为参数传递给HTML Template了，之后我们可以在HTML中使用json_dumps(…)来调用</p>
 
-<p>var mon = setInterval(function(){
-    checkStatus(mon); // Ajax call function.
-    $(“html, body”).animate({
-        scrollTop: $(“#end”).offset().top
-    }, 1000) //Scroll to the bottom of page. #end is defined at the end.
-}, 1000); //Call inline function every second</p>
+<h2 id="section-1">图形界面设计</h2>
 
-<p>```</p>
+<ul>
+  <li>整体上使用了twitter-bootstrap框架设计UI</li>
+  <li>为了提供更好的可读性以及方便用户输入数据，在图形界面上我们使用了YAML格式来替换JSON格式，使用了JS包：jsyaml</li>
+  <li>将输出结果中的URL转换成超链接，使用了JS包：Autolinker.js</li>
+  <li>高亮YAML输出结果，使用了JS包：highlight.min.js</li>
+  <li>根据API meta中的内容显示对应的GET/POST/PUT/DELETE按钮</li>
+  <li>用户点击按钮后，触发AJAX事件，调用对应API并将结果重载到输出框中</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="kd">function</span> <span class="nx">loadData</span><span class="p">(</span><span class="nx">raw_data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">text_data</span> <span class="o">=</span> <span class="nx">jsyaml</span><span class="p">.</span><span class="nx">dump</span><span class="p">(</span><span class="nx">raw_data</span><span class="p">);</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="s1">'#submit button'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="p">...</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="na">type</span><span class="p">:</span> <span class="nx">method</span><span class="p">,</span>
+        <span class="na">url</span><span class="p">:</span> <span class="nx">url</span><span class="p">,</span>
+        <span class="na">data</span><span class="p">:</span> <span class="nx">data</span><span class="p">,</span>
+        <span class="na">contentType</span><span class="p">:</span> <span class="s1">'application/json'</span><span class="p">,</span>
+        <span class="na">dataType</span><span class="p">:</span> <span class="s1">'json'</span><span class="p">,</span>
+        <span class="na">complete</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">xhr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">loadData</span><span class="p">(</span><span class="nx">xhr</span><span class="p">.</span><span class="nx">responseJSON</span><span class="p">);</span>
+            <span class="p">...</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+<span class="p">})</span>
+
+</code></pre>
+</div>
 
         </div>
     </div>
@@ -183,229 +167,111 @@ Track.html是一个用户追踪任务进程的page，用于显示任务进度给
 
 <div class="article">
     <div class="well">
-		<span class="author" id="page">May 8, 2016</span>
-        <h1><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></h1>
+		<span class="author" id="page">Jul 9, 2016</span>
+        <h1><a href="/2016/07/tornado-async-with-threadpool">使用Tornado实现RESTFUL Style API(2) -- 使用threadpool并发处理非异步IO</a></h1>
         <div class="post-content">
-            <p>介绍使用Django Form + Bootstrap实现表单管理的思路和方式</p>
+            <p>Tornado的异步功能很强大，相对的它要求对应的操作本身需要支持异步，但其实并不是所有的IO操作都有对应的异步实现，比如坑爹的Sybase… <br />
+为了不让这些非异步IO阻塞进程，我在参考了网上一些讨论后，设计了如下的方法。</p>
 
-<h2 id="djangomodelform">创建Django的ModelForm模块</h2>
+<h2 id="python-threadpoolexecutor">使用python ThreadPoolExecutor处理并发</h2>
 
-<p>Django的Form类可以在后台生成和管理表单，而其中的ModelForm类更是可以方便的将数据库模型映射成一个表单，实现快速开发。 <br />
-文档：https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/   </p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
 
-<p>简单来讲流程如下   </p>
+<span class="n">EXECUTOR</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
-<p>```python
-## 1. Define a ModelForm class
-class MyForm(ModelForm):
-    ## 2. Add a subclass “Meta”
-    class Meta:
-        model = MyModel ## 3. Define the Model you use
-        fields = ‘<strong>all</strong>’ ## 4. The fields you want to show</p>
-
-<p>```</p>
-
-<h3 id="djangobootstrap">让Django生成Bootstrap风格的表单</h3>
-
-<p>Django自动生成的表单并不能很好的契合前端Bootstrap的风格，因为Bootstrap的表单需要将每个域囊括在’form-control’的DIV中。 <br />
-解决方法如下：   </p>
-
-<p><code>python
-class MyForm(ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(MyForm, self).__init__(*args, **kwargs)
-        for field in iter(self.field):
-            self.fields[field].widget.attrs.update({
-                'class': 'form-control',
-            })
-</code></p>
-
-<h3 id="widget">重定义/初始化表单Widget</h3>
-
-<p>默认情况下Django会根据Model的属性自动生成Widget，不过有时候我们也会需要自定义部分Widget，比如添加提示或者设置成只读。 <br />
-我们可以在Meta中定义labels/widgets来实现这个功能：   </p>
-
-<p>```python
-class MyForm(ModelForm):
-    def <strong>init</strong>(self, <em>args, **kwargs):
-        super(MyForm, self).<strong>init</strong>(</em>args, **kwargs)
-        for field in iter(self.field):
-            self.fields[field].widget.attrs.update({
-                ‘class’: ‘form-control’,
-            })</p>
-
-<pre><code>class Meta:
-    model = MyModel
-    fields = '__all__'
-    labels = {
-        'user_id': _('User'), ## Rename user_id to User
-    }
-    widgets = {
-        'user_id': TextInput(attrs={'readonly': True}), ## Set user_id as readonly
-    } ```
+<span class="k">def</span> <span class="nf">threaded</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>    
+    <span class="nd">@asynchronous</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">future</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">({</span>
+                    <span class="s">'error'</span><span class="p">:</span> <span class="s">'Unexcepted error: </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">e</span>
+                <span class="p">})</span>
+            <span class="k">return</span>
+        
+        <span class="n">EXECUTOR</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">future</span><span class="p">:</span> <span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre>
+</div>
 
-<h3 id="section">表单检查</h3>
+<p>当调用被装饰的函数f时，首先会将它submit到线程池EXECUTOR中执行，EXECUTOR的回调函数直接将future传递给Tornado的IOLoop，之后Tornado就会在下一次IO Loop时调用真正的callback函数。</p>
 
-<p>Django的ModelForm默认会根据Model本身的限制进行检查（例如主键唯一，类型检查等） <br />
-我们也可以提供一些自定义检查规则：   </p>
+<h2 id="handler">如何在真正的Handler中控制页面操作？</h2>
 
-<p>```python
-class MyForm(ModelForm):
-    def <strong>init</strong>(self, <em>args, **kwargs):
-        super(MyForm, self).<strong>init</strong>(</em>args, **kwargs)
-        for field in iter(self.field):
-            self.fields[field].widget.attrs.update({
-                ‘class’: ‘form-control’,
-            })</p>
+<p>在用上述threaded方法装饰API Handler后，这个Handler就会运行在线程池中，也失去了直接操作Tornado IOLoop的能力，所以我们只能让Handler返回一个字典，再通过回调函数去执行self.finish来将结果输出到Tornado IOLoop中。   </p>
 
-<pre><code>    ## Use Bootstrap alert to show error message
-    self.error_css_class = 'alert alert-danger'
-    self.required_css_class = 'alert alert-danger'
+<p>那么如果我们希望执行一些稍微复杂点的页面操作，比如设置一下status code呢？ <br />
+显然我们不可能为每个Handler都创建一个对应的回调函数，并且操作的内容也得在Handler中控制，下面是一个可行解决方法。</p>
 
-def clean_name(self):
-    v = self.cleaned_data['name']
-    RegexValidattor(
-        regex = '^[a-z0-9_]+$', ## Only allow lower case chars, ints and underline
-        message = _('Only allow lower case chars, ints and underline'),
-    )(v)
-    return v
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+
+<span class="n">EXECUTOR</span> <span class="o">=</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">ResultTransformer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">ORDER</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s">'__status_code__'</span><span class="p">,</span>
+        <span class="s">'__finish__'</span><span class="p">,</span>
+    <span class="p">]</span>
     
-class Meta:
-    model = MyModel
-    fields = '__all__'
-    labels = {
-        'user_id': _('User'), ## Rename user_id to User
-    }
-    widgets = {
-        'user_id': TextInput(attrs={'readonly': True}),
-    } ```
+    <span class="k">def</span> <span class="nf">trainsform__status_code__</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">status_code</span><span class="p">):</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="n">status_code</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">transform__finish__</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="n">request</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="k">def</span> <span class="nf">threaded</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>    
+    <span class="nd">@asynchronous</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">future</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+                
+                <span class="n">private_items</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span>
+                    <span class="p">[(</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">'^__.*__$'</span><span class="p">,</span> <span class="n">k</span><span class="p">)],</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">ResultTransformer</span><span class="o">.</span><span class="n">ORDER</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="p">))</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">private_items</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">private_items</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">fn</span> <span class="o">=</span> <span class="s">'transform</span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">k</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">ResultTransformer</span><span class="p">,</span> <span class="n">fn</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="n">HTTPError</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s">'Invalid special param: </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">fn</span><span class="p">)</span>
+                    <span class="n">f</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">ResultTransformer</span><span class="p">,</span> <span class="n">fn</span><span class="p">)</span>
+                    <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">set_status</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">finish</span><span class="p">({</span>
+                    <span class="s">'error'</span><span class="p">:</span> <span class="s">'Unexcepted error: </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">e</span>
+                <span class="p">})</span>
+        
+        <span class="n">EXECUTOR</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">future</span><span class="p">:</span> <span class="n">IOLoop</span><span class="o">.</span><span class="n">instance</span><span class="p">()</span><span class="o">.</span><span class="n">add_callback</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="n">future</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre>
+</div>
 
-<h2 id="template">创建前端Template</h2>
+<p>为了处理这些页面操作，我定义了一类API的“特殊参数”和一个工厂类ResultTransformer，然后为每一个可能出现的特殊参数注册一个同名的工厂函数。在工厂类中又定义了一个数组ORDER用来管理工厂函数执行的顺序，所有工厂函数的格式均为result=f(result, value)，即通过value的值来处理result，并返回一个新的result。      </p>
 
-<p>后台类编写完毕后开始为前端页面创建模板，这里使用了Bootstrap的’form-horizontal’模板</p>
+<p>回调函数在处理result结果集时，首先寻找形如__.*__的特殊参数，把它们pop到有序字典private_items中，再遍历一遍private_items中的每个成员，依次执行它们对应的工厂函数并得到一个新的result值，通过这样类似流水线式的作业，我们就能够比较灵活的管理一些特殊的页面操作了。   </p>
 
-<p>```html
-&lt;form class="form-horizontal"&gt;
-    <!-- Load general error -->
-    { % if form.errors % }
-        { % for error in form.non_field_errors % }
-            &lt;div class="alert alert-danger"&gt; { { error|escape } }&lt;/div&gt;
-        { % endfor % }
-    { % endif % }</p>
-
-<pre><code>{ % for field in form % }
-    { % if field.errors % }
-        &lt;!-- Load fields error --&gt;
-        &lt;div class="form-group has-error"&gt;
-            &lt;label class="col-xs-3 control-label" for="{ { field.name } }"&gt;{ { field.label } }&lt;/label&gt;
-            &lt;div class="col-xs-9"&gt;{ { field } }&lt;/div&gt;
-            &lt;span class="help-block col-xs-12"&gt;{ { field.errors.as_text } }&lt;/span&gt;
-        &lt;/div&gt;
-    { % else % }
-        &lt;!-- Load fields only --&gt;
-        &lt;div class="form-group"&gt;
-            &lt;label class="col-xs-3 control-label" for="{ { field.name } }"&gt;{ { field.label } }&lt;/label&gt;
-            &lt;div class="col-xs-9"&gt;{ { field } }&lt;/div&gt;
-        &lt;/div&gt;
-    { % endif % }
-{ % endfor % }
-&lt;div class="form-group"&gt;
-    &lt;div class="col-xs-offset-9 col-xs-3"&gt;
-        &lt;input type="submit" class="btn btn-primary col-xs-12" value="Submit"&gt;
-    &lt;/div&gt;
-&lt;/div&gt;
-</code></pre>
-<p>&lt;/form&gt;
-```</p>
-
-<h2 id="views">为表单创建views</h2>
-
-<p>有了ModelForm类和HTML模板，下面的步骤就是创建一个接口view用于将数据加载至模板中。 <br />
-在这里我们可以创建一个通用view class用于加载所有的ModelForm   </p>
-
-<p>```python
-class FormView(View):</p>
-
-<pre><code>## Exclude csrf check for POST
-@method_decorator(csrf_exempt)
-def dispatch(self, request, *args, **kwargs):
-    return super(FormView, self).dispatch(request, *args, **kwargs)
-
-## Get a form for new object, or get a form to edit existing object
-## Using 'is_new' param to identify if we want a new form.
-def get(self, request, form_class, template):
-    template_file  = 'myapp/form/%s.html' % template ## a template file for form
-    request_dict = request.GET.dict()
-    is_new = request_dict.pop('is_new')
-    if is_new == 'true':
-        ## Generating a new form
-        form = eval(form_class)(initial=request.GET.dict())
-        id = ''
-    else:
-        ## Getting a model object, then load it to form for editing
-        model = eval(form_class)._meta.model
-        inst = model.object.get(**request_dict)
-        form = eval(form_class)(instance=inst)
-        id = inst.id
-    context = {
-        'form': form,
-        'id': id,
-        'form_class': form_class,
-        'template': template,
-    }
-    return render(request, template_file, context)
-
-## Edit existing form, steps:
-## Get info submitted by form =&gt; get model by info =&gt; load model into form =&gt; save form
-def put(self, request, form_class, template):
-    template_file = 'myapp/form/%s.html' % template
-    request_querydict = QueryDict(request.body, mutable=True)
-    id = request_querydict.pop('id')[0]
-    model = eval(form_class)._meta.model
-    inst = model.objects.get(id=id)
-    form = eval(form_class)(request_querydict, instance=inst)
-    if form.is_valid():
-        form.save()
-        return HttpResponse(status=200)
-    else:
-        context = {
-            'form': form,
-            'id': id,
-            'form_class': form_class,
-            'template': template,
-        }
-        return render(request, template_file, context, status=400)
-
-## Create a new model instance by submitted form 
-def post(self, request, form_class, template):
-    template_file = 'myapp/form/%s.html' % template
-    form = eval(form_class)(request.POST)
-    if form.is_valid():
-        form.save()
-        return HttpResponse(status=200)
-    else:
-        context = {
-            'form': form,
-            'id': '',
-            'form_class': form_class,
-            'template': template,
-        }
-        return render(request, template_file, context, status=400) ```
-</code></pre>
-
-<p>配置urls.py：</p>
-
-<p><code>python
-urlpatterns = [
-    url(r'_form/(?P&lt;form_class&gt;.+)/(?P&lt;template&gt;.+)/$'),
-]
-</code></p>
-
-<p>有了这个view我们的思路就很清楚了： <br />
-1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&gt; 使用POST提交表单 <br />
-2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&gt; 使用PUT提交表单   </p>
+<p>在上面的例子中我们定义了两个最基础的Transformer: <strong>status_code__和__finish</strong>，在API的Handler中，我们可以通过设定__status_code__的值来控制页面的返回值，而__finish__函数其实并不需要任何参数，在Handler中设定__finish__参数表示我们希望结果集直接通过request.finish来返回给用户。</p>
 
 
         </div>
@@ -415,7 +281,7 @@ urlpatterns = [
 
 <div class="pagination">
   
-  <span class="page_number ">Page: 1 of 12</span>
+  <span class="page_number ">Page: 1 of 14</span>
   
     <a class="btn btn-default" href="/page2" class="next">Older</a>
   
@@ -431,50 +297,6 @@ urlpatterns = [
 	
 	
 	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
 	
 	
 	
@@ -482,10 +304,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#ESXi" style="font-size: 16pt; color: #999;">ESXi</a>
 	
@@ -493,32 +311,20 @@ urlpatterns = [
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19pt; color: #666;">Linux</a>
 	
 	  
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 17.5pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Git" style="font-size: 16pt; color: #999;">Git</a>
 	
@@ -526,10 +332,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#jekyll" style="font-size: 16pt; color: #999;">jekyll</a>
 	
@@ -537,10 +339,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#apache" style="font-size: 16pt; color: #999;">apache</a>
 	
@@ -548,10 +346,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#JQuery" style="font-size: 16pt; color: #999;">JQuery</a>
 	
@@ -559,10 +353,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Python" style="font-size: 25pt; color: #000;">Python</a>
 	
@@ -570,10 +360,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
@@ -581,10 +367,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CGI" style="font-size: 16pt; color: #999;">CGI</a>
 	
@@ -592,10 +374,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
@@ -603,10 +381,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CSS" style="font-size: 16pt; color: #999;">CSS</a>
 	
@@ -614,10 +388,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLAlchemy" style="font-size: 16pt; color: #999;">SQLAlchemy</a>
 	
@@ -625,10 +395,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#centOS" style="font-size: 16pt; color: #999;">centOS</a>
 	
@@ -636,10 +402,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Regex" style="font-size: 16pt; color: #999;">Regex</a>
 	
@@ -647,10 +409,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
 	
@@ -658,10 +416,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
@@ -669,10 +423,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#OS" style="font-size: 16pt; color: #999;">OS</a>
 	
@@ -680,10 +430,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Database" style="font-size: 16pt; color: #999;">Database</a>
 	
@@ -691,10 +437,6 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Redis" style="font-size: 16pt; color: #999;">Redis</a>
 	
@@ -702,12 +444,15 @@ urlpatterns = [
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
+	
+	  
+	  
+	  
+	  
+	  
+	  <a href="/tags.html#Tornado" style="font-size: 16.5pt; color: #888;">Tornado</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>
@@ -715,7 +460,7 @@ urlpatterns = [
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
 			height:	200,
-			text:	"http://www.arthurmao.me/index.html"
+			text:	"http://0.0.0.0:8000/"
 		});
 	</script>
 	

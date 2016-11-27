@@ -22,7 +22,7 @@ tags: [centOS, Linux]
 
 ## 安装jekyll
 
-基本与OpenSUSE类似，参考：[OpenSUSE搭建jekyll服务器](http://www.arthurmao.me/2015/10/establish-jekyll-on-suse/)   
+基本与OpenSUSE类似，参考：[OpenSUSE搭建jekyll服务器](http://blog.arthurmao.me/2015/10/establish-jekyll-on-suse)   
 要注意的是yum没有自带nodejs，需要安装EPEL库后再安装nodejs：
 
 ```

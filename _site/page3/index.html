@@ -50,15 +50,15 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/07/tornado-webbrowserable-api">使用Tornado实现RESTFUL Style API(3) -- 可视化API</a></li>
+        
+          <li><a href="/2016/07/tornado-async-with-threadpool">使用Tornado实现RESTFUL Style API(2) -- 使用threadpool并发处理非异步IO</a></li>
+        
+          <li><a href="/2016/06/tornado-api-design">使用Tornado实现RESTFUL Style API(1) -- 搭建和设计API服务</a></li>
+        
           <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
         
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
-        
-          <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
-        
-          <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
-        
-          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
         
     </ul>
 </div>
@@ -67,13 +67,13 @@
     <h1>Categories</h1>
     <ul>
         
-			<a href="/categories.html#other"><li>other<span class='badge'>1</span></li></a>
+			<a href="/categories.html#Other"><li>Other<span class='badge'>1</span></li></a>
         
-			<a href="/categories.html#os"><li>os<span class='badge'>6</span></li></a>
+			<a href="/categories.html#OS"><li>OS<span class='badge'>6</span></li></a>
         
-			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
+			<a href="/categories.html#web-build"><li>web-build<span class='badge'>4</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>13</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,48 +87,229 @@
 			
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Mar 5, 2016</span>
-        <h1><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></h1>
+		<span class="author" id="page">May 8, 2016</span>
+        <h1><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></h1>
         <div class="post-content">
-            <p>Python的命令行debug程序pdb笔记</p>
+            <p>介绍使用Django Form + Bootstrap实现表单管理的思路和方式</p>
 
-<h2 id="pdbpython">使用PDB打开python脚本</h2>
+<h2 id="djangomodelform">创建Django的ModelForm模块</h2>
 
-<p>```python
-‘’’
-方法1：使用python -m pdb <your script="">
-相当于在第一行程序之前设置一个断点
-'''
-$ python -m pdb test.py
-&gt; /root/test.py(3)<module>()
--&gt; import sys,os</module></your></p>
+<p>Django的Form类可以在后台生成和管理表单，而其中的ModelForm类更是可以方便的将数据库模型映射成一个表单，实现快速开发。 <br />
+文档：https://docs.djangoproject.com/en/1.9/topics/forms/modelforms/   </p>
 
-<p>’’’
-方法2：在程序代码中添加pdb断点
-比方法1方便，但是会更改源程序，调试完得全部删除
-‘’’
-import pdb</p>
+<p>简单来讲流程如下   </p>
 
-<p>print(‘hello’)
-pdb.set_trace()
-print(‘world’)
-```</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">## 1. Define a ModelForm class</span>
+<span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="c">## 2. Add a subclass "Meta"</span>
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MyModel</span> <span class="c">## 3. Define the Model you use</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s">'__all__'</span> <span class="c">## 4. The fields you want to show</span>
 
-<h2 id="pdb">pdb常用命令</h2>
+</code></pre>
+</div>
 
-<p>```
-h =&gt; 显示帮助，h后面可以跟上具体的指令来显示该指令的文档
-l =&gt; 浏览代码，默认是从第一行开始的11行，连续使用可以翻页。可以添加参数l(ist) [first [,last]]，比如l 0能回到行首。
-b =&gt; 设置断点，后面跟行号，会回显断点号
-cl =&gt; 清除断点，后面跟断点号可以清除指定的断点
-disable =&gt; 禁用断点，用法如cl，用enable解禁
-n =&gt; 下一行。不进入函数体
-s =&gt; 下一行，进入函数体
-c =&gt; 执行程序直到断点
-p =&gt; 后跟变量，打印变量值</p>
+<h3 id="djangobootstrap">让Django生成Bootstrap风格的表单</h3>
 
-<p>TIPS：在pdb中直接回车一般会执行上一条指令，可以更方便的用n/s跟踪程序或者用l翻页查看
-```</p>
+<p>Django自动生成的表单并不能很好的契合前端Bootstrap的风格，因为Bootstrap的表单需要将每个域囊括在’form-control’的DIV中。 <br />
+解决方法如下：   </p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s">'class'</span><span class="p">:</span> <span class="s">'form-control'</span><span class="p">,</span>
+            <span class="p">})</span>
+</code></pre>
+</div>
+
+<h3 id="widget">重定义/初始化表单Widget</h3>
+
+<p>默认情况下Django会根据Model的属性自动生成Widget，不过有时候我们也会需要自定义部分Widget，比如添加提示或者设置成只读。 <br />
+我们可以在Meta中定义labels/widgets来实现这个功能：   </p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s">'class'</span><span class="p">:</span> <span class="s">'form-control'</span><span class="p">,</span>
+            <span class="p">})</span>
+            
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MyModel</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s">'__all__'</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'user_id'</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s">'User'</span><span class="p">),</span> <span class="c">## Rename user_id to User</span>
+        <span class="p">}</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'user_id'</span><span class="p">:</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">'readonly'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span> <span class="c">## Set user_id as readonly</span>
+        <span class="p">}</span>
+</code></pre>
+</div>
+
+<h3 id="section">表单检查</h3>
+
+<p>Django的ModelForm默认会根据Model本身的限制进行检查（例如主键唯一，类型检查等） <br />
+我们也可以提供一些自定义检查规则：   </p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyForm</span><span class="p">(</span><span class="n">ModelForm</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MyForm</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fields</span><span class="p">[</span><span class="n">field</span><span class="p">]</span><span class="o">.</span><span class="n">widget</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+                <span class="s">'class'</span><span class="p">:</span> <span class="s">'form-control'</span><span class="p">,</span>
+            <span class="p">})</span>
+    
+        <span class="c">## Use Bootstrap alert to show error message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error_css_class</span> <span class="o">=</span> <span class="s">'alert alert-danger'</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">required_css_class</span> <span class="o">=</span> <span class="s">'alert alert-danger'</span>
+    
+    <span class="k">def</span> <span class="nf">clean_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_data</span><span class="p">[</span><span class="s">'name'</span><span class="p">]</span>
+        <span class="n">RegexValidattor</span><span class="p">(</span>
+            <span class="n">regex</span> <span class="o">=</span> <span class="s">'^[a-z0-9_]+$'</span><span class="p">,</span> <span class="c">## Only allow lower case chars, ints and underline</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s">'Only allow lower case chars, ints and underline'</span><span class="p">),</span>
+        <span class="p">)(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">v</span>
+        
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">MyModel</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="s">'__all__'</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'user_id'</span><span class="p">:</span> <span class="n">_</span><span class="p">(</span><span class="s">'User'</span><span class="p">),</span> <span class="c">## Rename user_id to User</span>
+        <span class="p">}</span>
+        <span class="n">widgets</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'user_id'</span><span class="p">:</span> <span class="n">TextInput</span><span class="p">(</span><span class="n">attrs</span><span class="o">=</span><span class="p">{</span><span class="s">'readonly'</span><span class="p">:</span> <span class="bp">True</span><span class="p">}),</span>
+        <span class="p">}</span>
+</code></pre>
+</div>
+
+<h2 id="template">创建前端Template</h2>
+
+<p>后台类编写完毕后开始为前端页面创建模板，这里使用了Bootstrap的’form-horizontal’模板</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;form</span> <span class="na">class=</span><span class="s">"form-horizontal"</span><span class="nt">&gt;</span>
+    <span class="c">&lt;!-- Load general error --&gt;</span>
+    { % if form.errors % }
+        { % for error in form.non_field_errors % }
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"alert alert-danger"</span><span class="nt">&gt;</span> { { error|escape } }<span class="nt">&lt;/div&gt;</span>
+        { % endfor % }
+    { % endif % }
+
+    { % for field in form % }
+        { % if field.errors % }
+            <span class="c">&lt;!-- Load fields error --&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group has-error"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">class=</span><span class="s">"col-xs-3 control-label"</span> <span class="na">for=</span><span class="s">"{ { field.name } }"</span><span class="nt">&gt;</span>{ { field.label } }<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-xs-9"</span><span class="nt">&gt;</span>{ { field } }<span class="nt">&lt;/div&gt;</span>
+                <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">"help-block col-xs-12"</span><span class="nt">&gt;</span>{ { field.errors.as_text } }<span class="nt">&lt;/span&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        { % else % }
+            <span class="c">&lt;!-- Load fields only --&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">class=</span><span class="s">"col-xs-3 control-label"</span> <span class="na">for=</span><span class="s">"{ { field.name } }"</span><span class="nt">&gt;</span>{ { field.label } }<span class="nt">&lt;/label&gt;</span>
+                <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-xs-9"</span><span class="nt">&gt;</span>{ { field } }<span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        { % endif % }
+    { % endfor % }
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-xs-offset-9 col-xs-3"</span><span class="nt">&gt;</span>
+            <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">class=</span><span class="s">"btn btn-primary col-xs-12"</span> <span class="na">value=</span><span class="s">"Submit"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;/div&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</code></pre>
+</div>
+
+<h2 id="views">为表单创建views</h2>
+
+<p>有了ModelForm类和HTML模板，下面的步骤就是创建一个接口view用于将数据加载至模板中。 <br />
+在这里我们可以创建一个通用view class用于加载所有的ModelForm   </p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">FormView</span><span class="p">(</span><span class="n">View</span><span class="p">):</span>
+    
+    <span class="c">## Exclude csrf check for POST</span>
+    <span class="nd">@method_decorator</span><span class="p">(</span><span class="n">csrf_exempt</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">FormView</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">dispatch</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="c">## Get a form for new object, or get a form to edit existing object</span>
+    <span class="c">## Using 'is_new' param to identify if we want a new form.</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">form_class</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+        <span class="n">template_file</span>  <span class="o">=</span> <span class="s">'myapp/form/</span><span class="si">%</span><span class="s">s.html'</span> <span class="o">%</span> <span class="n">template</span> <span class="c">## a template file for form</span>
+        <span class="n">request_dict</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="nb">dict</span><span class="p">()</span>
+        <span class="n">is_new</span> <span class="o">=</span> <span class="n">request_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">'is_new'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_new</span> <span class="o">==</span> <span class="s">'true'</span><span class="p">:</span>
+            <span class="c">## Generating a new form</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)(</span><span class="n">initial</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="o">.</span><span class="nb">dict</span><span class="p">())</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="s">''</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c">## Getting a model object, then load it to form for editing</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model</span>
+            <span class="n">inst</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="nb">object</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="o">**</span><span class="n">request_dict</span><span class="p">)</span>
+            <span class="n">form</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)(</span><span class="n">instance</span><span class="o">=</span><span class="n">inst</span><span class="p">)</span>
+            <span class="nb">id</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="nb">id</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'form'</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+            <span class="s">'id'</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
+            <span class="s">'form_class'</span><span class="p">:</span> <span class="n">form_class</span><span class="p">,</span>
+            <span class="s">'template'</span><span class="p">:</span> <span class="n">template</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_file</span><span class="p">,</span> <span class="n">context</span><span class="p">)</span>
+    
+    <span class="c">## Edit existing form, steps:</span>
+    <span class="c">## Get info submitted by form =&gt; get model by info =&gt; load model into form =&gt; save form</span>
+    <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">form_class</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+        <span class="n">template_file</span> <span class="o">=</span> <span class="s">'myapp/form/</span><span class="si">%</span><span class="s">s.html'</span> <span class="o">%</span> <span class="n">template</span>
+        <span class="n">request_querydict</span> <span class="o">=</span> <span class="n">QueryDict</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">mutable</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">request_querydict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s">'id'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)</span><span class="o">.</span><span class="n">_meta</span><span class="o">.</span><span class="n">model</span>
+        <span class="n">inst</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)(</span><span class="n">request_querydict</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="n">inst</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'form'</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+                <span class="s">'id'</span><span class="p">:</span> <span class="nb">id</span><span class="p">,</span>
+                <span class="s">'form_class'</span><span class="p">:</span> <span class="n">form_class</span><span class="p">,</span>
+                <span class="s">'template'</span><span class="p">:</span> <span class="n">template</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_file</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    
+    <span class="c">## Create a new model instance by submitted form </span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">form_class</span><span class="p">,</span> <span class="n">template</span><span class="p">):</span>
+        <span class="n">template_file</span> <span class="o">=</span> <span class="s">'myapp/form/</span><span class="si">%</span><span class="s">s.html'</span> <span class="o">%</span> <span class="n">template</span>
+        <span class="n">form</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">form_class</span><span class="p">)(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'form'</span><span class="p">:</span> <span class="n">form</span><span class="p">,</span>
+                <span class="s">'id'</span><span class="p">:</span> <span class="s">''</span><span class="p">,</span>
+                <span class="s">'form_class'</span><span class="p">:</span> <span class="n">form_class</span><span class="p">,</span>
+                <span class="s">'template'</span><span class="p">:</span> <span class="n">template</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">template_file</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>配置urls.py：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">urlpatterns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">url</span><span class="p">(</span><span class="s">r'_form/(?P&lt;form_class&gt;.+)/(?P&lt;template&gt;.+)/$'</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre>
+</div>
+
+<p>有了这个view我们的思路就很清楚了： <br />
+1. 创建一个model：使用GET获取一个空表单(is_new=’true’) =&gt; 使用POST提交表单 <br />
+2. 编辑一个model：使用GET获取一个加载了现有数据的表单(is_new=’false’) =&gt; 使用PUT提交表单   </p>
+
 
         </div>
     </div>
@@ -136,77 +317,114 @@ p =&gt; 后跟变量，打印变量值</p>
 
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Feb 20, 2016</span>
-        <h1><a href="/2016/02/art-of-print">Linux下实现彩色/动态的命令行输出</a></h1>
+		<span class="author" id="page">May 2, 2016</span>
+        <h1><a href="/2016/05/python-getattr-modules">Python 反射机制</a></h1>
         <div class="post-content">
-            <p>做项目有实时、动态显示结果的需求，并且要用红色高亮错误，记录一下实现方法</p>
+            <p>Python 反射机制简单介绍和适用场景。</p>
 
-<h2 id="section">彩色输出</h2>
+<h2 id="python">Python的反射机制</h2>
 
-<p>SHELL本身可以通过ANSI控制码来控制输出字体的格式，具体格式如下：    </p>
+<p>在获取一个类或模块的某个属性时，通常需要在代码中直接指定属性名，如：   </p>
 
-<p><code>bash
-\033[&lt;字体格式&gt;;&lt;前景色&gt;;&lt;背景色&gt;m&lt;输出&gt;\033[0m
-</code></p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nb">int</span> <span class="n">a</span>
+    <span class="nb">float</span> <span class="n">b</span>
+    <span class="n">string</span> <span class="n">c</span>
 
-<p>在shell脚本中直接echo或者在python中按照上述格式print，就能显示对应的效果。 <br />
-基于这个原理我写了一个简单的python函数，在需要彩色输出的时候给出对应的参数就可以了：   </p>
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
 
-<p><code>python
-def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
-    fcolor_map = {
-        'black': 30,
-        'red': 31,
-        'green': 32,
-        'yellow': 33,
-        'blue': 34,
-        'purple': 35,
-        'cyan': 36,
-        'white': 37,
-    }
-    bcolor_map = {
-        'black': 40,
-        'red': 41,
-        'green': 42,
-        'yellow': 43,
-        'blue': 44,
-        'purple': 45,
-        'cyan': 46,
-        'white': 47,
-    }
-    mode_map = {
-        'normal': 0,
-        'bold': 1,
-        'underline': 4,
-        'blink': 5,
-        'invert': 7,
-        'hide': 8,
-    }
-    msg = '\033[%(mode)s;%(fcolor)s;%(bcolor)sm%(msg)s\033[0m' % {
-        'mode': mode,
-        'fcolor': fcolor,
-        'bcolor': bcolor,
-        'msg': msg,
-    }
-    if (not end):
-        print(msg)
-    else:
-        print(msg,end=end)
-</code></p>
+<span class="k">print</span> <span class="n">c</span><span class="o">.</span><span class="n">a</span>
 
-<h2 id="section-1">动态输出</h2>
+</code></pre>
+</div>
 
-<p>在我上面的代码中用到了print函数中的end选项，这个是python3.x中print函数非常实用的一个选项，简单来讲就是替换掉print的结束符–在默认情况下实用print都会在结尾自动跟一个换行符。   </p>
+<p>但如果我们不知道属性名呢？比如属性名是在代码中动态生成并存在某个变量中。在这种情况下就需要借助python的反射机制了。</p>
 
-<p>所以如果你不希望print换行，就可以<code>print(msg,end='')</code>，而为了实现动态输出，我们需要在print完之后将光标移到行首，对应的转移字符就是<code>\r</code>，因此使用<code>print(msg,end='\r')</code>就可以让光标在每次print完后回到行首了。  <br />
-另外在print完后记得使用<code>sys.stdout.flush()</code>来及时显示信息。      </p>
+<h2 id="hasattr-getattr-setattr">hasattr, getattr, setattr</h2>
 
-<p>一些TIPS：   </p>
+<p>python代码可以通过三个内置函数来实现反射：hasattr, getattr, setattr</p>
 
-<ul>
-  <li>在python2中可以通过<code>from __future__ import print_function</code>来使用python3的print功能。</li>
-  <li>在动态刷新当前行的时候，如果前一行的字符串比较长，多出来的部分不会被清掉，记得在结尾补上空白符来清除。</li>
-</ul>
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="n">myattr</span> <span class="o">=</span> <span class="s">'a'</span>
+<span class="n">new_value</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">'Old attribute: </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">val</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">,</span> <span class="n">new_value</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">'New attribute: </span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">val</span>
+
+</code></pre>
+</div>
+
+<h2 id="evalgetattr">使用eval实现getattr</h2>
+
+<p>内置函数eval可以将一段字符串当做python表达式处理，灵活使用eval函数也可以部分实现反射的功能：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="n">myattr</span> <span class="o">=</span> <span class="s">'a'</span>
+<span class="n">new_value</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s">'c.</span><span class="si">%</span><span class="s">s'</span> <span class="o">%</span> <span class="n">myattr</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">val</span>
+
+</code></pre>
+</div>
+
+<h2 id="callable-dir">使用callable, dir获得额外信息</h2>
+
+<p>内置函数callable可以帮助判断一个属性是否是个函数</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+    
+<span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+
+<span class="n">myattr</span> <span class="o">=</span> <span class="s">'myfunc'</span>
+
+<span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">):</span>
+    <span class="n">myfunc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">myattr</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">myfunc</span><span class="p">):</span>
+        <span class="n">myfunc</span><span class="p">()</span>
+
+</code></pre>
+</div>
+
+<p>内置函数dir可以帮助列出一个类的所有属性</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">class</span> <span class="nc">MyClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="k">def</span> <span class="nf">myfunc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+        
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">MyClass</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">dir</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="p">[</span><span class="s">'__class__'</span><span class="p">,</span> <span class="s">'__delattr__'</span><span class="p">,</span> <span class="s">'__dict__'</span><span class="p">,</span> <span class="s">'__doc__'</span><span class="p">,</span> <span class="s">'__format__'</span><span class="p">,</span> <span class="s">'__getattribute__'</span><span class="p">,</span> <span class="s">'__hash__'</span><span class="p">,</span> <span class="s">'__init__'</span><span class="p">,</span> <span class="s">'__module__'</span><span class="p">,</span> <span class="s">'__new__'</span><span class="p">,</span> <span class="s">'__reduce__'</span><span class="p">,</span> <span class="s">'__reduce_ex__'</span><span class="p">,</span> <span class="s">'__repr__'</span><span class="p">,</span> <span class="s">'__setattr__'</span><span class="p">,</span> <span class="s">'__sizeof__'</span><span class="p">,</span> <span class="s">'__str__'</span><span class="p">,</span> <span class="s">'__subclasshook__'</span><span class="p">,</span> <span class="s">'__weakref__'</span><span class="p">,</span> <span class="s">'a'</span><span class="p">,</span> <span class="s">'b'</span><span class="p">]</span>
+
+</code></pre>
+</div>
 
         </div>
     </div>
@@ -219,7 +437,7 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
         <a class="btn btn-default" href="/page2" class="previous">Newer</a>
       
   
-  <span class="page_number ">Page: 3 of 12</span>
+  <span class="page_number ">Page: 3 of 14</span>
   
     <a class="btn btn-default" href="/page4" class="next">Older</a>
   
@@ -235,50 +453,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	
 	
 	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
 	
 	
 	
@@ -286,10 +460,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#ESXi" style="font-size: 16pt; color: #999;">ESXi</a>
 	
@@ -297,32 +467,20 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19pt; color: #666;">Linux</a>
 	
 	  
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 17.5pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Git" style="font-size: 16pt; color: #999;">Git</a>
 	
@@ -330,10 +488,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#jekyll" style="font-size: 16pt; color: #999;">jekyll</a>
 	
@@ -341,10 +495,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#apache" style="font-size: 16pt; color: #999;">apache</a>
 	
@@ -352,10 +502,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#JQuery" style="font-size: 16pt; color: #999;">JQuery</a>
 	
@@ -363,10 +509,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Python" style="font-size: 25pt; color: #000;">Python</a>
 	
@@ -374,10 +516,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
@@ -385,10 +523,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CGI" style="font-size: 16pt; color: #999;">CGI</a>
 	
@@ -396,10 +530,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
@@ -407,10 +537,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CSS" style="font-size: 16pt; color: #999;">CSS</a>
 	
@@ -418,10 +544,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLAlchemy" style="font-size: 16pt; color: #999;">SQLAlchemy</a>
 	
@@ -429,10 +551,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#centOS" style="font-size: 16pt; color: #999;">centOS</a>
 	
@@ -440,10 +558,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Regex" style="font-size: 16pt; color: #999;">Regex</a>
 	
@@ -451,10 +565,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
 	
@@ -462,10 +572,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
@@ -473,10 +579,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#OS" style="font-size: 16pt; color: #999;">OS</a>
 	
@@ -484,10 +586,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Database" style="font-size: 16pt; color: #999;">Database</a>
 	
@@ -495,10 +593,6 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Redis" style="font-size: 16pt; color: #999;">Redis</a>
 	
@@ -506,12 +600,15 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
+	
+	  
+	  
+	  
+	  
+	  
+	  <a href="/tags.html#Tornado" style="font-size: 16.5pt; color: #888;">Tornado</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>
@@ -519,7 +616,7 @@ def color_print(msg, fcolor='white', bcolor='black', mode='normal', end=None):
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
 			height:	200,
-			text:	"http://www.arthurmao.me/page3/index.html"
+			text:	"http://0.0.0.0:8000/page3/"
 		});
 	</script>
 	

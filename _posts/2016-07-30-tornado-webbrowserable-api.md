@@ -39,7 +39,7 @@ def trainsform__format__(request, result, format):
 
 ```
 
-注意代码中 ```json_dumps=json.dumps``` ，这句话表明我们将函数json.dumps作为参数传递给HTML Template了，之后我们可以在HTML中使用{{json_dumps(...)}}来调用
+注意代码中 ```json_dumps=json.dumps``` ，这句话表明我们将函数json.dumps作为参数传递给HTML Template了，之后我们可以在HTML中使用json_dumps(...)来调用
 
 ## 图形界面设计
 

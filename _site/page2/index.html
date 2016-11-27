@@ -50,15 +50,15 @@
     <h1>Recent Posts</h1>
     <ul>
         
+          <li><a href="/2016/07/tornado-webbrowserable-api">使用Tornado实现RESTFUL Style API(3) -- 可视化API</a></li>
+        
+          <li><a href="/2016/07/tornado-async-with-threadpool">使用Tornado实现RESTFUL Style API(2) -- 使用threadpool并发处理非异步IO</a></li>
+        
+          <li><a href="/2016/06/tornado-api-design">使用Tornado实现RESTFUL Style API(1) -- 搭建和设计API服务</a></li>
+        
           <li><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></li>
         
           <li><a href="/2016/05/django-ajax-form-model">Django框架下表单的开发模型</a></li>
-        
-          <li><a href="/2016/05/python-getattr-modules">Python 反射机制</a></li>
-        
-          <li><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></li>
-        
-          <li><a href="/2016/03/python-pdb-debug">使用pdb来debug python程序</a></li>
         
     </ul>
 </div>
@@ -67,13 +67,13 @@
     <h1>Categories</h1>
     <ul>
         
-			<a href="/categories.html#other"><li>other<span class='badge'>1</span></li></a>
+			<a href="/categories.html#Other"><li>Other<span class='badge'>1</span></li></a>
         
-			<a href="/categories.html#os"><li>os<span class='badge'>6</span></li></a>
+			<a href="/categories.html#OS"><li>OS<span class='badge'>6</span></li></a>
         
-			<a href="/categories.html#web-build"><li>web-build<span class='badge'>3</span></li></a>
+			<a href="/categories.html#web-build"><li>web-build<span class='badge'>4</span></li></a>
         
-			<a href="/categories.html#python"><li>python<span class='badge'>11</span></li></a>
+			<a href="/categories.html#python"><li>python<span class='badge'>13</span></li></a>
         
 			<a href="/categories.html#splunk"><li>splunk<span class='badge'>1</span></li></a>
         
@@ -87,123 +87,71 @@
 			
 <div class="article">
     <div class="well">
-		<span class="author" id="page">May 2, 2016</span>
-        <h1><a href="/2016/05/python-getattr-modules">Python 反射机制</a></h1>
+		<span class="author" id="page">Jun 25, 2016</span>
+        <h1><a href="/2016/06/tornado-api-design">使用Tornado实现RESTFUL Style API(1) -- 搭建和设计API服务</a></h1>
         <div class="post-content">
-            <p>Python 反射机制简单介绍和适用场景。</p>
+            <h2 id="api">API需求</h2>
 
-<h2 id="python">Python的反射机制</h2>
+<p>项目开发上经常需要从其他组的数据源那里去读取数据，而公司内部开发组太多，每个组使用的技术各不相同，还有各种安全认证，往往使数据访问、转换的过程变得非常痛苦。在这种情况下一个跨平台，标准化的API中间件能够很好的将数据处理逻辑与业务逻辑分隔开来。   </p>
 
-<p>在获取一个类或模块的某个属性时，通常需要在代码中直接指定属性名，如：   </p>
+<h2 id="section">技术选型</h2>
 
-<p>```python
-class MyClass(object):
-    int a
-    float b
-    string c</p>
+<p>现在主流的Python Web框架包括Django、Flask和Tornado。Django太过笨重首先被排除了，Tornado和Flask比较起来并发处理更强，更适合用作API Server。  </p>
 
-<p>c = MyClass()</p>
+<h2 id="section-1">代码架构</h2>
 
-<p>print c.a</p>
+<p>项目结构如下：</p>
 
-<p>```</p>
-
-<p>但如果我们不知道属性名呢？比如属性名是在代码中动态生成并存在某个变量中。在这种情况下就需要借助python的反射机制了。</p>
-
-<h2 id="hasattr-getattr-setattr">hasattr, getattr, setattr</h2>
-
-<p>python代码可以通过三个内置函数来实现反射：hasattr, getattr, setattr</p>
-
-<p>```python</p>
-
-<p>class MyClass(object):
-    a = 0
-    b = 1</p>
-
-<p>c = MyClass()</p>
-
-<p>myattr = ‘a’
-new_value = 123</p>
-
-<p>if hasattr(c, myattr):
-    val = getattr(c, myattr)
-    print ‘Old attribute: %s’ % val</p>
-
-<pre><code>setattr(c, myattr, new_value)
-val = getattr(c, myattr)
-print 'New attribute: %s' % val
+<div class="highlighter-rouge"><pre class="highlight"><code>|- start.py
+|- base.py
+|- setting.py
+|- api_gui.html
+|- API
+  |- __init__.py
+  |- index.py
+  |- ...
+|- CONFIG
+  |- __main__.yml
+  |- base.yml
+  |- API.index.yml
+  |- ...
+|- static
+  |- favicon.icon
+  |- ...
 </code></pre>
+</div>
 
-<p>```</p>
+<p>主目录下start.py用于启动服务器，base.py定义了一些继承类和模板，setting.py用于管理配置文件，api_gui是API图形界面的HTML模板。 <br />
+API下存放了各个API的业务逻辑，理论上可以做到在添加新的API时只需要添加一个模块到API包即可。 <br />
+CONFIG下存放了各种配置文件，各种常量都会定义在配置文件中。这里用了YAML作为配置文件的格式 – 个人比较喜欢YAML，因为它和JSON一样简介，又有XML差不多的表达能力，还可以添加注释.. <br />
+python下操作YAML文件可以使用PyYAML: http://pyyaml.org/    </p>
 
-<h2 id="evalgetattr">使用eval实现getattr</h2>
+<h2 id="startpy">start.py</h2>
 
-<p>内置函数eval可以将一段字符串当做python表达式处理，灵活使用eval函数也可以部分实现反射的功能：</p>
+<p>我们将URL和Handler的映射关系拆分到各个API Module，这样在每个API模块中可以很直观的看到它对应的URL，在新添加API时也无需更改start.py <br />
+实现方法是在API包中添加router变量，然后在start.py中通过getattr来获取。   </p>
 
-<p>```python</p>
+<p>另外我们将server address, port等启动函数写到了配置文件中，再通过**kwargs的方式传递给Application类，其中default_handler_class由于是一个类，需要使用eval进行转化   </p>
 
-<p>class MyClass(object):
-    a = 0
-    b = 1</p>
-
-<p>c = MyClass()</p>
-
-<p>myattr = ‘a’
-new_value = 123</p>
-
-<p>val = eval(‘c.%s’ % myattr)
-print val</p>
-
-<p>```</p>
-
-<h2 id="callable-dir">使用callable, dir获得额外信息</h2>
-
-<p>内置函数callable可以帮助判断一个属性是否是个函数</p>
-
-<p>```python</p>
-
-<p>class MyClass(object):
-    a = 0
-    b = 1</p>
-
-<pre><code>def myfunc(self):
-    pass
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">make_app</span><span class="p">():</span>
+    <span class="kn">import</span> <span class="nn">base</span><span class="o">,</span> <span class="nn">API</span>
+    <span class="n">url_router</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">API</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'__'</span><span class="p">):</span>
+            <span class="n">api_module</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">API</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+            <span class="n">api_url_router</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">api_module</span><span class="p">,</span> <span class="s">'router'</span><span class="p">)</span>
+            <span class="n">url_router</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">api_url_router</span><span class="p">)</span>
+    <span class="n">url_router</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">URLSpec</span><span class="p">(</span><span class="s">r'/(favicon.icon)'</span><span class="p">,</span> <span class="n">StaticFileHandler</span><span class="p">,</span> <span class="p">{</span><span class="s">'path'</span><span class="p">:</span> <span class="n">config</span><span class="o">.</span><span class="n">STATIC_PATH</span><span class="p">},</span> <span class="n">name</span><span class="o">=</span><span class="s">'favicon'</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">application_args</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">APPLICATION</span>
+    <span class="k">if</span> <span class="s">'default_handler_class'</span> <span class="ow">in</span> <span class="n">application_args</span><span class="p">:</span>
+        <span class="n">application_args</span><span class="p">[</span><span class="s">'default_handler_class'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">application_args</span><span class="p">[</span><span class="s">'default_handler_class'</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Application</span><span class="p">(</span><span class="n">url_router</span><span class="p">,</span> <span class="o">**</span><span class="n">application_args</span><span class="p">)</span>
+    
 </code></pre>
-
-<p>c = MyClass()</p>
-
-<p>myattr = ‘myfunc’</p>
-
-<p>if hasattr(c, myattr):
-    myfunc = getattr(c, myattr)
-    if callable(myfunc):
-        myfunc()</p>
-
-<p>```</p>
-
-<p>内置函数dir可以帮助列出一个类的所有属性</p>
-
-<p>```python</p>
-
-<p>class MyClass(object):
-    a = 0
-    b = 1</p>
-
-<pre><code>def myfunc(self):
-    pass
-</code></pre>
-
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <p>c = MyClass()
-dir(c)
-[‘<strong>class</strong>’, ‘<strong>delattr</strong>’, ‘<strong>dict</strong>’, ‘<strong>doc</strong>’, ‘<strong>format</strong>’, ‘<strong>getattribute</strong>’, ‘<strong>hash</strong>’, ‘<strong>init</strong>’, ‘<strong>module</strong>’, ‘<strong>new</strong>’, ‘<strong>reduce</strong>’, ‘<strong>reduce_ex</strong>’, ‘<strong>repr</strong>’, ‘<strong>setattr</strong>’, ‘<strong>sizeof</strong>’, ‘<strong>str</strong>’, ‘<strong>subclasshook</strong>’, ‘<strong>weakref</strong>’, ‘a’, ‘b’]</p>
-    </blockquote>
-  </blockquote>
-</blockquote>
-
-<p>```</p>
+</div>
 
         </div>
     </div>
@@ -211,88 +159,93 @@ dir(c)
 
 <div class="article">
     <div class="well">
-		<span class="author" id="page">Apr 23, 2016</span>
-        <h1><a href="/2016/04/install-redis-centos">CentOS安装Redis数据库</a></h1>
+		<span class="author" id="page">Jun 10, 2016</span>
+        <h1><a href="/2016/06/django-async-script">Django下将命令行程序异步图形化</a></h1>
         <div class="post-content">
-            <p>Redis安装笔记</p>
+            <p>项目上需要将一个命令行程序图形化成Django网页应用。 <br />
+起初尝试按照一般设计思路，设计一个表单提交参数，然后等待服务器回应，结果发现在程序执行时间过长时会导致网页超时，因此需要重新设计，将整个流程异步化。   </p>
 
-<h2 id="section">安装依赖包</h2>
+<h2 id="section">设计思路</h2>
 
-<p><code>bash
-yum install gcc
-yum install tcl
-</code></p>
+<h3 id="stage-1-">Stage 1: 用户输入</h3>
 
-<h2 id="section-1">下载安装包</h2>
+<p>首先当用户访问APP时，会被url.py定位到index view，并提供一个表单给用户输入参数。 <br />
+用户提交表单后，数据会被提交给submit view   </p>
 
-<p><code>bash
-wget http://download.redis.io/releases/redis-stable.tar.gz
-cd redis-stable
-make MALLOC=libc
-make test
-</code></p>
+<p><a href="/images/2016-06-10/stage_1.png"><img src="/images/2016-06-10/stage_1.png" alt="" /></a></p>
 
-<h2 id="section-2">复制命令行和配置文件</h2>
+<h3 id="stage-2">Stage 2：执行过程</h3>
 
-<p><code>bash
-ln -s ~/redis-stable/src/redis-server /usr/local/bin/redis-server
-ln -s ~/redis-stable/src/redis-cli /usr/local/bin/redis-cli
-mkdir /etc/redis
-cp ~/redis-stable/redis.conf /etc/redis/redis.conf
-</code></p>
+<p>由于程序执行时间过长，我们并不会在submit view中直接处理业务逻辑，而是创建一个线程Batch Thread。 <br />
+然后对于每一个线程，我们都会指定一个唯一的ID用于标识，submit view在拿到Batch ID后会根据Batch ID渲染template Track.html，并立即返回给用户。 <br />
+Track.html是一个用户追踪任务进程的page，用于显示任务进度给用户。在该页面上会有JS代码通过Ajax Call的方式，根据Batch ID查询进度。   </p>
 
-<h2 id="section-3">操作</h2>
+<p><a href="/images/2016-06-10/stage_2.png"><img src="/images/2016-06-10/stage_2.png" alt="" /></a></p>
 
-<p><code>bash
-## 启动
-redis-server &amp;
-## 连接
-redis-cli
-## 关闭
-redis-cli
-shutdown
-</code></p>
+<h3 id="stage-3-">Stage 3: 结果显示</h3>
 
-<h2 id="python-">python 包</h2>
+<p>在所有任务完毕后，track page会重定向到Result View，然后从Batch Thread中获取程序执行的结果，渲染成Result.html并返回给用户，整个程序就算执行完毕了。   </p>
 
-<p><code>bash
-## 安装
-python -m pip install redis
-</code></p>
+<p><a href="/images/2016-06-10/stage_3.png"><img src="/images/2016-06-10/stage_3.png" alt="" /></a></p>
 
-<p>```python</p>
+<h2 id="section-1">技术细节</h2>
 
-<p>import redis</p>
+<h3 id="section-2">表单实现</h3>
 
-<p>r = redis.Redis(host=’192.168.111.211’, port=6379, db=1)
-print(r.info())</p>
+<p>采用了Django的表单设计模式和Twitter Bootstrap网页框架。 <br />
+另外还使用了bootstrap-select插件实现了一个可多选的下拉框。</p>
 
-<h2 id="string">string</h2>
-<p>r[‘name’] = ‘Arthur’
-print(r[‘name’])</p>
+<h3 id="section-3">任务线程实现</h3>
 
-<h2 id="list">list</h2>
-<p>r.lpush(‘listtest’, ‘aaa’)
-r.lpush(‘listtest’, ‘bbb’)
-r.lrange(‘listtest’, start=0, end=-1)
-r.lindex(‘listtest’, 0)</p>
+<p>在线程模型中利用getattr方式实现了一个简单的工厂模型：   </p>
 
-<h2 id="set">set</h2>
-<p>r.sadd(‘settest’, ‘aa’)
-r.sadd(‘settest’, ‘aa’)
-r.sadd(‘settest’, ‘bb’)
-r.sadd(‘settest1’, ‘bb’)
-r.smembers(‘settest’)
-r.sinter(‘settest’,’settest1’) ## 交集
-r.sunion(‘s1’,’s2’) ## 并集
-r.sdiff(‘settest’,’settest1’) ## 不同</p>
+<ul>
+  <li>一次执行被分隔成多个Task</li>
+  <li>建立两个映射用于控制不同Task之间的依赖关系，以及不同Task对应的数据内容</li>
+  <li>对于没有依赖关系的多个Task，用户可以自行选择是否执行。</li>
+  <li>用户的选择之间通过getattr(BatchThread, taskname)映射到对于函数</li>
+</ul>
 
-<h2 id="hash">hash</h2>
-<p>r.hset(‘hashtest’, ‘name’, ‘Arthur’)
-r.hset(‘hashtest’, ‘age’, ‘25’)
-r.hgetall(‘hashtest’)
-r.hget(‘hashtest’, ‘name’)
-```</p>
+<p>以下这个函数可以给用户表单提供所有可用Task的列表，供用户选择：   </p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="k">def</span> <span class="nf">allBatches</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_attr</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="n">cls</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">all_attr</span><span class="p">:</span>
+        <span class="n">regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s">'^batch_(.+)'</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>  <span class="c">## All task method would be named as batch_xxxx</span>
+        <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span> <span class="ow">and</span> <span class="n">regex</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">regex</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+    
+</code></pre>
+</div>
+
+<h3 id="section-4">网页模拟控制台实时输出</h3>
+
+<p>在track.html页面中使用了js setInterval的方式来给用户实时显示程序进度：每秒执行一个Ajax请求来获得后台进度，并更新页面。</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="kd">function</span> <span class="nx">checkStatus</span><span class="p">(</span><span class="nx">mon</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">ajax</span><span class="p">({</span>
+        <span class="p">...</span>
+        <span class="na">complete</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">xhr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="p">....</span>
+            <span class="nb">window</span><span class="p">.</span><span class="nx">localtion</span><span class="p">.</span><span class="nx">replace</span><span class="p">(...);</span> <span class="c1">// Using 'replace' rather than 'href' to redirect page.</span>
+            <span class="nx">clearInterval</span><span class="p">(</span><span class="nx">mon</span><span class="p">);</span> <span class="c1">// Able to stop interval inside ajax call.</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">mon</span> <span class="o">=</span> <span class="nx">setInterval</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+    <span class="nx">checkStatus</span><span class="p">(</span><span class="nx">mon</span><span class="p">);</span> <span class="c1">// Ajax call function.</span>
+    <span class="nx">$</span><span class="p">(</span><span class="s2">"html, body"</span><span class="p">).</span><span class="nx">animate</span><span class="p">({</span>
+        <span class="na">scrollTop</span><span class="p">:</span> <span class="nx">$</span><span class="p">(</span><span class="s2">"#end"</span><span class="p">).</span><span class="nx">offset</span><span class="p">().</span><span class="nx">top</span>
+    <span class="p">},</span> <span class="mi">1000</span><span class="p">)</span> <span class="c1">//Scroll to the bottom of page. #end is defined at the end.</span>
+<span class="p">},</span> <span class="mi">1000</span><span class="p">);</span> <span class="c1">//Call inline function every second</span>
+
+</code></pre>
+</div>
 
         </div>
     </div>
@@ -305,7 +258,7 @@ r.hget(‘hashtest’, ‘name’)
         <a class="btn btn-default" href="/index.html" class="previous">Newer</a>
       
   
-  <span class="page_number ">Page: 2 of 12</span>
+  <span class="page_number ">Page: 2 of 14</span>
   
     <a class="btn btn-default" href="/page3" class="next">Older</a>
   
@@ -321,50 +274,6 @@ r.hget(‘hashtest’, ‘name’)
 	
 	
 	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-		
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
-	  
-	
 	
 	
 	
@@ -372,10 +281,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#ESXi" style="font-size: 16pt; color: #999;">ESXi</a>
 	
@@ -383,32 +288,20 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#Linux" style="font-size: 19.5pt; color: #666;">Linux</a>
+	  <a href="/tags.html#Linux" style="font-size: 19pt; color: #666;">Linux</a>
 	
 	  
 	  
 	  
 	  
-		
 	  
-	  
-		
-	  
-	  <a href="/tags.html#OpenSUSE" style="font-size: 18pt; color: #777;">OpenSUSE</a>
+	  <a href="/tags.html#OpenSUSE" style="font-size: 17.5pt; color: #777;">OpenSUSE</a>
 	
 	  
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Git" style="font-size: 16pt; color: #999;">Git</a>
 	
@@ -416,10 +309,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#jekyll" style="font-size: 16pt; color: #999;">jekyll</a>
 	
@@ -427,10 +316,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#apache" style="font-size: 16pt; color: #999;">apache</a>
 	
@@ -438,10 +323,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#JQuery" style="font-size: 16pt; color: #999;">JQuery</a>
 	
@@ -449,10 +330,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Python" style="font-size: 25pt; color: #000;">Python</a>
 	
@@ -460,10 +337,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLite" style="font-size: 16.5pt; color: #888;">SQLite</a>
 	
@@ -471,10 +344,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CGI" style="font-size: 16pt; color: #999;">CGI</a>
 	
@@ -482,10 +351,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Bootstrap" style="font-size: 16.5pt; color: #888;">Bootstrap</a>
 	
@@ -493,10 +358,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#CSS" style="font-size: 16pt; color: #999;">CSS</a>
 	
@@ -504,10 +365,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#SQLAlchemy" style="font-size: 16pt; color: #999;">SQLAlchemy</a>
 	
@@ -515,10 +372,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#centOS" style="font-size: 16pt; color: #999;">centOS</a>
 	
@@ -526,10 +379,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Regex" style="font-size: 16pt; color: #999;">Regex</a>
 	
@@ -537,10 +386,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Splunk" style="font-size: 16pt; color: #999;">Splunk</a>
 	
@@ -548,10 +393,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#shell" style="font-size: 16.5pt; color: #888;">shell</a>
 	
@@ -559,10 +400,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#OS" style="font-size: 16pt; color: #999;">OS</a>
 	
@@ -570,10 +407,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Database" style="font-size: 16pt; color: #999;">Database</a>
 	
@@ -581,10 +414,6 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Redis" style="font-size: 16pt; color: #999;">Redis</a>
 	
@@ -592,12 +421,15 @@ r.hget(‘hashtest’, ‘name’)
 	  
 	  
 	  
-		
-	  
-	  
-		
 	  
 	  <a href="/tags.html#Django" style="font-size: 16.5pt; color: #888;">Django</a>
+	
+	  
+	  
+	  
+	  
+	  
+	  <a href="/tags.html#Tornado" style="font-size: 16.5pt; color: #888;">Tornado</a>
 	
 	</div>
 		<div id="qrcodeCanvas"></div>
@@ -605,7 +437,7 @@ r.hget(‘hashtest’, ‘name’)
 		jQuery("#qrcodeCanvas").qrcode({
 			width:	200,
 			height:	200,
-			text:	"http://www.arthurmao.me/page2/index.html"
+			text:	"http://0.0.0.0:8000/page2/"
 		});
 	</script>
 	
