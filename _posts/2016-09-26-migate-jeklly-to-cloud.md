@@ -1,11 +1,14 @@
 ---
 layout: post
-title:  '把jekyll blog搬运到我的破服务器上'
+title:  '把jekyll blog搬运到我的服务器上'
 date:   2016-09-26 20:18 +0800
 comments: true
 category: OS
 tags: [Python, Docker]
 ---
+
+> 更新:   
+> 嗨呀好气啊，因为没有备案还是被墙了，只能老老实实用回gitpage版本了。。。
 
 最近gitpage访问有点不稳定，打算在自己docker+nginx环境上也搭一个博客镜像，记录下过程。
 
