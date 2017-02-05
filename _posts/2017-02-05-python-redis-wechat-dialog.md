@@ -96,7 +96,22 @@ answer方法接收data和dialog模块作为参数，用dialog中定义的逻辑�
 
 在调用answer函数后，bot会先根据用户的open_id检查对应的redis key，如果redis key中没有值或者出现意外状况，那么就认为这是一段新的对话，通过ROUTER中配置的静态映射关系，进入对应的对话处理函数并返回。
 
-如果key中有值，那么bot就认为用户的这条信息是针对这段会话的一个回复消息，会从redis中取出之前的历时消息记录，不断触发yield重现会话上下文，到达正确的断点后返回。
+如果key中有值，那么bot就认为用户的这条信息是针对这段会话的一个回复消息，会从redis中取出之前的历时消息记录，不断触发yield重现会话上下文，到达正确的断点后返回：
+
+```python
+    # 新会话或者会话超时，创建新会话
+    if not hist:
+        dialog = _new_dialog(msg_type, msg_content, to_user)
+        logger.debug('new_dialog')
+    # 存在会话记录，重现上下文
+    else:
+        logger.debug('replay_dialog')
+        try:
+            dialog = _replay_dialog(hist, to_user)
+        except StopIteration:
+            logger.error('会话记录错误..重新创建会话..')
+            dialog = _new_dialog(msg_type, msg_content, to_user)
+```
 
 redis key默认设置了60秒的过期时间，用户60秒内不回复就丢弃这段会话。
 key中的数据结构是一段json序列化的数组，第一个元素存储了dialog_handler的名字作为入口，后面是一组历时消息用于重现上下文：
@@ -107,7 +122,18 @@ key中的数据结构是一段json序列化的数组，第一个元素存储了d
 
 如果发现生成器return了(即抛出了StopIteration异常)就结束这段对话，回复用户return的消息并清空redis key。
 
-代码量不多，更多的还是看源码吧，欢迎吐槽。
+```python
+    # 发送消息
+    try:
+        # _redis_send对生成器调用send方法的同时，在redis key中记录操作，用于之后重现上下文
+        type, msg = _redis_send(hkey, dialog, msg_content) 
+    except StopIteration as e:
+        # 会话已结束，删去redis中的记录
+        type, msg = e.value
+        redis_db.delete(hkey)
+```
+
+代码量不多，更多细节可以看源码，欢迎吐槽。
 轮子是顺手造的，代码写的比较随意还请见谅。。
 
 ------
