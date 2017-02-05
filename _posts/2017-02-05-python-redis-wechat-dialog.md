@@ -133,6 +133,23 @@ key中的数据结构是一段json序列化的数组，第一个元素存储了d
         redis_db.delete(hkey)
 ```
 
+# 存在的问题
+
+这里用重现消息的方式来保存会话状态，所以在会话过程中做数据改动要慎重，比如
+```python
+answer = yield xxx
+<write database>
+answer = yield xxx
+```
+在重现过程中<write database>会被多次执行，可能导致重复数据插入。
+
+解决的办法：
+*  写操作统一在return的时候做
+*  写操作尽量用UPDATE不要用INSERT，避免重复插入
+*  直接用singleton代替redis，在进程内存中存储generator，不过这样就不适用prefork多进程的服务器..
+
+考虑过用pickle持久化但好像不支持generator..
+
 代码量不多，更多细节可以看源码，欢迎吐槽。
 轮子是顺手造的，代码写的比较随意还请见谅。。
 
