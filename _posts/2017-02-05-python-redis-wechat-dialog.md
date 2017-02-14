@@ -7,6 +7,26 @@ category: python
 tags: [Python, Redis]
 ---
 
+2017-02-11 更新：
+
+在实际应用过程中发现replay时候重复写数据的问题还是挺难绕开的，所以加了一个is_replay的新参数来解决。   
+所以现在发消息时需要这样：
+
+msg_content, is_replay = yield xxxxx
+
+然后如果希望某段代码在replay的时候不要执行，可以通过判断is_replay的值来实现。   
+
+另外新增了一个自定义异常UnexpectAnswer，用于静默处理用户的不合法输入。   
+想一下这个场景：当公众号让用户回复YES或者NO的时候，用户回复了一个START会怎么样呢？   
+ 
+现在有两种处理方式：   
+1.  回复一个信息告诉用户他的输入有误，让他重新输入。 --- 这个通过return实现
+2.  直接找一下是否有逻辑处理START这条信息。 --- 这个通过raise UnexpectAnswer实现
+
+具体请看说明和代码注释
+
+----
+
 最近打算用微信公众号做一些玩票小项目，研究了半天后发现很多功能对个人订阅号都不开放（需要认证），比如自定义菜单啦，管理图文消息啦，获取用户信息等等很基本的功能..所以只能用被动回复消息，通过一问一答的方式实现用户交互。
 
 然而这就需要记录会话状态，对于相同的信息要根据状态的不同给出不同的回复，比如在刚关注公众号的时候，如果用户发送了一个“苹果”过来，我要返回给他一段帮助消息：
@@ -51,22 +71,22 @@ demo_dialog.py是示例用的会话逻辑程序，需要根据业务要求配置
 ```python
 def accumulator(to_user):
     yield None
-    msg_content = yield None
-    
-    num_count = yield ('TextMsg', '您需要累加几个数字？')
+    msg_content, is_replay = yield None
+
+    num_count, is_replay = yield ('TextMsg', '您需要累加几个数字？')
     try:
         num_count = int(num_count)
     except Exception:
         return ('TextMsg', '输入不合法！我们需要一个整数，请输入"开始"重新开启累加器')
     res = 0
     for i in range(num_count):
-        num = yield ('TextMsg', '请输入第%s个数字, 目前累加和:%s' % (i+1, res))
+        num, is_replay = yield ('TextMsg', '请输入第%s个数字, 目前累加和:%s' % (i+1, res))
         try:
             num = int(num)
         except Exception:
             return ('TextMsg', '输入不合法！我们需要一个整数，请输入"开始"重新开启累加器')
         res += num
-        
+
     # 注意：最后一个消息一定要用return不要用yield！return用于标记会话结束。
     return ('TextMsg', '累加结束，累加和: %s' % res)
 ```
@@ -150,6 +170,7 @@ answer = yield xxx
 *  写操作统一在return的时候做
 *  写操作尽量用UPDATE不要用INSERT，避免重复插入
 *  直接用singleton代替redis，在进程内存中存储generator，不过这样在部分多进程服务器上可能会出问题
+*  新增加is_replay返回值。在代码中可以通过这个值来判断这次调用是否是replay造成的，避免重复写入。
 
 考虑过用pickle持久化但好像不支持generator..
 
