@@ -76,7 +76,7 @@ start.py的调度方式比较粗暴，直接起两个线程，在线程内用os.
 另外写了个Dockerfile可以直接部署到Docker上（python3用的是Daocloud的镜像），跑容器的时候记得把hq-proxies.yml映射到容器/etc/hq-proxies.yml下。   
 手工部署的话跑`pip install -r requirements.txt`安装依赖包   
 
-在scrapy中使用代理池的只需要添加一个middleware，每次爬取时从redis SET里用srandmember随机获取一个代理就行了，超时就retry，代理池有自检retry时候再次拿到失效代理的概率很低，但如果代理被BAN的话还是得在redis里srem手工移除。   
+在scrapy中使用代理池的只需要添加一个middleware，每次爬取时从redis SET里用srandmember随机获取一个代理就行了，代理失效和一般的请求超时一样retry就行了，代理池的自检特性保证了我们retry时候再次拿到失效代理的概率很低。
 
 最后放一张萌萌哒日志菌触发proxy_fetch时候的截图：   
 
