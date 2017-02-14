@@ -21,14 +21,14 @@ tags: [Python, Redis, Scrapy]
 
 找过一些现成的轮子，但发现或多或少都不太符合我的需求   
 
-[kohn](https://github.com/kohn)/**[HttpProxyMiddleware](https://github.com/kohn/HttpProxyMiddleware)**
+[kohn](https://github.com/kohn)/**[HttpProxyMiddleware](https://github.com/kohn/HttpProxyMiddleware)**   
 一个“被动”选择代理的方式。在scrapy middleware中加入大量代码，让爬虫在代理失效后再去代理网站找代理，会有下面几个问题：   
 *  大多数情况下始终使用一个代理去访问，造成流量集中在一个IP上，可能导致代理IP被BAN。
 *  切换代理的过程比较耗时，导致爬虫性能下降比较厉害
 *  所有逻辑都嵌套在了爬虫项目里面，有兼容性和可移植性方面的问题（有多个爬虫的话每个都要改一遍..）
 *  基于python2写的，我的项目在python3上..
 
-[jhao104](https://github.com/jhao104)/**[proxy_pool](https://github.com/jhao104/proxy_pool)**
+[jhao104](https://github.com/jhao104)/**[proxy_pool](https://github.com/jhao104/proxy_pool)**   
 这个几乎和我想要的一样，但还是因为下面几点原因没有使用：   
 *  基于SSDB，这边没有现成的SSDB，因为已经在用Redis了不想专门去装一个
 *  只管定时收集代理，在收集过程中做一次验证。但事实上收集到的代理即便通过了验证，也可能活不过10分钟，时间一长代理池内就会有很多过期的代理，需要在爬虫代码中处理这些过期代理（爬虫代码调用delete删除）。
